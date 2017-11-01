@@ -1,0 +1,26 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html>
+<head>
+	<title>FAW/Locust Project</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<style>
+		body 		{ padding-top:80px; word-wrap:break-word; }
+	</style>
+</head>
+<body>
+<div class="container">
+
+	<div class="page-header text-center">
+		<a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px" /></a>
+		<h1><span class="fa fa-anchor"></span> FAW/Locust - User Home </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
+		<a href="/dataEntry" class="btn btn-default btn-sm"> Data Entry </a>
+		<a href="/dataQuery" class="btn btn-default btn-sm"> Data Query </a>
+		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+		<a href="/signup" class="btn btn-default btn-sm">Sign Up</a>
+	</div>
+
+</div>
+</body>
+</html>

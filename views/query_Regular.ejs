@@ -1,0 +1,427 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>FAW/Locust -  Data Query</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style_query.css" type="text/css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+        body 		{ padding-top:80px; word-wrap:break-word; }
+    </style>
+    <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <script src="//unpkg.com/flatpickr"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX94wEDdQ52lCDhKAhcfR-flIw1NyLTMA"></script>
+</head>
+<body>
+<div class="container">
+
+	<div class="page-header text-center">
+        <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px" /></a>
+        <h1><span class="fa fa-anchor"></span> FAW Project -  Data Query </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
+        <a href="/profile" class="btn btn-default btn-sm"> User Home </a>
+        <a href="/dataEntry" class="btn btn-default btn-sm"> Data Entry </a>
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+    </div>
+
+    <div id="modal" class="modal">
+        <!-- Modal content -->
+        <div id="modal-content">
+            <div id="modal-header">
+                <span id="close"></span>
+                <h2 id="header"></h2>
+            </div>
+            <div id="modal-body">
+                <p id="body"></p>
+            </div>
+            <div id="modal-footer">
+            </div>
+        </div>
+    </div>
+    <div class="containerBox">
+        <h4 class="floatingBox">Start Date: &nbsp;&nbsp;&nbsp;</h4><input class="date datePicker"required>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <h4 class="floatingBox">End Date: &nbsp;&nbsp;&nbsp;</h4><input class="date datePicker" placeholder="Select Date here" required>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+        <input type="submit" onclick="query()" value="Click here to continue">
+        <br><br>
+        <div id="map"></div>
+        <div id=dataDisplayDiv class='container'>
+            <div id="dvData">
+                <h4 id="description">Please click on row(s) content to export.</h4>
+                <table id="example">
+                </table>
+            </div>
+            <br>
+            <div class='button'>
+                <button onclick="exportTableToCSV('<%= user.username %>.csv')">Export .CSV File</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type='text/javascript'>
+
+    $(function() {
+        flatpickr(".date", {
+            dateFormat: "Y-m-d",
+            time_24hr: true
+        });
+    });
+
+    var markers = [];
+    var map;
+
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    document.getElementsByClassName("date")[0].value = date;
+    document.getElementsByClassName("date")[1].value = date;
+
+
+    function query() {
+        var startDate = document.getElementsByClassName("datePicker")[0].value;
+        var endDate = document.getElementsByClassName("datePicker")[1].value;
+        //alert(startDate + "  " + endDate);
+        if (startDate && endDate) {
+            $("#dataDisplay").remove();
+            $("#dvData").append($("<table id='dataDisplay'></table>"))
+
+            queryAndDisplay(startDate, endDate);
+        } else {
+            alert("Please Select Both Dates!");
+        }
+    }
+
+    var queryAndDisplay = function (startDate, endDate) {
+        var ajaxRequest;
+        try{
+            // Opera 8.0+, Firefox, Safari
+            ajaxRequest = new XMLHttpRequest();
+        }catch (e){
+            // Internet Explorer Browsers
+            try{
+                ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+            }catch (e) {
+                try{
+                    ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                }catch (e){
+                    // Something went wrong
+                    alert("Your browser broke!");
+                    return false;
+                }
+            }
+        }
+
+        ajaxRequest.onreadystatechange = function() {
+            //alert("xhr status: " + ajaxRequest.readyState);
+
+            if (ajaxRequest.readyState == 4 && ajaxRequest.status == 200) {
+                var ajaxReturn = JSON.parse(ajaxRequest.response);
+                //alert(ajaxReturn[0].errStatus);
+                document.getElementById("dataDisplayDiv").style.display = "none";
+
+                if (!ajaxReturn[0].errStatus) {
+
+                    document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
+                    document.getElementById("modal-footer").style.display = "none";
+                    document.getElementById("close").innerHTML = "&times";
+
+                    document.getElementById("header").innerHTML = "The results will appear after closing this !";
+                    document.getElementById("body").innerHTML = "You can click the 'X' or click anywhere on the browser to close this message .";
+
+                    var center = {lat: 0, lng: 0};
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 2,
+                        center: center,
+                        mapTypeId: 'hybrid'
+                    });
+
+                    var table = $("#dataDisplay");
+                    table.append($("<tr id='title'>"));
+                    var field = [
+                        "Username",
+                        "Title",
+                        "Date",
+                        "Location",
+                        "GPS Location (Latitude)",
+                        "GPS Location (Longitude)",
+                        "Crop Variety",
+                        "Cropping System",
+                        "Main Crop",
+                        "Planting Date",
+                        "Field Size",
+                        "Date of Last Rainfall",
+                        "Pest Species",
+                        "Presence or Absence",
+                        "Crop Damage",
+                        "Stage",
+                        "Number per Plant (Crops)",
+                        "Number per m2 (Pastures)",
+                        "Number per Trap",
+                        "% Crop Infested",
+                        "Control",
+                        "If Pesticide: Amount in Litres",
+                        "Photos of Pest (Path)",
+                        "Photos of Pest (Preview)",
+                        "Photos of Damage (Path)",
+                        "Photos of Damage (Preview)"
+                    ];
+
+                    for (var i = 0; i < field.length; i++) {
+                        $("#title").append($("<th>" + field[i] + "</th>"));
+                    }
+                    table.append($("</tr>"));
+
+                    for (var i = 0; i < ajaxReturn.length; i++){
+
+                        table.append($("<tr id='dataColumn" + (i + 1) + "' onmousedown='RowClick(this,false);'>"));
+                        $("#dataColumn" + (i + 1)).append($("<td>" + ajaxReturn[i].Username + "</td>" + "<td>" + ajaxReturn[i].Title + "</td>" + "<td>" + ajaxReturn[i].Date.substring(0,10) + "</td>" + "<td>" + ajaxReturn[i].Location + "</td>" + "<td>" + ajaxReturn[i].GPS_Location_Latitude + "</td>" + "<td>" + ajaxReturn[i].GPS_Location_Longitude + "</td>" + "<td>" + ajaxReturn[i].Crop_Variety + "</td>" + "<td>" + ajaxReturn[i].Cropping_System + "</td>" + "<td>" + ajaxReturn[i].Main_Crop + "</td>" + "<td>" + ajaxReturn[i].Planting_Date.substring(0,10) + "</td>" + "<td>" + ajaxReturn[i].Field_Size + "</td>" + "<td>" + ajaxReturn[i].Last_Rainfall_Date.substring(0,10) + "</td>" + "<td>" + ajaxReturn[i].Pest_Species + "</td>" + "<td>" + ajaxReturn[i].Presence_or_Absence + "</td>" + "<td>" + ajaxReturn[i].Crop_Damage + "</td>"  + "<td>" + ajaxReturn[i].Stage + "</td>" + "<td>" + ajaxReturn[i].Number_per_Plant + "</td>" + "<td>" + ajaxReturn[i].Number_per_Pastures + "</td>" + "<td>" + ajaxReturn[i].Number_per_Trap + "</td>" + "<td>" + ajaxReturn[i].Percentage_of_Crop_Infested + "</td>" + "<td>" + ajaxReturn[i].Control + "</td>" + "<td>" + ajaxReturn[i].Amount_of_Pesticide_in_Litres + "</td>" + "<td>" + ajaxReturn[i].Photos_of_Pest + "</td>" + "<td id='photoOfPest" + (i + 1) + "'></td>" + "<td>" + ajaxReturn[i].Photos_of_Damage + "</td>" + "<td id='photoOfDamage" + (i + 1) + "'></td>"));
+
+                        var photoOfPest = ajaxReturn[i].Photos_of_Pest.split(";");
+
+                        for (var a = 0; a < photoOfPest.length; a++) {
+                            $("#photoOfPest"  + (i + 1)).append($("<a target=\"_blank\" href='" + photoOfPest[a] + "'><img src='" + photoOfPest[a] + "' id='p" + i + a + "'></a>"));
+
+                            var popWidth = document.getElementById("p" + i + a).naturalWidth;
+                            var popHeight = document.getElementById("p" + i + a).naturalHeight;
+//                            alert("weight: " + popWidth + "     height: " + popHeight);
+                            if (popWidth > popHeight) {
+                                document.getElementById("p" + i + a).setAttribute("class", "x");
+                            } else if (popWidth < popHeight) {
+                                document.getElementById("p" + i + a).setAttribute("class", "y");
+                            } else if (popWidth === popHeight) {
+                                document.getElementById("p" + i + a).setAttribute("class", "z");
+                            }
+                        }
+
+                        var photoOfDamage = ajaxReturn[i].Photos_of_Damage.split(",");
+                        for (var b = 0; b < photoOfDamage.length; b++) {
+                            $("#photoOfDamage" + (i + 1)).append($("<a target=\"_blank\" href='" + photoOfDamage[b] + "'><img src='" + photoOfDamage[b] + "' id='d" + i + b + "'></a>"));
+
+                            var podWidth = document.getElementById("d" + i + b).naturalWidth;
+                            var podHeight = document.getElementById("d" + i + b).naturalHeight;
+                            if (podWidth > podHeight) {
+                                document.getElementById("d" + i + b).setAttribute("class", "x");
+                            } else if (podWidth < podHeight) {
+                                document.getElementById("d" + i + b).setAttribute("class", "y");
+                            } else if (podWidth === podHeight) {
+                                document.getElementById("d" + i + b).setAttribute("class", "z");
+                            }
+                        }
+
+                        table.append($("</tr>"));
+
+                        // array
+                        var latiDMS = ajaxReturn[i].GPS_Location_Latitude.split(" ");
+                        var longDMS = ajaxReturn[i].GPS_Location_Longitude.split(" ");
+                        // convert latitude & longitude from Degrees Minutes Seconds to Decimal Degree
+                        var latiDD = parseFloat(latiDMS[1].substring(0,latiDMS[1].length - 1)) + (parseFloat(latiDMS[2].substring(0,latiDMS[2].length - 1)) / 60) + (parseFloat(latiDMS[3].substring(0,latiDMS[3].length - 1)) / 3600);
+                        var longDD = parseFloat(longDMS[1].substring(0,longDMS[1].length - 1)) + (parseFloat(longDMS[2].substring(0,longDMS[2].length - 1)) / 60) + (parseFloat(longDMS[3].substring(0,longDMS[3].length - 1)) / 3600);
+                        // change to negative if S or W
+                        if (latiDMS[0] === "S") {
+                            latiDD = latiDD * -1;
+                        }
+                        if (longDMS[0] === "W") {
+                            longDD = longDD * -1;
+                        }
+
+                        var pinColor = "FE7569";
+                        var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
+                            new google.maps.Size(21, 34),
+                            new google.maps.Point(0,0),
+                            new google.maps.Point(10, 34));
+                        var pinShadow = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_shadow",
+                            new google.maps.Size(40, 37),
+                            new google.maps.Point(0, 0),
+                            new google.maps.Point(12, 35));
+
+                        var position = {lat: latiDD, lng: longDD};
+                        var marker = new google.maps.Marker({
+                            position: position,
+                            map: map
+                        });
+                        marker.DMS = ajaxReturn[i].GPS_Location_Latitude + "; " + ajaxReturn[i].GPS_Location_Longitude;
+                        markers.push(marker);
+                        markers[i].setMap(null);
+
+                    }
+
+                    document.getElementById("modal").style.display = "block";
+
+                } else if (ajaxReturn[0].errStatus === "fail") {
+
+                    document.getElementById("modal-header").style.backgroundColor = "#f44242";
+                    document.getElementById("modal-footer").style.display = "none";
+                    document.getElementById("close").innerHTML = "&times";
+
+                    document.getElementById("header").innerHTML = "Sorry. There is an error occurs during the query !";
+                    document.getElementById("body").innerHTML = "Please try again later .";
+
+                    document.getElementById("modal").style.display = "block";
+                } else if (ajaxReturn[0].errStatus === "no data entry") {
+                    document.getElementById("modal-header").style.backgroundColor = "#f44242";
+                    document.getElementById("modal-footer").style.display = "none";
+                    document.getElementById("close").innerHTML = "&times";
+                    if (startDate === endDate) {
+                        document.getElementById("header").innerHTML = "There is no data entry in " + startDate + " !";
+                    } else {
+                        document.getElementById("header").innerHTML = "There is no data entry from " + startDate + " to " + endDate + " !";
+                    }
+                    document.getElementById("body").innerHTML = "Please try again with another date .";
+
+                    document.getElementById("modal").style.display = "block";
+                }
+
+                // Get the <span> element that closes the modal
+                var span = document.getElementById("close");
+
+                // When the user clicks on <span> (x), close the modal
+                span.onclick = function () {
+                    document.getElementById("modal").style.display = "none";
+                    if (!ajaxReturn[0].errStatus) {
+                        document.getElementById("dataDisplayDiv").style.display = "block";
+                    }
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
+                };
+
+                // When the user clicks anywhere outside of the modal, close it
+                window.onclick = function (event) {
+                    if (event.target == modal) {
+                        document.getElementById("modal").style.display = "none";
+                        if (!ajaxReturn[0].errStatus) {
+                            document.getElementById("dataDisplayDiv").style.display = "block";
+                        }
+                        document.body.scrollTop = 0;
+                        document.documentElement.scrollTop = 0;
+                    }
+                };
+            }
+        };
+
+        var querystring = "?startDate=" + startDate + "&endDate=" + endDate;
+        ajaxRequest.open("GET", "/query" + querystring, true);
+        ajaxRequest.send(querystring);
+    };
+
+    function downloadCSV(csv, filename) {
+        var csvFile;
+        var downloadLink;
+
+        // CSV file
+        csvFile = new Blob([csv], {type: "text/csv"});
+
+        // Download link
+        downloadLink = document.createElement("a");
+
+        // File name
+        downloadLink.download = filename;
+
+        // Create a link to the file
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+
+        // Hide download link
+        downloadLink.style.display = "none";
+
+        // Add the link to DOM
+        document.body.appendChild(downloadLink);
+
+        // Click download link
+        downloadLink.click();
+    }
+
+    function exportTableToCSV(filename) {
+        var csv = [];
+        var rows = document.querySelectorAll(".selected, #title");
+
+        for (var i = 0; i < rows.length - 1; i++) {
+            var row = [], cols = rows[i].querySelectorAll("td, th");
+
+            for (var j = 0; j < cols.length; j++)
+                row.push(cols[j].innerText);
+
+            csv.push(row.join(","));
+        }
+
+        // Download CSV file
+        downloadCSV(csv.join("\n"), filename);
+
+    }
+
+    var lastSelectedRow;
+    var trs = document.getElementById('example').getElementsByTagName('tr');
+
+    // disable text selection
+    document.onselectstart = function() {
+        return false;
+    }
+
+    function RowClick(currenttr, lock) {
+        if (window.event.ctrlKey) {
+            toggleRow(currenttr);
+        }
+
+        if (window.event.button === 0) {
+            if (!window.event.ctrlKey && !window.event.shiftKey) {
+                clearAll();
+                toggleRow(currenttr);
+            }
+
+            if (window.event.shiftKey) {
+                selectRowsBetweenIndexes([lastSelectedRow.rowIndex, currenttr.rowIndex])
+            }
+        }
+    }
+
+    function toggleRow(row) {
+        row.className = row.className === 'selected' ? 'change' : 'selected change';
+        lastSelectedRow = row;
+        //alert(row);
+
+        changeColor();
+    }
+
+    function selectRowsBetweenIndexes(indexes) {
+        indexes.sort(function(a, b) {
+            return a - b;
+        });
+
+        for (var i = indexes[0]; i <= indexes[1]; i++) {
+            trs[i-1].className = 'selected';
+        }
+    }
+
+    function clearAll() {
+        for (var i = 0; i < trs.length; i++) {
+            trs[i].className = '';
+        }
+    }
+
+    function changeColor() {
+        //alert(document.getElementsByClassName("change")[0].innerHTML);
+        var row = document.getElementsByClassName("change")[0].innerHTML.trim().split("</td>");
+//        for (var i = 0; i < row.length; i++) {
+//            alert(row[i]);
+//        }
+        var latiLong = row[4].substring(4, row[4].length) + "; " + row[5].substring(4, row[5].length);
+        //alert(latiLong + " / " + markers[0].DMS);
+
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i].DMS === latiLong) {
+
+                if (document.getElementsByClassName("change")[0].className === "selected change") {
+                    document.getElementsByClassName("change")[0].className = "selected";
+                    markers[i].setMap(map);
+                } else if (document.getElementsByClassName("change")[0].className === "change") {
+                    document.getElementsByClassName("change")[0].className = "";
+                    markers[i].setMap(null);
+                }
+                break
+            }
+        }
+
+        //alert(markers.length)
+    }
+</script>
+</body>
+</html>
