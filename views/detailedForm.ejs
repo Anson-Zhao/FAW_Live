@@ -1,0 +1,68 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html>
+<head>
+	<title>FAW/Locust Project -  Data Entry</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="/css/style_final.css" type="text/css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+	<style>
+		body 		{ padding-top:80px; word-wrap:break-word; }
+	</style>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="//unpkg.com/flatpickr"></script>
+	<script src="/scripts/jquery.form.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBX94wEDdQ52lCDhKAhcfR-flIw1NyLTMA"></script>
+</head>
+<body>
+<div class="container">
+
+	<div id="modal" class="modal">
+		<!-- Modal content -->
+		<div id="modal-content">
+			<div id="modal-header">
+				<span id="close"></span>
+				<h2 id="header"></h2>
+			</div>
+			<div id="modal-body">
+				<p id="body"></p>
+			</div>
+			<div id="modal-footer">
+			</div>
+		</div>
+	</div>
+
+	<h1 id="title">Step 2: Detailed Form</h1>
+	<div id="container">
+		<form id="uploadForm" method = "post">
+			<div>
+				<h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= transactionID %>" readonly><br><br>
+				<h4>Pests Present: &nbsp;&nbsp;&nbsp;</h4>
+				<select id='pestsPresent' name='pestsPresent' onchange="pestSelect()" required>
+					<option value=''>SELECT THE TYPE OF THE PEST</option>
+					<option>FAW</option>
+					<option>AAW</option>
+					<option>BORER</option>
+				</select><br><br>
+			</div>
+		</form>
+	</div>
+
+</div>
+<script>
+	function pestSelect() {
+	    var pestsPresent = document.getElementById("pestsPresent").value;
+	    if (!pestsPresent) {
+
+		} else if (pestsPresent === "FAW") {
+			$("#uploadForm").append($("<div id='FAW'></div>"))
+		} else {
+	        alert("To be Developed")
+		}
+	}
+</script>
+</body>
+</html>
