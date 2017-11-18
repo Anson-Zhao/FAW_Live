@@ -28,43 +28,43 @@ module.exports = function(app, passport) {
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
 
-	// =====================================
-	// HOME PAGE (with login links) ========
-	// =====================================
-	app.get('/', function(req, res) {
+    // =====================================
+    // HOME PAGE (with login links) ========
+    // =====================================
+    app.get('/', function(req, res) {
         // res.render('index.ejs'); // load the index.ejs file
-        res.redirect('/login');
-	});
-
-	// =====================================
-	// LOGIN ===============================
-	// =====================================
-	// show the login form
-	app.get('/login', function(req, res) {
-
-		// render the page and pass in any flash data if it exists
-		res.render('login.ejs', { message: req.flash('loginMessage') });
-	});
-
-	// process the login form
-	app.post('/login', passport.authenticate('local-login', {
-            successRedirect : '/profile', // redirect to the secure profile section
-            failureRedirect : '/login', // redirect back to the signup page if there is an error
-            failureFlash : true // allow flash messages
-            }),
-        function(req, res) {
-            if (req.body.remember) {
-              req.session.cookie.maxAge = 1000 * 60 * 3;
-            } else {
-              req.session.cookie.expires = false;
-            }
         res.redirect('/login');
     });
 
-	// =====================================
-	// SIGNUP ==============================
-	// =====================================
-	// show the signup form
+    // =====================================
+    // LOGIN ===============================
+    // =====================================
+    // show the login form
+    app.get('/login', function(req, res) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('login.ejs', { message: req.flash('loginMessage') });
+    });
+
+    // process the login form
+    app.post('/login', passport.authenticate('local-login', {
+            successRedirect : '/profile', // redirect to the secure profile section
+            failureRedirect : '/login', // redirect back to the signup page if there is an error
+            failureFlash : true // allow flash messages
+        }),
+        function(req, res) {
+            if (req.body.remember) {
+                req.session.cookie.maxAge = 1000 * 60 * 3;
+            } else {
+                req.session.cookie.expires = false;
+            }
+            res.redirect('/login');
+        });
+
+    // =====================================
+    // SIGNUP ==============================
+    // =====================================
+    // show the signup form
     app.get('/signup', function (req, res) {
         // render the page and pass in any flash data if it exists
         res.render('signup.ejs', {message: req.flash('signupMessage')});
@@ -99,39 +99,39 @@ module.exports = function(app, passport) {
         });
     });
 
-	// =====================================
-	// PROFILE SECTION =========================
-	// =====================================
-	// we will want this protected so you have to be logged in to visit
-	// we will use route middleware to verify this (the isLoggedIn function)
-	app.get('/profile', isLoggedIn, function(req, res) {
+    // =====================================
+    // PROFILE SECTION =========================
+    // =====================================
+    // we will want this protected so you have to be logged in to visit
+    // we will use route middleware to verify this (the isLoggedIn function)
+    app.get('/profile', isLoggedIn, function(req, res) {
         var queryStatementTest = "SELECT userrole FROM Login_DB.users WHERE username = '" + req.user.username + "';";
-
+        console.log(req.user.username);
         connection.query(queryStatementTest, function(err, results, fields) {
-            //console.log(results);
+            console.log(results);
 
             if (!results[0].userrole) {
                 console.log("Error");
             } else if (results[0].userrole === "Admin") {
                 // process the signup form
-                res.render('profile_Admin.ejs', {
+                res.render('profile.ejs', {
                     user: req.user // get the user out of session and pass to template
                 });
             } else if (results[0].userrole === "Regular") {
-                res.render('profile_Regular.ejs', {
+                res.render('profile.ejs', {
                     user: req.user // get the user out of session and pass to template
                 });
             }
         });
-	});
+    });
 
-	// =====================================
-	// LOGOUT ==============================
-	// =====================================
-	app.get('/logout', function(req, res) {
-		req.logout();
-		res.redirect('/');
-	});
+    // =====================================
+    // LOGOUT ==============================
+    // =====================================
+    app.get('/logout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
 
     app.post('/upload', fileUpload, function(req,res){
         //console.log(req.headers.origin);
@@ -283,6 +283,59 @@ module.exports = function(app, passport) {
             }
         });
     });
+    app.get('/reset', function (req, res) {
+
+        res.render('profile.ejs',
+            {
+                user:req.user
+            });
+
+    });
+    app.post('/reset', function(req, res) {
+
+
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+        connection.query('USE ' + config.Login_db); // Locate Login DB
+        var user = req.user;
+        var newPassword = {
+            firestname: req.body.usernameF,
+            lastname: req.body.usernameL,
+            username: req.body.username,
+            currentpassword: req.body.currentpassword,
+            Newpassword: bcrypt.hashSync(req.body.newpassword, null, null),
+            ConfirmPassword:bcrypt.hashSync(req.body.Confirmpassword, null, null)
+        };
+        // var changeusername = "'UPDATE Users Set password = '" + newPassword.usernameF + "' WHERE username        "
+
+        var changepassword = "UPDATE Users SET password = '" + newPassword.Newpassword + "' WHERE username = '" + user.username + "'";
+        console.log(newPassword.Newpassword,user.username);
+        connection.query("SELECT * FROM Users WHERE username = ?",[user.username], function(err, rows){
+                       // console.log(rows);
+            var result = bcrypt.compareSync(newPassword.currentpassword, user.password);
+            console.log(result);
+            if (result) {
+                console.log("Password correct");
+                connection.query(changepassword,function(err,rows){
+
+                    if (err) {
+                    console.log(err);
+                    res.send("New Password Change Fail!");
+                    res.end();
+                } else {
+                    res.render('profile_Admin.ejs', {
+                        user: req.user // get the user out of session and pass to template
+                    });
+                }
+                })
+            } else {
+                console.log("Password wrong");
+            }
+
+    });
+});
+
+
+
 
     app.get('/query', function (req, res) {
 
