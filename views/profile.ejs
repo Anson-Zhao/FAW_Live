@@ -1,26 +1,75 @@
-<!-- views/profile.ejs -->
+<!-- views/profileBK.ejs -->
 <!doctype html>
 <html>
 <head>
 	<title>FAW/Locust Project</title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/css/Profile.css" type="text/css">
+
 	<style>
 		body 		{ padding-top:80px; word-wrap:break-word; }
 	</style>
 </head>
 <body>
+
 <div class="container">
 
 	<div class="page-header text-center">
 		<a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px" /></a>
-		<h1><span class="fa fa-anchor"></span> FAW/Locust - User Home </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
-		<a href="/dataEntry" class="btn btn-default btn-sm"> Data Entry </a>
-		<a href="/dataQuery" class="btn btn-default btn-sm"> Data Query </a>
-		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
-		<a href="/signup" class="btn btn-default btn-sm">Sign Up</a>
+
 	</div>
 
+
+		<div action="/reset" method="post">
+			<h3><strong>User Name</strong>:
+				<div>
+				First Name:<input type="text" id="INPUT" name="usernameF"  value="<%= user.firstName %>">
+				Last Name:<input type="text" id="INPUT" name="usernameL" value="<%= user.lastName %>">
+				</div>
+				<div><strong>User Role</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.userrole%></div>
+				<div><strong>Date created</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.dateCreated %></div>
+				<div> <strong>Last Modification</strong>:&nbsp;&nbsp;&nbsp;<%= user.dateModified %></div>
+				<div><strong>LoginName/Email</strong>:&nbsp;&nbsp;<%= user.username%></div>
+
+		<br>    <div><strong>Password Change</strong>:    </div>
+		</h3>
+	<div >
+		<label>CurrentPassword</label>&nbsp;&nbsp;&nbsp;
+		<input type="text" id="INPUT" name="currentpassword" maxlength="2000px">
+	</div>
+	<div>
+		<label>NewPassword</label>
+		<input type="password" id="INPUT" name="newpassword" maxlength="2000px">
+	</div>
+	<div>
+		<label>Confirm New Password</label>
+		<input type="password" id="INPUT" name="Confirmpassword" maxlength="2000px">
+	</div>
+
+	<button id="SS"  type="submit" class="btn btn-warning btn-sm"> Submit </button>
+	<a href="/cancel" class="btn btn-warning btn-sm">cancel</a>
+			<a href="/logout" class="btn btn-warning btn-sm">Logout</a>
+</form>
 </div>
+
+<script>
+
+    $("#SS").click(function() {
+        var pass1 = req.body.Newpassword;
+        var pass2 = req.body.Confirmpassword;
+        if (pass1 != pass2)
+        {
+            alert("Passwords do not match");
+            return false;
+        }
+        else
+        {
+            $( "#reset" ).submit();
+        }
+
+    });
+</script>
+
 </body>
 </html>

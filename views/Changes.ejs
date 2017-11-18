@@ -1,0 +1,59 @@
+<!-- views/profileBK.ejs -->
+<!doctype html>
+<html>
+<head>
+	<title>FAW/Locust Project</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<style>
+		body 		{ padding-top:80px; word-wrap:break-word; }
+	</style>
+</head>
+<body>
+<div class="container">
+
+	<div class="page-header text-center">
+		<a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px" /></a>
+		<form action="/Changes" method="post">
+			<h1><span class="fa fa-anchor"></span> FAW/Locust - Change Password </h1>
+			<h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username%></h4>
+		<h5><strong>Email</strong>: <%= user.email%></h5>
+		<h6><strong>Firstname</strong>:<%= user.firstName%>  <Strong>Lastname</Strong>:<%= user.lastName%></h6>
+		<br>
+		<a href="/dataEntry" class="btn btn-default btn-sm"> Data Entry </a>
+		<a href="/dataQuery" class="btn btn-default btn-sm"> Data Query </a>
+		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+		<a href="/signup" class="btn btn-default btn-sm">Sign Up</a>
+
+	</div>
+
+
+</div>
+
+<div id="1">
+
+		<div class="form-group">
+			<label>OldPassword</label>
+
+			<input type="text" class="Changes" name="username" maxlength="2000px">
+		</div>
+		<div class="form-group">
+			<label>NewPassword</label>
+			<input type="password" class="Changes" name="password" maxlength="2000px">
+		</div>
+		<div class="form-group">
+			<label>ConfirmPassword</label>
+			<input type="password" class="Changes" name="password" maxlength="2000px">
+		</div>
+
+		<button type="submit" class="btn btn-warning btn-lg"> Submit </button>
+		<a href="/profile" class="password">cancel</a>
+	</form>
+
+</div>
+</div>
+<script>
+
+</script>
+</body>
+</html>
