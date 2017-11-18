@@ -130,7 +130,11 @@
                 dataType: 'json',
                 data: $(this).serialize(),
                 success: function (result) {
-                    alert("An Unexpected Error Happens");
+                    if (!result.error) {
+                        window.location.replace('/submit')
+                    } else {
+                        alert (result.message)
+                    }
                 }
             })
         })

@@ -24,6 +24,6 @@ module.exports = {
 
     'Server_Port': 9090,
 
-    'Upload_Path': '/Users/ftaaworldbridgelab/Desktop/Test'
+    'Upload_Path': '/Users/iMacBig04/Desktop/Test'
 
 };

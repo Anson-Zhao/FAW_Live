@@ -15,7 +15,7 @@ var storage =   multer.diskStorage({
         callback(null, uploadPath);
     },
     filename: function (req, file, callback) {
-        //console.log(file.fieldname + " " + file.originalname);
+        console.log(file.fieldname + " " + file.originalname);
         filePathName += file.fieldname + '-' + file.originalname + ";";
         //console.log(filePathName);
         callback(null, file.fieldname + '-' + file.originalname);
@@ -134,35 +134,31 @@ module.exports = function(app, passport) {
         res.redirect('/');
     });
 
-    app.get('/continue', isLoggedIn, function(req,res){
-        // res.render('generalForm.ejs', {
-        //     user: req.user, // get the user out of session and pass to template
-        //     message: req.flash('Data Entry Message'),
-        //     firstname: req.user.firstName,
-        //     lastname: req.user.lastName,
-        //     transactionID: transactionID
-        // });
-
-        res.render('query_Admin.ejs', {
+    app.get('/submit', isLoggedIn, function(req,res){
+        res.render('detailedForm.ejs', {
             user: req.user, // get the user out of session and pass to template
             message: req.flash('Data Entry Message'),
             transactionID: transactionID
         });
     });
 
-    app.get('/submit', isLoggedIn, function(req,res){
-        console.log("A01");
-        res.render('query_Admin.ejs', {
+    // app.post('/submit', isLoggedIn, function(req,res){
+    //
+    // });
+
+    app.get('/continue', isLoggedIn, function(req,res){
+        // console.log("A01");
+        res.render('generalForm.ejs', {
             user: req.user, // get the user out of session and pass to template
             message: req.flash('Data Entry Message'),
+            firstname: req.user.firstName,
+            lastname: req.user.lastName,
             transactionID: transactionID
         });
     });
 
     app.post('/continue', isLoggedIn, function(req,res){
-
         res.setHeader("Access-Control-Allow-Origin", "*");
-
         console.log(req.body);
 
         var result = Object.keys(req.body).map(function(key) {
@@ -210,26 +206,29 @@ module.exports = function(app, passport) {
             console.log("Z");
             if (err) {
                 console.log(err);
-                res.json({"error": true, "message": "fail"});
+                res.json({"error": true, "message": "Insert Error! Check your entry."});
             } else {
-                var type = req.body.entryType;
-                if (type === "SCOUTING") {
-                    console.log("A1");
-                    res.redirect('/submit');
-                } else if (type === "TRAP") {
-                    console.log("B1");// console.log("B");
-                    // res.json({"error": false, "message": "detailedForm.ejs"});
-                    res.redirect('/submit');
-                }
+                res.json({"error": false, "message": "/submit"});
+                // var type = req.body.entryType;
+                // if (type === "SCOUTING") {
+                //     console.log("A1");
+                //     res.redirect('/submit');
+                // } else if (type === "TRAP") {
+                //     console.log("B1");// console.log("B");
+                //     res.redirect('/submit');
+                // }
             }
         });
     });
 
-    app.post('/upload', fileUpload, function(req,res){
+    app.post('/submit', fileUpload, function(req,res){
+        console.log("A");
+        console.log(req.body);
         //console.log(req.headers.origin);
         res.setHeader("Access-Control-Allow-Origin", "*");
 
         fileUpload(req,res,function(err) {
+            console.log("Z");
             if(err) {
                 console.log(err);
                 res.json({"error": true, "message": "Fail"});
@@ -237,6 +236,7 @@ module.exports = function(app, passport) {
                 //res.send("Error uploading file.");
             } else {
                 //console.log("Success:" + filePathName);
+                console.log(filePathName);
                 res.json({"error": false, "message": filePathName});
                 filePathName = "";
                 //res.send("File is uploaded");
@@ -282,8 +282,7 @@ module.exports = function(app, passport) {
                         console.log(err);
                     } else {
                         if (req.user.userrole === "Admin") {
-                            console.log(req.user.firstName);
-                            res.redirect('/continue');
+                            res.redirect('/submit');
 
                         } else if (req.user.userrole === "Regular") {
                             // res.render('insert_Armyworm_Regular.ejs', {
