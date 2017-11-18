@@ -64,7 +64,7 @@ app.use(session({
     store: sessionStore,
     resave: false,
     saveUninitialized: false
-    //ttl: (1 * 60 * 60),
+    //ttl: (Useless * 60 * 60),
     // cookie: {
     //     path: "/",
     //     httpOnly: true,

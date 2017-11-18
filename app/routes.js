@@ -48,7 +48,7 @@ module.exports = function(app, passport) {
 
 	// process the login form
 	app.post('/login', passport.authenticate('local-login', {
-            successRedirect : '/profile', // redirect to the secure profile section
+            successRedirect : '/userhome', // redirect to the secure profile section
             failureRedirect : '/login', // redirect back to the signup page if there is an error
             failureFlash : true // allow flash messages
             }),
@@ -92,19 +92,43 @@ module.exports = function(app, passport) {
                 res.send("New User Insert Fail!");
                 res.end();
             } else {
-                res.render('profile_Admin.ejs', {
+                res.render('user_home_Admin.ejs', {
                     user: req.user // get the user out of session and pass to template
                 });
             }
         });
     });
 
+// =====================================
+    // SIGNOUT =========================
+    // =====================================
+    //shouw the signout form
+    app.get('/signout', function (req, res) {
+        // render the page and pass in any flash data if it exists
+        res.render('signout.ejs', {message: req.flash('signoutMessage')});
+    });
+
+    app.post('/signout', passport.authenticate('local-login', {
+            successRedirect : '/userhome', // redirect to the secure profile section
+            failureRedirect : '/signout', // redirect back to the signup page if there is an error
+            failureFlash : true // allow flash messages
+        }),
+        function(req, res) {
+            if (req.body.remember) {
+                req.session.cookie.maxAge = 1000 * 60 * 3;
+            } else {
+                req.session.cookie.expires = false;
+            }
+            res.redirect('/signout');
+        });
+
+
 	// =====================================
 	// PROFILE SECTION =========================
 	// =====================================
 	// we will want this protected so you have to be logged in to visit
 	// we will use route middleware to verify this (the isLoggedIn function)
-	app.get('/profile', isLoggedIn, function(req, res) {
+	app.get('/userhome', isLoggedIn, function(req, res) {
         var queryStatementTest = "SELECT userrole FROM Login_DB.users WHERE username = '" + req.user.username + "';";
 
         connection.query(queryStatementTest, function(err, results, fields) {
@@ -114,11 +138,11 @@ module.exports = function(app, passport) {
                 console.log("Error");
             } else if (results[0].userrole === "Admin") {
                 // process the signup form
-                res.render('profile_Admin.ejs', {
+                res.render('user_home_Admin.ejs', {
                     user: req.user // get the user out of session and pass to template
                 });
             } else if (results[0].userrole === "Regular") {
-                res.render('profile_Regular.ejs', {
+                res.render('user_home_Regular.ejs', {
                     user: req.user // get the user out of session and pass to template
                 });
             }
@@ -311,6 +335,135 @@ module.exports = function(app, passport) {
                 var JSONresult = JSON.stringify(results, null, "\t");
                 res.send(JSONresult);
                 res.end();
+            }
+        });
+    });
+
+    app.get('/editUser', function (req, res) {
+
+        console.log("dQ: " + req.query.dateCreatedFrom);
+        connection.query('USE ' + config.Login_db);
+
+        var queryStat = "SELECT * FROM userss WHERE ";
+        var myQuery = [
+            {
+                fieldName: "dateCreatedFrom",
+                fieldVal: req.query.dateCreatedFrom,
+                dbCol: "dateCreated",
+                op: " >= '"
+            },
+            {
+                fieldName: "dateCreatedTo",
+                fieldVal: req.query.dateCreatedTo,
+                dbCol: "dateCreated",
+                op: " <= '"
+            },
+            {
+                fieldName: "dateModifiedFrom",
+                fieldVal: req.query.dateModifiedFrom,
+                dbCol: "dateModified",
+                op: " >= '"
+            },
+            {
+                fieldName: "dateModifiedTo",
+                fieldVal: req.query.dateModifiedTo,
+                dbCol: "dateModified",
+                op: " <= '"
+            },
+            {
+                fieldName: "firstName",
+                fieldVal: req.query.firstName,
+                dbCol: "firstName",
+                op: " = '"
+            },
+            {
+                fieldName: "lastName",
+                fieldVal: req.query.lastName,
+                dbCol: "lastName",
+                op: " = '"
+            },
+            {
+                fieldName: "userrole",
+                fieldVal: req.query.userrole,
+                dbCol: "userrole",
+                op: " = '"
+            }
+        ];
+    // console.log("length: " + myQuery.length);
+    //
+    // for (var j = 0; j < myQuery.length; j++) {
+    //     console.log("myQuery[" + j + "].fieldVal: " + !!myQuery[j].fieldVal);
+    //     // console.log([j] + ": " + myQuery[j].fieldName + ", " + myQuery[j].fieldVal + ", " + myQuery[j].dbCol);
+    //     // queryStat += myQuery[j].dbCol + myQuery[j].op + myQuery[j].fieldVal + "'";
+    //     // console.log("j = first," + "j = " + j + ":" + queryStat);
+    // }
+
+    function userQuery() {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+
+        connection.query(queryStat, function (err, results, fields) {
+
+            var status = [{errStatus: ""}];
+
+            if (err) {
+                console.log(err);
+                status[0].errStatus = "fail";
+                res.send(status);
+                res.end();
+            } else if (results.length === 0) {
+                status[0].errStatus = "no data entry";
+                res.send(status);
+                res.end();
+            } else {
+                var JSONresult = JSON.stringify(results, null, "\t");
+                console.log(JSONresult);
+                res.send(JSONresult);
+                res.end();
+            }
+        });
+    }
+    for (var i = 0; i < myQuery.length; i++) {
+        console.log("myQuery[" + i + "].fieldVal: " + !!myQuery[i].fieldVal);
+        if (!!myQuery[i].fieldVal) {
+            console.log(i);
+            if (i == 0) {
+                queryStat += myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                console.log("i = " + i + ":" + queryStat);
+            } else {
+                console.log(i + "-G");
+                queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                console.log("i = " + i + ":" + queryStat);
+                if (i == myQuery.length -1) {
+                    console.log(i + " -U");
+                    userQuery()
+                }
+            }
+        } else {
+            if (i == myQuery.length -1) {
+                console.log(i + " -U");
+                userQuery()
+            }
+        }
+    }
+  });
+app.get('/userManagement', isLoggedIn, function(req, res) {
+        var queryStatementTest = "SELECT userrole FROM Login_DB.userss WHERE username = '" + req.user.username + "';";
+
+        connection.query(queryStatementTest, function(err, results, fields) {
+
+            if (!results[0].userrole) {
+                console.log("Error");
+            } else if (results[0].userrole === "Admin") {
+                // process the signup form
+                res.render('userManagement_Admin.ejs', {
+                    user: req.user, // get the user out of session and pass to template
+                    message: req.flash('Data Entry Message')
+                });
+            } else if (results[0].userrole === "Regular") {
+                res.render('userManagement_Regular.ejs', {
+                    user: req.user, // get the user out of session and pass to template
+                    message: req.flash('Data Query Message')
+                });
             }
         });
     });

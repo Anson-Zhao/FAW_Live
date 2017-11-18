@@ -1,0 +1,321 @@
+
+<!doctype html>
+<html>
+<head>
+    <title>FAW/Locust -  User Management</title>
+    <meta charset="UTF-8">
+    <!--<link rel="stylesheet" href="/css/style_query.css" type="text/css">-->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+        body 		{ padding-top:80px; word-wrap:break-word; }
+        form{
+            margin: 20px 0;
+        }
+        form input, button{
+            padding: 5px;
+        }
+        table{
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td{
+            border: 1px solid #cdcdcd;
+        }
+        table th, table td{
+            padding: 10px;
+            text-align: left;
+        }
+        .floatingBox {
+            display: inline-block;
+        }
+        .inputBoxDate {
+            width: 10%;
+        }
+        #userListForm {
+            margin: 0 10% 0 10%;
+        }
+        #subtitles {
+            margin-right: 10%;
+        }
+        #dataDisplay {
+            overflow-x: auto;
+        }
+        table {
+            table-layout: fixed;
+        }
+        td, th {
+            vertical-align: top;
+            padding: 10px;
+            width: 150px;
+        }
+        #dvData {
+            overflow-x: scroll;
+            overflow-y: visible;
+            width: 700px;
+            margin-left: 145px;
+        }
+
+    </style>
+    <script src="//unpkg.com/flatpickr"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header text-center">
+        <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px" /></a>
+        <h1><span class="fa fa-anchor"></span> FAW Project -  User Management </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
+        <a href="/dataEntry" class="btn btn-default btn-sm"> Data Entry </a>
+        <!--<a href="/signup" class="btn btn-default btn-sm"> Sign Up </a>-->
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+        <a type="button"  href="/signup" class="btn-default btn"> Add User </a>
+
+    </div>
+
+    <!--<form>-->
+        <!--<input type="text" id="username" placeholder="Enter New Username">-->
+        <!--<input type="text" id="firstName" placeholder="Enter New First Name">-->
+        <!--<input type="text" id="lastName" placeholder="Enter New Last Name">-->
+        <!--<input type="text" id="password" placeholder="Enter New Password">-->
+        <!--<input type="radio" name="userrole" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
+        <!--<input type="radio" name="userrole" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
+        <!--<input type="button" class="add-row" value="Add Row">-->
+    <!--</form>-->
+    <div id="userListForm">
+        <div class="row">
+            <h4 class="floatingBox"><strong>Date Created:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h6 class="floatingBox">From:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateCreated" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h6 class="floatingBox">To:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateCreated" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <h4 class="floatingBox"><strong>Date Modified:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h6 class="floatingBox">From:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateModified" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;
+            <h6 class="floatingBox">To:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateModified" placeholder="Select Date">
+        </div><br>
+        <div class="row">
+            <h4 class="floatingBox"><strong>User Name:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h6 class="floatingBox">First Name:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate" type="text" id="firstName" placeholder="Enter First Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h6 class="floatingBox">Last Name:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate" type="text" id="lastName" placeholder="Enter Last Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <h4 class="floatingBox"><strong>User Role:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="userrole" id="Admin" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="userrole" id="Regular" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        <br>
+
+            <!--<input type="text" id="lastName" placeholder="Enter New Last Name">-->
+            <!--<input type="text" id="password" placeholder="Enter New Password">-->
+            <!--<input type="radio" name="userrole" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
+            <!--<input type="radio" name="userrole" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
+            <!--<input type="button" class="add-row" value="Add Row">-->
+        <input type="submit" onclick="query()" class="btn-default btn" style="color: #ffffff; background-color: #a7cb9f" value="Filter">
+        <button type="button" class="delete-row btn-default btn">Edit User(s)</button>
+        <button type="button" class="delete-row btn-default btn">Delete User(s)</button>
+    </div><br>
+    <h4 style="margin-left:75px;"><strong>Most Recent Records:</strong></h4>
+    <div id="dvData">
+
+    <!--<table>-->
+
+    <!--</table>-->
+        <table id="dataDisplay" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>User Role</th>
+                <th>Date Created</th>
+                <th>Created By</th>
+                <th>Date Last Modified</th>
+                <th>Last Modified By</th>
+                <th>Status</th>
+                <th>Last Login Time</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+            <tfoot>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>User Role</th>
+                <th>Date Created</th>
+                <th>Created By</th>
+                <th>Date Last Modified</th>
+                <th>Last Modified By</th>
+                <th>Status</th>
+                <th>Last Login Time</th>
+            </tr>
+            </tfoot>
+        </table>
+
+    </div>
+
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+            $(".add-row").click(function(){
+                var name = $("#name").val();
+                var email = $("#email").val();
+                var markup = "<tr><td><input type='checkbox' name='record'></td><td>" + name + "</td><td>" + email + "</td></tr>";
+                $("table tbody").append(markup);
+            });
+
+            // Find and remove selected table rows
+            $(".delete-row").click(function(){
+                $("table tbody").find('input[name="record"]').each(function(){
+                    if($(this).is(":checked")){
+                        $(this).parents("tr").remove();
+                    }
+                });
+            });
+            $(function() {
+                flatpickr(".date", {
+                    dateFormat: "Y-m-d",
+                    time_24hr: true
+                });
+            });
+        });
+
+
+var queryString1;
+var queryString2;
+
+        function query() {
+            alert("a");
+            var dateCreatedFrom = document.getElementsByClassName("datePicker")[0].value;
+            var dateCreatedTo = document.getElementsByClassName("datePicker")[1].value;
+            var dateModifiedFrom = document.getElementsByClassName("datePicker")[2].value;
+            var dateModifiedTo = document.getElementsByClassName("datePicker")[3].value;
+            var firstName = document.getElementById("firstName").value;
+            var lastName = document.getElementById("lastName").value;
+            var Admin = document.getElementById("Admin").checked;
+            var Regular = document.getElementById("Admin").checked;
+            if (Admin) {
+                status = document.getElementById("Admin").value;
+            } else if (Regular) {
+                status = document.getElementById("Regular").value;
+            } else {
+                status = false;
+            }
+
+
+            queryString1 = "dateCreatedFrom=" + dateCreatedFrom + "&dateCreatedTo=" + dateCreatedTo + "&dateModifiedFrom=" + dateModifiedFrom + "&dateModifiedTo=" + dateModifiedTo;
+            queryString2 = "&firstName=" + firstName + "&lastName=" + lastName + "&Admin=" + Admin + "&Regular=" + Regular;
+
+
+            var querystr = queryString1 + queryString2;
+//            alert(querystr);
+//
+//            alert(dateCreatedFrom + "  " + dateCreatedTo + dateModifiedFrom + "  " + dateModifiedTo);
+//            alert(userrole);
+            if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !Admin || !Regular) {
+                t.clear();
+
+                 queryAndDisplay(querystr);
+                alert(dateCreatedFrom + "a");
+
+            } else {
+                alert("Please Select Both Dates!");
+            }
+        }
+
+        var table = $("#dataDisplay");
+        var t = table.DataTable();
+
+        var queryAndDisplay = function (querystr) {
+
+            $.ajax({
+                url: '/editUser',
+                type: 'GET',
+                dataType: 'json',
+                async: false,
+                data: querystr,
+                success: function (resp) {
+
+//                    $("#dvData").append($("<table id='dataDisplay'></table>"));
+
+
+                      //table.append($("<tr id='title'>"));
+//                    var field = [
+//                        "Select",
+//                        "First Name",
+//                        "Last Name",
+//                        "Username",
+//                        "Password",
+//                        "User Role",
+//                        "Date Created",
+//                        "Date Last Modified"
+//                    ];
+//
+//                    for (var i = 0; i < field.length; i++) {
+//                        $("#title").append($("<th>" + field[i] + "</th>"));
+//                    }
+//                    table.append($("</tr>"));
+
+                    for (var i = 0; i < resp.length; i++) {
+//                        table.append($("<tr id='dataColumn" + (i + Useless) + "' >"));
+                        t.row.add( [
+                            resp[i].firstName,
+                            resp[i].lastName,
+                            resp[i].username,
+                            resp[i].password,
+                            resp[i].userrole,
+                            resp[i].dateCreated,
+                            resp[i].createdUser,
+                            resp[i].dateModified,
+                            resp[i].modifiedUser,
+                            resp[i].status,
+                            resp[i].lastLoginTime
+                        ] ).draw( false );
+
+//                        table.append($("<tr id='dataColumn" + (i + Useless) + "' >"));
+//                        $("#dataColumn" + (i + Useless)).append($("<td>" + "<input type='checkbox' name='record'>" + "</td>" + "<td contenteditable='true' >" + resp[i].firstName + "</td>" + "<td contenteditable='true'>" + resp[i].lastName + "</td>" + "<td contenteditable='true'>" + resp[i].username + "</td>" + "<td>" + resp[i].password + "</td>" + "<td contenteditable='true'>" + resp[i].userrole + "</td>" + "<td contenteditable='true'>" + resp[i].dateCreated + "</td>" + "<td contenteditable='true'>" + resp[i].dateModified + "</td>"));
+
+
+//                        table.append($("</tr>"));
+                    }
+                }
+
+            });
+        }
+
+
+
+//        $(function () {
+//            $("td").dblclick(function () {
+//                var OriginalContent = $(this).text();
+//
+//                $(this).addClass("cellEditing");
+//                $(this).html(" " + OriginalContent + " ");
+//                $(this).children().first().focus();
+//                $(this).children().first().keypress(function (e) {
+//                    if (e.which === 13) {
+//                        var newContent = $(this).val();
+//                        $(this).parent().text(newContent);
+//                        $(this).parent().removeClass("cellEditing");
+//                    }
+//                });
+//                $(this).children().first().blur(function(){
+//                    $(this).parent().text(OriginalContent);
+//                    $(this).parent().removeClass("cellEditing");
+//                });
+//            });
+//        });
+    </script>
+</div>
+    </body>
+</html>
