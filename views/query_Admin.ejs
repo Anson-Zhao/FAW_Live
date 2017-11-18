@@ -301,6 +301,7 @@
         };
 
         var querystring = "?startDate=" + startDate + "&endDate=" + endDate;
+        alert(querystring);
         ajaxRequest.open("GET", "/query" + querystring, true);
         ajaxRequest.send(querystring);
     };

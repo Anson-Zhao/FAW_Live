@@ -8,6 +8,10 @@
     <style>
         body 		{ padding-top:80px; word-wrap:break-word; }
     </style>
+    <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <script src="//unpkg.com/flatpickr"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 </head>
 <body>
     <div class="container">
@@ -34,15 +38,37 @@
                     <label>Remember Me</label>
                     <input type="checkbox" class="form-control" name="remember" value="yes">
                 </div>
+                <div class="form-group" hidden>
+                    <label>Login Time</label>
+                    <input type="date" id="date" class="form-control" name="lastLoginTime" readonly>
+                </div>
+                <div class="form-group" hidden>
+                    <label>Status</label>
+                    <input type="text" id="status" class="form-control" name="status" value="Active" readonly >
+                </div>
 
                 <button type="submit" class="btn btn-warning btn-lg"> Login </button>
-            </form>
 
+            </form>
             <hr>
 
             <!--<p>Need an account? <a href="/signup"> Signup </a></p>-->
             <!--<p>Or go <a href="/">home</a>.</p>-->
         </div>
     </div>
+    <script>
+            $(function () {
+                flatpickr(".date", {
+                    dateFormat: "Y-m-d",
+                    time_24hr: true
+                });
+            });
+            var today = new Date();
+            var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            var dateTime = date + ' ' + time2;
+            document.getElementById("date").value = dateTime;
+
+    </script>
 </body>
 </html>

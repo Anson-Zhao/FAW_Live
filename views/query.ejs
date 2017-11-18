@@ -41,7 +41,7 @@
         </div>
     </div>
     <div class="containerBox">
-        <h4 class="floatingBox">Start Date: &nbsp;&nbsp;&nbsp;</h4><input class="date datePicker"required>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <h4 class="floatingBox">Start Date: &nbsp;&nbsp;&nbsp;</h4><input class="date datePicker" required>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <h4 class="floatingBox">End Date: &nbsp;&nbsp;&nbsp;</h4><input class="date datePicker" placeholder="Select Date here" required>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
         <input type="submit" onclick="query()" value="Click here to continue">
         <div id=dataDisplayDiv class='container'>
@@ -78,6 +78,9 @@
 
 
     function query() {
+
+
+
         var startDate = document.getElementsByClassName("datePicker")[0].value;
         var endDate = document.getElementsByClassName("datePicker")[1].value;
         //alert(startDate + "  " + endDate);
