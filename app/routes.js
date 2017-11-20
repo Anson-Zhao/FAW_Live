@@ -455,30 +455,7 @@ module.exports = function(app, passport) {
         //     // console.log("j = first," + "j = " + j + ":" + queryStat);
         // }
 
-        function userQuery() {
-            res.setHeader("Access-Control-Allow-Origin", "*");
 
-            connection.query(queryStat, function (err, results, fields) {
-
-                var status = [{errStatus: ""}];
-
-                if (err) {
-                    console.log(err);
-                    status[0].errStatus = "fail";
-                    res.send(status);
-                    res.end();
-                } else if (results.length === 0) {
-                    status[0].errStatus = "no data entry";
-                    res.send(status);
-                    res.end();
-                } else {
-                    var JSONresult = JSON.stringify(results, null, "\t");
-                    console.log(JSONresult);
-                    res.send(JSONresult);
-                    res.end();
-                }
-            });
-        }
 
         for (var i = 0; i < myQuery.length; i++) {
             //console.log("myQuery[" + i + "].fieldVal: " + !!myQuery[i].fieldVal);
@@ -572,4 +549,29 @@ function statusUpD (req, res, next) {
     });
 
     return next();
+}
+
+function userQuery() {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+
+    connection.query(queryStat, function (err, results, fields) {
+
+        var status = [{errStatus: ""}];
+
+        if (err) {
+            console.log(err);
+            status[0].errStatus = "fail";
+            res.send(status);
+            res.end();
+        } else if (results.length === 0) {
+            status[0].errStatus = "no data entry";
+            res.send(status);
+            res.end();
+        } else {
+            var JSONresult = JSON.stringify(results, null, "\t");
+            console.log(JSONresult);
+            res.send(JSONresult);
+            res.end();
+        }
+    });
 }
