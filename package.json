@@ -160,19 +160,8 @@
       "version": "1.1.2"
     },
     "mime": "^2.0.3",
-    "mime-db": {
-      "integrity": "sha1-SNJtI1WJZRcErFkWygYAGRQmaHg=",
-      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.29.0.tgz",
-      "version": "1.29.0"
-    },
-    "mime-types": {
-      "integrity": "sha1-K4WKUuXs1RbbiXrCvodIeDBpjiM=",
-      "requires": {
-        "mime-db": "1.29.0"
-      },
-      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.16.tgz",
-      "version": "2.1.16"
-    },
+    "mime-db": "^1.31.0",
+    "mime-types": "^2.1.17",
     "morgan": "^1.9.0",
     "ms": {
       "integrity": "sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=",
@@ -284,11 +273,7 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
-    "path-to-regexp": {
-      "integrity": "sha1-32BBeABfUi8V60SQ5yR6G/qmf4w=",
-      "resolved": "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-0.1.7.tgz",
-      "version": "0.1.7"
-    },
+    "path-to-regexp": "^2.1.0",
     "process-nextick-args": {
       "integrity": "sha1-FQ4gt1ZZCtP5EJPyWk8q2L/zC6M=",
       "resolved": "https://registry.npmjs.org/process-nextick-args/-/process-nextick-args-1.0.7.tgz",
