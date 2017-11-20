@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt-nodejs');
 
 var filePathName = "";
+var transactionID;
 
 var storage =   multer.diskStorage({
     destination: function (req, file, callback) {
@@ -93,7 +94,7 @@ module.exports = function(app, passport) {
             status: req.body.status
         };
 
-        var insertQuery = "INSERT INTO users ( username, firstName, lastName, password, userrole, dateCreated, dateModified, createdUser, status) VALUES (?,?,?,?,?,?,?,?,?)";
+        var insertQuery = "INSERT INTO Users ( username, firstName, lastName, password, userrole, dateCreated, dateModified, createdUser, status) VALUES (?,?,?,?,?,?,?,?,?)";
 
         connection.query(insertQuery,[newUser.username, newUser.firstName, newUser.lastName, newUser.password, newUser.userrole, newUser.dateCreated, newUser.dateModified, newUser.createdUser, newUser.status],function(err, rows) {
 
@@ -141,7 +142,7 @@ module.exports = function(app, passport) {
 	// we will want this protected so you have to be logged in to visit
 	// we will use route middleware to verify this (the isLoggedIn function)
 	app.get('/userhome', isLoggedIn, function(req, res) {
-        var queryStatementTest = "SELECT userrole FROM Login_DB.users WHERE username = '" + req.user.username + "';";
+        var queryStatementTest = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
 
         connection.query(queryStatementTest, function(err, results, fields) {
             //console.log(results);
@@ -180,7 +181,7 @@ module.exports = function(app, passport) {
                 filePathName = "";
                 //res.send("Error uploading file.");
             } else {
-                //console.log("Success:" + filePathName);
+                console.log("Success:" + filePathName);
                 res.json({"error": false, "message": filePathName});
                 filePathName = "";
                 //res.send("File is uploaded");
@@ -188,8 +189,95 @@ module.exports = function(app, passport) {
         });
     });
 
+    app.get('/submit', isLoggedIn, function(req,res){
+        res.render('detailedForm.ejs', {
+            user: req.user, // get the user out of session and pass to template
+            message: req.flash('Data Entry Message'),
+            transactionID: transactionID
+        });
+    });
+
+    app.post('/submit', isLoggedIn, function(req,res){
+        console.log("AZ");
+    });
+
+    app.get('/continue', isLoggedIn, function(req,res){
+        // console.log("A01");
+        res.render('generalForm.ejs', {
+            user: req.user, // get the user out of session and pass to template
+            message: req.flash('Data Entry Message'),
+            firstname: req.user.firstName,
+            lastname: req.user.lastName,
+            transactionID: transactionID
+        });
+    });
+
+    app.post('/continue', isLoggedIn, function(req,res){
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        console.log(req.body);
+
+        var result = Object.keys(req.body).map(function(key) {
+            return [String(key), req.body[key]];
+        });
+
+        var name = "";
+        var value = "";
+
+        for (var i = 0; i < result.length; i++) {
+            if (result[i][0] === "latitudeDirection" || result[i][0] === "longitudeDirection") {
+                // lati and long
+                name += result[i][0].substring(0, result[i][0].length - 9) + ", ";
+                value += '"' + result[i][1] + " " + result[i + 1][1] + "° " + result[i + 2][1] + "' " + result[i + 3][1] + "''" + '"' + ", ";
+                i = i + 3;
+            } else if (result[i][0] === "rota_inter_crop" && result[i][1] === "OTHER") {
+                // other main crop
+                name += result[i][0] + ", ";
+                value += '"' + result[i + 1][1] + '"' + ", ";
+                i = i + 1;
+            } else if (result[i][0] === "fieldSizeInteger") {
+                // field size
+                name += result[i][0].substring(0, result[i][0].length - 7) + ", ";
+                // one decimal place = divide by 10
+                value += '"' + (parseFloat(result[i][1]) + (result[i + 1][1] / 10)) + '"' + ", ";
+                i = i + 1;
+            } else {
+                // normal
+                if (result[i][1] !== "") {
+                    name += result[i][0] + ", ";
+                    value += '"' + result[i][1] + '"' + ", ";
+                }
+            }
+        }
+        name = name.substring(0, name.length - 2);
+        value = value.substring(0, value.length - 2);
+
+        // console.log(name);
+        // console.log(value);
+        var deleteStatement = "DELETE FROM FAW.General_Form WHERE transactionID = '" + transactionID + "'; ";
+        var insertStatement = "INSERT INTO FAW.General_Form (" + name + ") VALUES (" + value + ");";
+        console.log(insertStatement);
+
+        connection.query(deleteStatement + insertStatement, function(err, results, fields) {
+            console.log("Z");
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "Insert Error! Check your entry."});
+            } else {
+                res.json({"error": false, "message": "/submit"});
+                // var type = req.body.entryType;
+                // if (type === "SCOUTING") {
+                //     console.log("A1");
+                //     res.redirect('/submit');
+                // } else if (type === "TRAP") {
+                //     console.log("B1");// console.log("B");
+                //     res.redirect('/submit');
+                // }
+            }
+        });
+    });
+
     app.get('/dataEntry', isLoggedIn, function(req, res) {
-        var queryStatementTest = "SELECT userrole FROM users WHERE username = '" + req.user.username + "';";
+        var queryStatementTest = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
 
         connection.query(queryStatementTest, function(err, results, fields) {
 
@@ -211,29 +299,39 @@ module.exports = function(app, passport) {
     });
 
     app.get('/dataEntry1', isLoggedIn, function(req, res) {
-        var queryStatementTest = "SELECT userrole FROM users WHERE username = '" + req.user.username + "';";
+        var d = new Date();
+        var utcDateTime = d.getUTCFullYear() + "-" + ('0' + (d.getUTCMonth() + 1)).slice(-2) + "-" + ('0' + d.getUTCDate()).slice(-2);
+        var queryStatementTest = "SELECT COUNT(transactionID) AS number FROM FAW.Transaction WHERE transactionID LIKE '" + utcDateTime + "%';";
 
         connection.query(queryStatementTest, function(err, results, fields) {
+            transactionID = utcDateTime + "_" + ('0000' + (results[0].number + 1)).slice(-5);
+            if (err) {
+                console.log(err);
+            } else {
+                var queryStatementTest2 = "INSERT INTO FAW.Transaction (transactionID, Cr_UN) VALUE (" + "'" + transactionID + "', '" + req.user.username + "');";
+                connection.query(queryStatementTest2, function(err, results, fields) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        if (req.user.userrole === "Admin") {
+                            console.log(req.user.firstName);
+                            res.redirect('/submit');
 
-            if (!results[0].userrole) {
-                console.log("Error");
-            } else if (results[0].userrole === "Admin") {
-                // process the signup form
-                res.render('insert_Armyworm_Admin.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Entry Message')
-                });
-            } else if (results[0].userrole === "Regular") {
-                res.render('insert_Armyworm_Regular.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Entry Message')
+                        } else if (req.user.userrole === "Regular") {
+                            // res.render('insert_Armyworm_Regular.ejs', {
+                            //     user: req.user, // get the user out of session and pass to template
+                            //     message: req.flash('Data Entry Message')
+                            // });
+                            res.redirect('/continue');
+                        }
+                    }
                 });
             }
         });
     });
 
     app.get('/dataEntry2', isLoggedIn, function(req, res) {
-        var queryStatementTest = "SELECT userrole FROM users WHERE username = '" + req.user.username + "';";
+        var queryStatementTest = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
 
         connection.query(queryStatementTest, function(err, results, fields) {
 
@@ -255,7 +353,7 @@ module.exports = function(app, passport) {
     });
 
     app.get('/dataEntry3', isLoggedIn, function(req, res) {
-        var queryStatementTest = "SELECT userrole FROM Login_DB.users WHERE username = '" + req.user.username + "';";
+        var queryStatementTest = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
 
         connection.query(queryStatementTest, function(err, results, fields) {
 
@@ -299,7 +397,7 @@ module.exports = function(app, passport) {
 
     // show the data query form
     app.get('/dataQuery', isLoggedIn, function(req, res) {
-        var queryStatementTest = "SELECT userrole FROM users WHERE username = '" + req.user.username + "';";
+        var queryStatementTest = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
 
         connection.query(queryStatementTest, function(err, results, fields) {
 
@@ -529,10 +627,10 @@ module.exports = function(app, passport) {
 // route middleware to make sure
 function isLoggedIn(req, res, next) {
 
-	// if user is authenticated in the session, carry on
-	if (req.isAuthenticated())
-		return next();
+    // if user is authenticated in the session, carry on
+    if (req.isAuthenticated())
+        return next();
 
-	// if they aren't redirect them to the home page
-	res.redirect('/');
+    // if they aren't redirect them to the home page
+    res.redirect('/');
 }
