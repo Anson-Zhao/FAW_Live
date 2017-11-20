@@ -1,4 +1,3 @@
-<!-- views/profile.ejs -->
 <!doctype html>
 <html>
 <head>
@@ -50,6 +49,21 @@
         #dataDisplay {
             overflow-x: auto;
         }
+        table {
+            table-layout: fixed;
+        }
+        td, th {
+            vertical-align: top;
+            padding: 10px;
+            width: 150px;
+        }
+        #dvData {
+            overflow-x: scroll;
+            overflow-y: visible;
+            width: 700px;
+            margin-left: 145px;
+        }
+
     </style>
     <script src="//unpkg.com/flatpickr"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -99,7 +113,6 @@
             <input type="radio" name="userrole" id="Admin" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;
             <input type="radio" name="userrole" id="Regular" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
-
         <br>
 
             <!--<input type="text" id="lastName" placeholder="Enter New Last Name">-->
@@ -108,10 +121,10 @@
             <!--<input type="radio" name="userrole" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
             <!--<input type="button" class="add-row" value="Add Row">-->
         <input type="submit" onclick="query()" class="btn-default btn" style="color: #ffffff; background-color: #a7cb9f" value="Filter">
-        <button type="button" class="btn-default btn" id="editUserButton">Edit User(s)</button>
-        <button type="button" class="btn-default btn">Delete User(s)</button>
+        <button type="button" class="delete-row btn-default btn">Edit User(s)</button>
+        <button type="button" class="delete-row btn-default btn">Delete User(s)</button>
     </div><br>
-    <h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
+    <h4 style="margin-left:75px;"><strong>Most Recent Records:</strong></h4>
     <div id="dvData">
 
     <!--<table>-->
@@ -162,7 +175,7 @@
         var queryString1;
         var queryString2;
 
-        $(document).ready(function(){
+//        $(document).ready(function(){
 //            $(".add-row").click(function(){
 //                var name = $("#name").val();
 //                var email = $("#email").val();
@@ -178,12 +191,29 @@
 //                    }
 //                });
 //            });
+        $(document).ready(function(){
+            $(".add-row").click(function(){
+                var name = $("#name").val();
+                var email = $("#email").val();
+                var markup = "<tr><td><input type='checkbox' name='record'></td><td>" + name + "</td><td>" + email + "</td></tr>";
+                $("table tbody").append(markup);
+            });
+
+            // Find and remove selected table rows
+            $(".delete-row").click(function(){
+                $("table tbody").find('input[name="record"]').each(function(){
+                    if($(this).is(":checked")){
+                        $(this).parents("tr").remove();
+                    }
+                });
+            });
             $(function() {
                 flatpickr(".date", {
                     dateFormat: "Y-m-d",
                     time_24hr: true
                 });
             });
+        });
 
             var table = $('#dataDisplay').DataTable();
 
