@@ -73,7 +73,6 @@
 </head>
 <body>
 <div class="container">
-
     <div class="page-header text-center">
         <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px" /></a>
         <h1><span class="fa fa-anchor"></span> FAW Project -  User Management </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
@@ -82,7 +81,6 @@
         <!--<a href="/signup" class="btn btn-default btn-sm"> Sign Up </a>-->
         <a href="/logout" class="btn btn-default btn-sm">Logout</a>
         <a type="button"  href="/signup" class="btn-default btn"> Add User </a>
-
     </div>
 
     <!--<form>-->
@@ -94,6 +92,7 @@
         <!--<input type="radio" name="userrole" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
         <!--<input type="button" class="add-row" value="Add Row">-->
     <!--</form>-->
+
     <div id="userListForm">
         <div class="row">
             <h4 class="floatingBox"><strong>Date Created:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -103,7 +102,8 @@
             <h4 class="floatingBox"><strong>Date Modified:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <h6 class="floatingBox">From:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateModified" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;
             <h6 class="floatingBox">To:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateModified" placeholder="Select Date">
-        </div><br>
+        </div>
+        <br>
         <div class="row">
             <h4 class="floatingBox"><strong>User Name:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <h6 class="floatingBox">First Name:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate" type="text" id="firstName" placeholder="Enter First Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -120,16 +120,16 @@
             <!--<input type="radio" name="userrole" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
             <!--<input type="radio" name="userrole" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
             <!--<input type="button" class="add-row" value="Add Row">-->
+
         <input type="submit" onclick="query()" class="btn-default btn" style="color: #ffffff; background-color: #a7cb9f" value="Filter">
         <button type="button" class="delete-row btn-default btn">Edit User(s)</button>
         <button type="button" class="delete-row btn-default btn">Delete User(s)</button>
-    </div><br>
+    </div>
+    <br>
     <h4 style="margin-left:75px;"><strong>Most Recent Records:</strong></h4>
+
     <div id="dvData">
 
-    <!--<table>-->
-
-    <!--</table>-->
         <table id="dataDisplay" cellspacing="0" width="100%">
             <thead>
             <tr>
@@ -174,24 +174,19 @@
         var rowSelected = [];
         var queryString1;
         var queryString2;
+        var querystr = queryString1 + queryString2;
+        var table = $('#dataDisplay').DataTable();
+//        var table = $("#dataDisplay");
+//        var t = table.DataTable();
 
-//        $(document).ready(function(){
-//            $(".add-row").click(function(){
-//                var name = $("#name").val();
-//                var email = $("#email").val();
-//                var markup = "<tr><td><input type='checkbox' name='record'></td><td>" + name + "</td><td>" + email + "</td></tr>";
-//                $("table tbody").append(markup);
-//            });
-//
-//            // Find and remove selected table rows
-//            $(".delete-row").click(function(){
-//                $("table tbody").find('input[name="record"]').each(function(){
-//                    if($(this).is(":checked")){
-//                        $(this).parents("tr").remove();
-//                    }
-//                });
-//            });
         $(document).ready(function(){
+            $(function() {
+                flatpickr(".date", {
+                    dateFormat: "Y-m-d",
+                    time_24hr: true
+                });
+            });
+
             $(".add-row").click(function(){
                 var name = $("#name").val();
                 var email = $("#email").val();
@@ -207,21 +202,11 @@
                     }
                 });
             });
-            $(function() {
-                flatpickr(".date", {
-                    dateFormat: "Y-m-d",
-                    time_24hr: true
-                });
-            });
-        });
-
-            var table = $('#dataDisplay').DataTable();
 
             $('#dataDisplay tbody').on( 'click', 'tr', function () {
                 if ( $(this).hasClass('selected') ) {
                     $(this).removeClass('selected');
-                }
-                else {
+                } else {
                     table.$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
 
@@ -280,34 +265,8 @@
                         }
                     ]
 
-
                 }
             } );
-
-            alert (d);
-            alert ("Row: " + rowSelected[1].Name);
-            console.log(rowSelected[2].Name);
-            console.log(rowSelected[2].Value);
-//
-//            $('#button').click( function () {
-//                table.row('.selected').remove().draw( false );
-//            } );
-
-//            var stri = "";
-//
-//            for ( var i = 0; i < rowSelected.length; i++ ) {
-//                if (i === rowSelected.length - 1) {
-//                    stri += rowSelected[i].Name + "=" + rowSelected[i].Value;
-//                    alert("last: " + stri);
-//                } else {
-//                    stri += rowSelected[i].Name + "=" + rowSelected[i].Value + "&";
-//                }
-//            }
-
-
-
-
-            var str12 = "ColName=123&Valu=456";
 
             $("#editUserButton").on("click", function () {
                 alert ("edit Click!")
@@ -321,8 +280,17 @@
 
                     }
                 })
-            })
+            });
         });
+
+        function dataPrepare () {
+            alert (d);
+            alert ("Row: " + rowSelected[1].Name);
+            console.log(rowSelected[2].Name);
+            console.log(rowSelected[2].Value);
+
+            //var str12 = "ColName=123&Valu=456";
+        }
 
         function query() {
             //alert("a");
@@ -342,29 +310,20 @@
                 status = false;
             }
 
-
             queryString1 = "dateCreatedFrom=" + dateCreatedFrom + "&dateCreatedTo=" + dateCreatedTo + "&dateModifiedFrom=" + dateModifiedFrom + "&dateModifiedTo=" + dateModifiedTo;
             queryString2 = "&firstName=" + firstName + "&lastName=" + lastName + "&Admin=" + Admin + "&Regular=" + Regular;
 
-
-            var querystr = queryString1 + queryString2;
             alert(querystr);
-//
-//            alert(dateCreatedFrom + "  " + dateCreatedTo + dateModifiedFrom + "  " + dateModifiedTo);
-//            alert(userrole);
-            if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !Admin || !Regular) {
-                t.clear();
 
-                 queryAndDisplay(querystr);
-                //alert(dateCreatedFrom + "a");
+            if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !Admin || !Regular) {
+
+                table.clear();
+                queryAndDisplay(querystr);
 
             } else {
                 alert("Please Select Both Dates!");
             }
         }
-
-        var table = $("#dataDisplay");
-        var t = table.DataTable();
 
         var queryAndDisplay = function (querystr) {
 
@@ -375,11 +334,24 @@
                 async: false,
                 data: querystr,
                 success: function (resp) {
+                    for (var i = 0; i < resp.length; i++) {
+                        table.row.add( [
+                            resp[i].firstName,
+                            resp[i].lastName,
+                            resp[i].username,
+                            resp[i].password,
+                            resp[i].userrole,
+                            resp[i].dateCreated,
+                            resp[i].createdUser,
+                            resp[i].dateModified,
+                            resp[i].modifiedUser,
+                            resp[i].status,
+                            resp[i].lastLoginTime
+                        ] ).draw( false );
 
 //                    $("#dvData").append($("<table id='dataDisplay'></table>"));
-
-
-                      //table.append($("<tr id='title'>"));
+//
+//                      table.append($("<tr id='title'>"));
 //                    var field = [
 //                        "Select",
 //                        "First Name",
@@ -396,56 +368,36 @@
 //                    }
 //                    table.append($("</tr>"));
 
-                    for (var i = 0; i < resp.length; i++) {
-//                        table.append($("<tr id='dataColumn" + (i + 1) + "' >"));
-                        t.row.add( [
-                            resp[i].firstName,
-                            resp[i].lastName,
-                            resp[i].username,
-                            resp[i].password,
-                            resp[i].userrole,
-                            resp[i].dateCreated,
-                            resp[i].createdUser,
-                            resp[i].dateModified,
-                            resp[i].modifiedUser,
-                            resp[i].status,
-                            resp[i].lastLoginTime
-                        ] ).draw( false );
-
 //                        table.append($("<tr id='dataColumn" + (i + 1) + "' >"));
 //                        $("#dataColumn" + (i + 1)).append($("<td>" + "<input type='checkbox' name='record'>" + "</td>" + "<td contenteditable='true' >" + resp[i].firstName + "</td>" + "<td contenteditable='true'>" + resp[i].lastName + "</td>" + "<td contenteditable='true'>" + resp[i].username + "</td>" + "<td>" + resp[i].password + "</td>" + "<td contenteditable='true'>" + resp[i].userrole + "</td>" + "<td contenteditable='true'>" + resp[i].dateCreated + "</td>" + "<td contenteditable='true'>" + resp[i].dateModified + "</td>"));
-
 
 //                        table.append($("</tr>"));
                     }
                 }
-
             });
         }
 
-
-
-//        $(function () {
-//            $("td").dblclick(function () {
-//                var OriginalContent = $(this).text();
-//
-//                $(this).addClass("cellEditing");
-//                $(this).html(" " + OriginalContent + " ");
-//                $(this).children().first().focus();
-//                $(this).children().first().keypress(function (e) {
-//                    if (e.which === 13) {
-//                        var newContent = $(this).val();
-//                        $(this).parent().text(newContent);
-//                        $(this).parent().removeClass("cellEditing");
-//                    }
-//                });
-//                $(this).children().first().blur(function(){
-//                    $(this).parent().text(OriginalContent);
-//                    $(this).parent().removeClass("cellEditing");
-//                });
-//            });
-//        });
+        //        $(function () {
+        //            $("td").dblclick(function () {
+        //                var OriginalContent = $(this).text();
+        //
+        //                $(this).addClass("cellEditing");
+        //                $(this).html(" " + OriginalContent + " ");
+        //                $(this).children().first().focus();
+        //                $(this).children().first().keypress(function (e) {
+        //                    if (e.which === 13) {
+        //                        var newContent = $(this).val();
+        //                        $(this).parent().text(newContent);
+        //                        $(this).parent().removeClass("cellEditing");
+        //                    }
+        //                });
+        //                $(this).children().first().blur(function(){
+        //                    $(this).parent().text(OriginalContent);
+        //                    $(this).parent().removeClass("cellEditing");
+        //                });
+        //            });
+        //        });
     </script>
 </div>
-    </body>
+</body>
 </html>

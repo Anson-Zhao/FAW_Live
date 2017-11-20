@@ -105,128 +105,123 @@
 		<h5 class="floatingBox3">Content:<input></h5>
 	</div><br>
 	<div class="center">
-<button id="button" class="btn btn-primary btn-sm" type="button">Filter</button>
-<button id="button" class="btn btn-primary btn-sm" type="button">Edit</button>
-<button id="button" class="btn btn-primary btn-sm" type="button">Delete</button>
+		<button id="button" class="btn btn-primary btn-sm" type="button">Filter</button>
+		<button id="button" class="btn btn-primary btn-sm" type="button">Edit</button>
+		<button id="button" class="btn btn-primary btn-sm" type="button">Delete</button>
 	</div>
-<br>
-<div class="center">
+	<br>
+    <div class="center">
 	<h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
-<div id="table">
-	<table style="width:28%;">
-	<thead>
-	<tr>
-		<th>First Name</th>
-		<th>Last Name</th>
-		<th>Entry Column 1</th>
-		<th>Entry Column 2</th>
-		<th>Entry Column 3</th>
-		<th>Entry Column 4</th>
-		<th>Entry Column 5</th>
-	</tr>
-	</thead>
-	<tbody>
+    <div id="table">
+        <table style="width:28%;">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Entry Column 1</th>
+            <th>Entry Column 2</th>
+            <th>Entry Column 3</th>
+            <th>Entry Column 4</th>
+            <th>Entry Column 5</th>
+        </tr>
+        </thead>
+        <tbody>
 
-	</tbody>
-	<tfoot>
-	<tr>
-		<th>First Name</th>
-		<th>Last Name</th>
-		<th>Entry Column 1</th>
-		<th>Entry Column 2</th>
-		<th>Entry Column 3</th>
-		<th>Entry Column 4</th>
-		<th>Entry Column 5</th>
-	</tr>
-	</tfoot>
-	</table>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Entry Column 1</th>
+            <th>Entry Column 2</th>
+            <th>Entry Column 3</th>
+            <th>Entry Column 4</th>
+            <th>Entry Column 5</th>
+        </tr>
+        </tfoot>
+        </table>
+    </div>
 </div>
-	</div>
-	<script type='text/javascript'>
+</div>
+<script type='text/javascript'>
+    var queryString1;
+    var queryString2;
+    var table = $("#dataDisplay");
+    var t = table.DataTable();
 
-        $(document).ready(function(){
-            $(".add-row").click(function(){
-                var name = $("#name").val();
-                var email = $("#email").val();
-                var markup = "<tr><td><input type='checkbox' name='record'></td><td>" + name + "</td><td>" + email + "</td></tr>";
-                $("table tbody").append(markup);
-            });
-
-            // Find and remove selected table rows
-            $(".delete-row").click(function(){
-                $("table tbody").find('input[name="record"]').each(function(){
-                    if($(this).is(":checked")){
-                        $(this).parents("tr").remove();
-                    }
-                });
-            });
-            $(function() {
-                flatpickr(".date", {
-                    dateFormat: "Y-m-d",
-                    time_24hr: true
-                });
-            });
+    $(document).ready(function(){
+        $(".add-row").click(function(){
+            var name = $("#name").val();
+            var email = $("#email").val();
+            var markup = "<tr><td><input type='checkbox' name='record'></td><td>" + name + "</td><td>" + email + "</td></tr>";
+            $("table tbody").append(markup);
         });
 
-        var queryString1;
-        var queryString2;
+        // Find and remove selected table rows
+        $(".delete-row").click(function(){
+            $("table tbody").find('input[name="record"]').each(function(){
+                if($(this).is(":checked")){
+                    $(this).parents("tr").remove();
+                }
+            });
+        });
+        $(function() {
+            flatpickr(".date", {
+                dateFormat: "Y-m-d",
+                time_24hr: true
+            });
+        });
+    });
 
-        function query() {
-            alert("a");
-            var dateCreatedFrom = document.getElementsByClassName("datePicker")[0].value;
-            var dateCreatedTo = document.getElementsByClassName("datePicker")[1].value;
-            var dateModifiedFrom = document.getElementsByClassName("datePicker")[2].value;
-            var dateModifiedTo = document.getElementsByClassName("datePicker")[3].value;
-            var firstName = document.getElementById("firstName").value;
-            var lastName = document.getElementById("lastName").value;
-            var Admin = document.getElementById("Admin").checked;
-            var Regular = document.getElementById("Admin").checked;
-            if (Admin) {
-                status = document.getElementById("Admin").value;
-            } else if (Regular) {
-                status = document.getElementById("Regular").value;
-            } else {
-                status = false;
-            }
-
-
-            queryString1 = "dateCreatedFrom=" + dateCreatedFrom + "&dateCreatedTo=" + dateCreatedTo + "&dateModifiedFrom=" + dateModifiedFrom + "&dateModifiedTo=" + dateModifiedTo;
-            queryString2 = "&firstName=" + firstName + "&lastName=" + lastName + "&Admin=" + Admin + "&Regular=" + Regular;
-
-
-            var querystr = queryString1 + queryString2;
-//            alert(querystr);
-//
-//            alert(dateCreatedFrom + "  " + dateCreatedTo + dateModifiedFrom + "  " + dateModifiedTo);
-//            alert(userrole);
-            if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !Admin || !Regular) {
-                $("table tbody").empty().append(queryAndDisplay(querystr));
-
-//                queryAndDisplay(querystr);
-                alert(dateCreatedFrom + "a");
-
-            } else {
-                alert("Please Select Both Dates!");
-            }
+    function query() {
+        alert("a");
+        var dateCreatedFrom = document.getElementsByClassName("datePicker")[0].value;
+        var dateCreatedTo = document.getElementsByClassName("datePicker")[1].value;
+        var dateModifiedFrom = document.getElementsByClassName("datePicker")[2].value;
+        var dateModifiedTo = document.getElementsByClassName("datePicker")[3].value;
+        var firstName = document.getElementById("firstName").value;
+        var lastName = document.getElementById("lastName").value;
+        var Admin = document.getElementById("Admin").checked;
+        var Regular = document.getElementById("Admin").checked;
+        if (Admin) {
+            status = document.getElementById("Admin").value;
+        } else if (Regular) {
+            status = document.getElementById("Regular").value;
+        } else {
+            status = false;
         }
 
-        var table = $("#dataDisplay");
-        var t = table.DataTable();
 
-        var queryAndDisplay = function (querystr) {
+        queryString1 = "dateCreatedFrom=" + dateCreatedFrom + "&dateCreatedTo=" + dateCreatedTo + "&dateModifiedFrom=" + dateModifiedFrom + "&dateModifiedTo=" + dateModifiedTo;
+        queryString2 = "&firstName=" + firstName + "&lastName=" + lastName + "&Admin=" + Admin + "&Regular=" + Regular;
 
-            $.ajax({
-                url: '/Test',
-                type: 'GET',
-                dataType: 'json',
-                async: false,
-                data: querystr,
-                success: function (resp) {
+
+        var querystr = queryString1 + queryString2;
+
+        if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !Admin || !Regular) {
+            $("table tbody").empty().append(queryAndDisplay(querystr));
+
+                queryAndDisplay(querystr);
+            alert(dateCreatedFrom + "a");
+        } else {
+            alert("Please Select Both Dates!");
+        }
+    }
+
+    var queryAndDisplay = function (querystr) {
+
+        $.ajax({
+            url: '/Test',
+            type: 'GET',
+            dataType: 'json',
+            async: false,
+            data: querystr,
+            success: function (resp) {
 
 //                    $("#dvData").append($("<table id='dataDisplay'></table>"));
 
 
-                    //table.append($("<tr id='title'>"));
+                //table.append($("<tr id='title'>"));
 //                    var field = [
 //                        "Select",
 //                        "First Name",
@@ -243,32 +238,32 @@
 //                    }
 //                    table.append($("</tr>"));
 
-                    for (var i = 0; i < resp.length; i++) {
+                for (var i = 0; i < resp.length; i++) {
 //                        table.append($("<tr id='dataColumn" + (i + Useless) + "' >"));
-                        t.row.add( [
-                            resp[i].firstName,
-                            resp[i].lastName,
-                            resp[i].username,
-                            resp[i].password,
-                            resp[i].userrole,
-                            resp[i].dateCreated,
-                            resp[i].createdUser,
-                            resp[i].dateModified,
-                            resp[i].modifiedUser,
-                            resp[i].status,
-                            resp[i].lastLoginTime
-                        ] ).draw( false );
+                    t.row.add( [
+                        resp[i].firstName,
+                        resp[i].lastName,
+                        resp[i].username,
+                        resp[i].password,
+                        resp[i].userrole,
+                        resp[i].dateCreated,
+                        resp[i].createdUser,
+                        resp[i].dateModified,
+                        resp[i].modifiedUser,
+                        resp[i].status,
+                        resp[i].lastLoginTime
+                    ] ).draw( false );
 
 //                        table.append($("<tr id='dataColumn" + (i + Useless) + "' >"));
 //                        $("#dataColumn" + (i + Useless)).append($("<td>" + "<input type='checkbox' name='record'>" + "</td>" + "<td contenteditable='true' >" + resp[i].firstName + "</td>" + "<td contenteditable='true'>" + resp[i].lastName + "</td>" + "<td contenteditable='true'>" + resp[i].username + "</td>" + "<td>" + resp[i].password + "</td>" + "<td contenteditable='true'>" + resp[i].userrole + "</td>" + "<td contenteditable='true'>" + resp[i].dateCreated + "</td>" + "<td contenteditable='true'>" + resp[i].dateModified + "</td>"));
 
 
 //                        table.append($("</tr>"));
-                    }
                 }
+            }
 
-            });
-        }
-	</script>
+        });
+    }
+</script>
 </body>
 </html>
