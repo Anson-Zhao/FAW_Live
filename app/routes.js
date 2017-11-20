@@ -15,7 +15,7 @@ var storage =   multer.diskStorage({
         callback(null, uploadPath);
     },
     filename: function (req, file, callback) {
-        console.log(file.fieldname + " " + file.originalname);
+        //console.log(file.fieldname + " " + file.originalname);
         filePathName += file.fieldname + '-' + file.originalname + ";";
         //console.log(filePathName);
         callback(null, file.fieldname + '-' + file.originalname);
@@ -134,6 +134,25 @@ module.exports = function(app, passport) {
         res.redirect('/');
     });
 
+    app.post('/upload', fileUpload, function(req,res){
+        //console.log(req.headers.origin);
+        res.setHeader("Access-Control-Allow-Origin", "*");
+
+        fileUpload(req,res,function(err) {
+            if(err) {
+                console.log(err);
+                res.json({"error": true, "message": "Fail"});
+                filePathName = "";
+                //res.send("Error uploading file.");
+            } else {
+                console.log("Success:" + filePathName);
+                res.json({"error": false, "message": filePathName});
+                filePathName = "";
+                //res.send("File is uploaded");
+            }
+        });
+    });
+
     app.get('/submit', isLoggedIn, function(req,res){
         res.render('detailedForm.ejs', {
             user: req.user, // get the user out of session and pass to template
@@ -142,9 +161,9 @@ module.exports = function(app, passport) {
         });
     });
 
-    // app.post('/submit', isLoggedIn, function(req,res){
-    //
-    // });
+    app.post('/submit', isLoggedIn, function(req,res){
+        console.log("AZ");
+    });
 
     app.get('/continue', isLoggedIn, function(req,res){
         // console.log("A01");
@@ -221,29 +240,6 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.post('/submit', fileUpload, function(req,res){
-        console.log("A");
-        console.log(req.body);
-        //console.log(req.headers.origin);
-        res.setHeader("Access-Control-Allow-Origin", "*");
-
-        fileUpload(req,res,function(err) {
-            console.log("Z");
-            if(err) {
-                console.log(err);
-                res.json({"error": true, "message": "Fail"});
-                filePathName = "";
-                //res.send("Error uploading file.");
-            } else {
-                //console.log("Success:" + filePathName);
-                console.log(filePathName);
-                res.json({"error": false, "message": filePathName});
-                filePathName = "";
-                //res.send("File is uploaded");
-            }
-        });
-    });
-
     app.get('/dataEntry', isLoggedIn, function(req, res) {
         var queryStatementTest = "SELECT userrole FROM FAW.Users WHERE username = '" + req.user.username + "';";
 
@@ -282,6 +278,7 @@ module.exports = function(app, passport) {
                         console.log(err);
                     } else {
                         if (req.user.userrole === "Admin") {
+                            console.log(req.user.firstName);
                             res.redirect('/submit');
 
                         } else if (req.user.userrole === "Regular") {

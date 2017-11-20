@@ -128,12 +128,67 @@
 
     $(function(){
 
+        $('#insertForm').submit(function(e) {
+            alert("A");
+            // Prevent form submission
+            e.preventDefault();
+
+            $.ajax({
+                type: "post",
+                url: $(this).attr("action"),
+                dataType: 'json',
+                data: $(this).serialize(),
+                beforeSend: showRequest,
+                success: function (result) {
+                    if (!result.error) {
+                        window.location.replace('/submit')
+                    } else {
+                        alert (result.message)
+                    }
+                }
+            })
+        })
+
+//        var options = {
+//            url:       '/submit',    // override for form's 'action' attribute
+//            type:      'post',        // 'get' or 'post', override for form's 'method' attribute
+//            dataType:  'json',        // 'xml', 'script', or 'json' (expected server response type)
+//            clearForm: true,        // clear all form fields after successful submit
+//            success:       showResponse  // post-submit callback
+//
+//            //target:        '#output2',   // target element(s) to be updated with server response
+//            // other available options:
+//            //resetForm: true        // reset the form after successful submit
+//            // $.ajax options can be used here too, for example:
+//            //timeout:   3000
+//        };
+//
+//        $('#insertForm').submit(function(e) {
+//            // Prevent form submission
+//            e.preventDefault();
+//
+//            $(this).ajaxSubmit(options);
+//        })
+    });
+
+    function showRequest() {
         var options = {
-            url:       '/submit',    // override for form's 'action' attribute
+            url:       '/upload',    // override for form's 'action' attribute
             type:      'post',        // 'get' or 'post', override for form's 'method' attribute
             dataType:  'json',        // 'xml', 'script', or 'json' (expected server response type)
             clearForm: true,        // clear all form fields after successful submit
-            success:       showResponse  // post-submit callback
+            success:       function(responseText, statusText, xhr, $form) {
+                if(responseText.error) {
+                    alert("There is an Unexpected Error happens !");
+                    return false
+                } else {
+                    return true
+                }
+            },  // post-submit callback
+            error: function() {
+                alert("There is an Unexpected Error happens !");
+                return false
+            }
 
             //target:        '#output2',   // target element(s) to be updated with server response
             // other available options:
@@ -142,13 +197,9 @@
             //timeout:   3000
         };
 
-        $('#insertForm').submit(function(e) {
-            // Prevent form submission
-            e.preventDefault();
+        $("#uploadForm").ajaxSubmit(options);
 
-            $(this).ajaxSubmit(options);
-        })
-    });
+    }
 
 	function pestSelect() {
 	    var pestsPresent = document.getElementById("pestsPresent").value;
@@ -162,13 +213,6 @@
 	        alert("To be Developed")
 		}
 	}
-
-	function upload() {
-	    var info = $("#insertForm").serialize();
-        var info2 = $("#uploadForm").serialize();
-	    alert(info);
-        alert(info2);
-    }
 </script>
 </body>
 </html>
