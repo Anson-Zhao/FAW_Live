@@ -135,6 +135,7 @@ module.exports = function(app, passport) {
     });
 
     app.post('/upload', fileUpload, function(req,res){
+        console.log("ABC");
         //console.log(req.headers.origin);
         res.setHeader("Access-Control-Allow-Origin", "*");
 
@@ -146,7 +147,7 @@ module.exports = function(app, passport) {
                 //res.send("Error uploading file.");
             } else {
                 console.log("Success:" + filePathName);
-                res.json({"error": false, "message": filePathName});
+                res.json({"error": true, "message": filePathName});
                 filePathName = "";
                 //res.send("File is uploaded");
             }
