@@ -453,7 +453,7 @@ module.exports = function (app, passport) {
     });
 
     app.get('/reset', function (req, res) {
-        res.render('profile.ejs', {user: req.user});
+        res.render('userprofile.ejs', {user: req.user});
     });
 
     app.post('/reset', function (req, res) {
@@ -485,7 +485,7 @@ module.exports = function (app, passport) {
                         res.send("New Password Change Fail!");
                         res.end();
                     } else {
-                        res.render('profile_Admin.ejs', {
+                        res.render('user_home_Admin.ejs', {
                             user: req.user // get the user out of session and pass to template
                         });
                     }
@@ -495,6 +495,14 @@ module.exports = function (app, passport) {
             }
 
         });
+    });
+
+    app.get('/userprofilecancel', function (req, res) {
+        res.render('user_home_Admin.ejs', {user: req.user});
+    });
+
+    app.get('/userprofile', function (req, res) {
+        res.render('userprofile.ejs', {user: req.user});
     });
 
     app.get('/userManagement', isLoggedIn, function (req, res) {
