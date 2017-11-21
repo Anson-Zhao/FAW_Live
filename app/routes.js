@@ -70,13 +70,16 @@ module.exports = function (app, passport) {
     app.get('/signup', isLoggedIn, function (req, res) {
 
         // render the page and pass in any flash data if it exists
-        res.render('signup.ejs', {user: req.user, message: req.flash('signupMessage')});
+        res.render('signup.ejs', {
+            user: req.user,
+            message: req.flash('signupMessage')
+        });
     });
 
     app.post('/signup', isLoggedIn, function (req, res) {
 
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
-        connection.query('USE ' + config.Login_db); // Locate Login DB
+        // connection.query('USE ' + config.Login_db); // Locate Login DB
 
         var newUser = {
             username: req.body.username,
@@ -459,7 +462,7 @@ module.exports = function (app, passport) {
 
     app.post('/reset', function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
-        connection.query('USE ' + config.Login_db); // Locate Login DB
+        // connection.query('USE ' + config.Login_db); // Locate Login DB
         var user = req.user;
         var newPassword = {
             firestname: req.body.usernameF,
@@ -507,7 +510,7 @@ module.exports = function (app, passport) {
     });
 
     app.get('/userManagement', isLoggedIn, function (req, res) {
-        var queryStatementTest = "SELECT userrole FROM Login_DB.userss WHERE username = '" + req.user.username + "';";
+        var queryStatementTest = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
 
         connection.query(queryStatementTest, function (err, results, fields) {
 
@@ -562,9 +565,9 @@ module.exports = function (app, passport) {
     app.get('/filterUser', function (req, res) {
 
         console.log("dQ: " + req.query.dateCreatedFrom);
-        connection.query('USE ' + config.Login_db);
+        // connection.query('USE ' + config.Login_db);
 
-        var queryStat = "SELECT * FROM userss WHERE ";
+        var queryStat = "SELECT * FROM Users WHERE ";
         var myQuery = [
             {
                 fieldName: "dateCreatedFrom",
@@ -610,6 +613,40 @@ module.exports = function (app, passport) {
             }
         ];
 
+        // console.log("length: " + myQuery.length);
+        //
+        // for (var j = 0; j < myQuery.length; j++) {
+        //     console.log("myQuery[" + j + "].fieldVal: " + !!myQuery[j].fieldVal);
+        //     // console.log([j] + ": " + myQuery[j].fieldName + ", " + myQuery[j].fieldVal + ", " + myQuery[j].dbCol);
+        //     // queryStat += myQuery[j].dbCol + myQuery[j].op + myQuery[j].fieldVal + "'";
+        //     // console.log("j = first," + "j = " + j + ":" + queryStat);
+        // }
+
+        function userQuery() {
+            res.setHeader("Access-Control-Allow-Origin", "*");
+
+            connection.query(queryStat, function (err, results, fields) {
+
+                var status = [{errStatus: ""}];
+
+                if (err) {
+                    console.log(err);
+                    status[0].errStatus = "fail";
+                    res.send(status);
+                    res.end();
+                } else if (results.length === 0) {
+                    status[0].errStatus = "no data entry";
+                    res.send(status);
+                    res.end();
+                } else {
+                    var JSONresult = JSON.stringify(results, null, "\t");
+                    console.log(JSONresult);
+                    res.send(JSONresult);
+                    res.end();
+                }
+            });
+        }
+
         for (var i = 0; i < myQuery.length; i++) {
             //console.log("myQuery[" + i + "].fieldVal: " + !!myQuery[i].fieldVal);
             if (!!myQuery[i].fieldVal) {
@@ -620,29 +657,19 @@ module.exports = function (app, passport) {
                 } else {
                     queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
                     //console.log("i = " + i + ":" + queryStat);
-                    if (i == myQuery.length - 1) {
+                    if (i == myQuery.length -1) {
                         userQuery()
                     }
                 }
             } else {
-                if (i == myQuery.length - 1) {
+                if (i == myQuery.length -1) {
                     userQuery()
                 }
             }
         }
     });
 
-    app.get('/editUser', isLoggedIn, function(req, res) {
-        console.log("query Name: " + req.query.First_Name);
-        console.log("query Role: " + req.query.User_Role);
-        var queryStatementTest = "SELECT userrole FROM Login_DB.userss WHERE username = '" + req.user.username + "';";
-
-        connection.query(queryStatementTest, function (err, results, fields) {
-
-            if (!results[0].userrole) {
-                console.log("Error");
-            } else if (results[0].userrole === "Admin") {
-                // process the signup form
+    app.get('/editUserFinal', isLoggedIn, function(req, res) {
                 res.render('userEdit_Admin.ejs', {
                     user: req.user, // get the user out of session and pass to template
                     editUser: req.query.Username,
@@ -652,8 +679,24 @@ module.exports = function (app, passport) {
                     status: req.query.Status,
                     message: req.flash('Data Entry Message')
                 });
+    });
+
+    app.post('/editUser', isLoggedIn, function(err, res, field) {
+
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "Insert Error! Check your entry."});
+            } else {
+                res.json({"error": false, "message": "/editUserFinal"});
+                // var type = req.body.entryType;
+                // if (type === "SCOUTING") {
+                //     console.log("A1");
+                //     res.redirect('/submit');
+                // } else if (type === "TRAP") {
+                //     console.log("B1");// console.log("B");
+                //     res.redirect('/submit');
+                // }
             }
-        });
     });
 
 };
@@ -672,7 +715,7 @@ function isLoggedIn(req, res, next) {
 function statusUpD (req, res, next) {
 
     res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
-    connection.query('USE ' + config.Login_db); // Locate Login DB
+    // connection.query('USE ' + config.Login_db); // Locate Login DB
     var today = new Date();
     var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -684,8 +727,8 @@ function statusUpD (req, res, next) {
     };
     // console.log(req.user.username);
 
-    //var insertQuery2 = "UPDATE userss SET status = '" + changeUser.status + "', lastLoginTime = '" + changeUser.lastLoginTime + "' WHERE username = '" + changeUser.username +"';";
-    var statusUpdate = "UPDATE userss SET status = 'Active', lastLoginTime = ? WHERE username = ?";
+    //var insertQuery2 = "UPDATE Users SET status = '" + changeUser.status + "', lastLoginTime = '" + changeUser.lastLoginTime + "' WHERE username = '" + changeUser.username +"';";
+    var statusUpdate = "UPDATE Users SET status = 'Active', lastLoginTime = ? WHERE username = ?";
 
     connection.query(statusUpdate,[dateTime, changeUser.username],function(err, rows) {
         // console.log(dateTime, changeUser.username);
@@ -706,27 +749,3 @@ function statusUpD (req, res, next) {
     return next();
 }
 
-function userQuery() {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-
-    connection.query(queryStat, function (err, results, fields) {
-
-        var status = [{errStatus: ""}];
-
-        if (err) {
-            console.log(err);
-            status[0].errStatus = "fail";
-            res.send(status);
-            res.end();
-        } else if (results.length === 0) {
-            status[0].errStatus = "no data entry";
-            res.send(status);
-            res.end();
-        } else {
-            var JSONresult = JSON.stringify(results, null, "\t");
-            console.log(JSONresult);
-            res.send(JSONresult);
-            res.end();
-        }
-    });
-}
