@@ -58,7 +58,6 @@ module.exports = function (app, passport) {
         function (req, res) {
             if (req.body.remember) {
                 req.session.cookie.maxAge = 1000 * 60 * 3;
-            } else {
                 req.session.cookie.expires = false;
             }
             res.redirect('/login');
@@ -128,10 +127,49 @@ module.exports = function (app, passport) {
                 req.session.cookie.maxAge = 1000 * 60 * 3;
                 req.session.cookie.expires = false;
             res.redirect('/signout');
-            };
+            }
         });
 
-        // =====================================
+    app.post('/session', function(req, res) {
+        User.findOne({ username: req.body.username })
+            .select('salt') // my mongoose schema doesn't fetches salt
+            .select('password') // and password by default
+            .exec(function(err, user) {
+                if (err || user === null) throw err; // awful error handling here
+                // mongoose schema methods which checks if the sent credentials
+                // are equal to the hashed password (allows callback)
+                user.hasEqualPassword(req.body.password, function(hasEqualPassword) {
+                    if (hasEqualPassword) {
+                        // if the password matches we do this:
+                        req.session.authenticated = true; // flag the session, all logged-in check now check if authenticated is true (this is required for the secured-area-check-middleware)
+                        req.session.user = user; // this is optionally. I have done this because I want to have the user credentials available
+                        // another benefit of storing the user instance in the session is
+                        // that we can gain from the speed of redis. If the user logs out we would have to save the user instance in the session (didn't tried this)
+                        res.send(200); // sent the client that everything gone ok
+                    } else {
+                        res.send("wrong password", 500); // tells the client that the password was wrong (on production sys you want to hide what gone wronge)
+                    }
+                });
+            });
+    });
+    app.delete('/session', function(req, res) {
+        // here is our security check
+        // if you use a isAuthenticated-middleware you could make this shorter
+        if (req.session.authenticated) {
+            // this destroys the current session (not really necessary because you get a new one
+            req.session.destroy(function() {
+                // if you don't want destroy the whole session, because you anyway get a new one you also could just change the flags and remove the private informations
+                // req.session.user.save(callback(err, user)) // didn't checked this
+                //delete req.session.user;  // remove credentials
+                //req.session.authenticated = false; // set flag
+                //res.clearCookie('connect.sid', { path: '/' }); // see comments above                res.send('removed session', 200); // tell the client everything went well
+            });
+        } else {
+            res.send('cant remove public session', 500); // public sessions don't containt sensible information so we leave them
+        }
+    });
+
+    // =====================================
     // PROFILE SECTION ==================
     // =====================================
     // we will want this protected so you have to be logged in to visit
