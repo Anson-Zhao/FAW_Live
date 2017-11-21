@@ -71,13 +71,10 @@ module.exports = function (app, passport) {
     app.get('/signup', isLoggedIn, function (req, res) {
 
         // render the page and pass in any flash data if it exists
-        res.render('signup.ejs', {
-            user: req.user,
-            message: req.flash('signupMessage')
-        });
+        res.render('signup.ejs', {user: req.user, message: req.flash('signupMessage')});
     });
 
-    app.post('/signup', function (req, res) {
+    app.post('/signup', isLoggedIn, function (req, res) {
 
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
         connection.query('USE ' + config.Login_db); // Locate Login DB
@@ -168,7 +165,8 @@ module.exports = function (app, passport) {
         res.redirect('/login');
     });
 
-    app.post('/upload', fileUpload, function (req, res) {
+    app.post('/upload', fileUpload, function (req,res) {
+        console.log("ABC");
         //console.log(req.headers.origin);
         res.setHeader("Access-Control-Allow-Origin", "*");
 

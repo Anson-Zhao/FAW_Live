@@ -99,14 +99,15 @@
                 <input type="radio" name="pesticide" value="yes"> YES
                 <input type="radio" name="pesticide" value="no"> NO <br><br>
 
-                <h2>Photos</h2>
-                <h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>
-                <input id="photoOfPest" type="file" name="photoOfPest" accept="image/*" onchange="previewFile()" multiple/><br>
-                <img id="photoOfPestImage" src="" alt="Image preview..."><br>
-                <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
-                <input id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" multiple/><br>
-                <img id="photoOfDamageImage" src="" alt="Image preview..."><br><br>
+                <!--<h2>Photos</h2>-->
+                <!--<h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>-->
+                <!--<input id="photoOfPest" type="file" name="photoOfPest" accept="image/*" onchange="previewFile()" multiple/><br>-->
+                <!--<img id="photoOfPestImage" src="" alt="Image preview..."><br>-->
+                <!--<h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>-->
+                <!--<input id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" multiple/><br>-->
+                <!--<img id="photoOfDamageImage" src="" alt="Image preview..."><br><br>-->
                 <!--<input type="submit" value="Submit the Form">-->
+                <input type="submit" value="Submit the Form">
             </div>
 		</form>
         <form id="uploadForm" enctype="multipart/form-data" method="post">
@@ -118,7 +119,6 @@
                 <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
                 <input id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" multiple/><br>
                 <img id="photoOfDamageImage" src="" alt="Image preview..."><br><br>
-                <input type="submit" value="Submit the Form">
             </div>
         </form>
 	</div>
@@ -172,6 +172,7 @@
     });
 
     function showRequest() {
+        var status;
         var options = {
             url:       '/upload',    // override for form's 'action' attribute
             type:      'post',        // 'get' or 'post', override for form's 'method' attribute
@@ -179,6 +180,7 @@
             clearForm: true,        // clear all form fields after successful submit
             success:       function(responseText, statusText, xhr, $form) {
                 if(responseText.error) {
+                    status = "fail";
                     alert("There is an Unexpected Error happens !");
                     return false
                 } else {
@@ -198,6 +200,8 @@
         };
 
         $("#uploadForm").ajaxSubmit(options);
+        alert("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        setTimeout(function(){ alert(status); }, 10000);
 
     }
 
