@@ -161,32 +161,19 @@
         var rowSelected = [];
         var queryString1;
         var queryString2;
+        var table = $('#dataDisplay').DataTable();
+        var tstring = "";
+//        var table = $("#dataDisplay");
+//        var t = table.DataTable();
+
 
         $(document).ready(function(){
-//            $(".add-row").click(function(){
-//                var name = $("#name").val();
-//                var email = $("#email").val();
-//                var markup = "<tr><td><input type='checkbox' name='record'></td><td>" + name + "</td><td>" + email + "</td></tr>";
-//                $("table tbody").append(markup);
-//            });
-//
-//            // Find and remove selected table rows
-//            $(".delete-row").click(function(){
-//                $("table tbody").find('input[name="record"]').each(function(){
-//                    if($(this).is(":checked")){
-//                        $(this).parents("tr").remove();
-//                    }
-//                });
-//            });
             $(function() {
                 flatpickr(".date", {
                     dateFormat: "Y-m-d",
                     time_24hr: true
                 });
             });
-
-            var table = $('#dataDisplay').DataTable();
-
             $('#dataDisplay tbody').on( 'click', 'tr', function () {
                 if ( $(this).hasClass('selected') ) {
                     $(this).removeClass('selected');
@@ -198,18 +185,18 @@
                     d = table.row( this ).data();
 
                     d.counter++;
-                    console.log(d);
-                    alert (d);
+                    //console.log(d);
+                   // alert (d);
 
                     table.row( this ).data( d ).draw();
 
                     rowSelected = [
                         {
-                            Name: "First Name",
+                            Name: "First_Name",
                             Value: d[0]
                         },
                         {
-                            Name: "Last Name",
+                            Name: "Last_Name",
                             Value: d[1]
                         },
                         {
@@ -221,23 +208,23 @@
                             Value: d[3]
                         },
                         {
-                            Name: "User Role",
+                            Name: "User_Role",
                             Value: d[4]
                         },
                         {
-                            Name: "Date Created",
+                            Name: "Date_Created",
                             Value: d[5]
                         },
                         {
-                            Name: "Created By",
+                            Name: "Created_By",
                             Value: d[6]
                         },
                         {
-                            Name: "Date Last Modified",
+                            Name: "Date_Last_Modified",
                             Value: d[7]
                         },
                         {
-                            Name: "Last Modified By",
+                            Name: "Last_Modified_By",
                             Value: d[8]
                         },
                         {
@@ -245,48 +232,44 @@
                             Value: d[9]
                         },
                         {
-                            Name: "Last Login Time",
+                            Name: "Last_Login_Time",
                             Value: d[10]
                         }
                     ]
 
+                }
+
+                alert(d);
+                alert("Row: " + rowSelected[1].Name);
+                console.log(rowSelected[2].Name);
+                console.log(rowSelected[2].Value);
+
+                for ( var i = 0; i < rowSelected.length; i++ ) {
+                    if ( i === 0 ) {
+                        tstring += rowSelected[i].Name + "=" + rowSelected[i].Value;
+                    } else {
+                        tstring += "&" + rowSelected[i].Name + "=" + rowSelected[i].Value;
+                    }
 
                 }
+                console.log("tstring for loop: " + tstring);
+
+
             } );
-
-            alert (d);
-            alert ("Row: " + rowSelected[1].Name);
-            console.log(rowSelected[2].Name);
-            console.log(rowSelected[2].Value);
-//
-//            $('#button').click( function () {
-//                table.row('.selected').remove().draw( false );
-//            } );
-
-//            var stri = "";
-//
-//            for ( var i = 0; i < rowSelected.length; i++ ) {
-//                if (i === rowSelected.length - 1) {
-//                    stri += rowSelected[i].Name + "=" + rowSelected[i].Value;
-//                    alert("last: " + stri);
-//                } else {
-//                    stri += rowSelected[i].Name + "=" + rowSelected[i].Value + "&";
-//                }
-//            }
-
 
 
 
             var str12 = "ColName=123&Valu=456";
 
             $("#editUserButton").on("click", function () {
+                console.log("tstring: " + tstring);
                 alert ("edit Click!")
                 $.ajax({
                     url: '/editUser',
                     type: 'GET',
                     dataType: 'json',
                     async: false,
-                    data: str12,
+                    data: tstring,
                     success: function (resp) {
 
                     }
@@ -323,7 +306,7 @@
 //            alert(dateCreatedFrom + "  " + dateCreatedTo + dateModifiedFrom + "  " + dateModifiedTo);
 //            alert(userrole);
             if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !Admin || !Regular) {
-                t.clear();
+                table.clear();
 
                  queryAndDisplay(querystr);
                 //alert(dateCreatedFrom + "a");
@@ -333,8 +316,6 @@
             }
         }
 
-        var table = $("#dataDisplay");
-        var t = table.DataTable();
 
         var queryAndDisplay = function (querystr) {
 
@@ -368,7 +349,7 @@
 
                     for (var i = 0; i < resp.length; i++) {
 //                        table.append($("<tr id='dataColumn" + (i + 1) + "' >"));
-                        t.row.add( [
+                        table.row.add( [
                             resp[i].firstName,
                             resp[i].lastName,
                             resp[i].username,

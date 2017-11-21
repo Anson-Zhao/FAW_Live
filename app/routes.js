@@ -500,8 +500,8 @@ module.exports = function(app, passport) {
     });
 
     app.get('/editUser', isLoggedIn, function(req, res) {
-        console.log("query Name: " + req.query.ColName);
-        console.log("query Value: " + req.query.Valu);
+        console.log("query Name: " + req.query.First_Name);
+        console.log("query Role: " + req.query.User_Role);
         var queryStatementTest = "SELECT userrole FROM Login_DB.userss WHERE username = '" + req.user.username + "';";
 
         connection.query(queryStatementTest, function(err, results, fields) {
@@ -509,12 +509,15 @@ module.exports = function(app, passport) {
             if (!results[0].userrole) {
                 console.log("Error");
             } else if (results[0].userrole === "Admin") {
+                console.log("hffsejdjc");
                 // process the signup form
                 res.render('userEdit_Admin.ejs', {
                     user: req.user, // get the user out of session and pass to template
-                    editUser: req.body.username,
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
+                    editUser: req.query.Username,
+                    firstName: req.query.First_Name,
+                    lastName: req.query.Last_Name,
+                    userrole: req.query.User_Role,
+                    status: req.query.Status,
                     message: req.flash('Data Entry Message')
                 });
             }
