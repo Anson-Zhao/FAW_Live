@@ -50,21 +50,6 @@
         #dataDisplay {
             overflow-x: auto;
         }
-        table {
-            table-layout: fixed;
-        }
-        td, th {
-            vertical-align: top;
-            padding: 10px;
-            width: 150px;
-        }
-        #dvData {
-            overflow-x: scroll;
-            overflow-y: visible;
-            width: 700px;
-            margin-left: 145px;
-        }
-
     </style>
     <script src="//unpkg.com/flatpickr"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -121,7 +106,7 @@
             <!--<input type="radio" name="userrole" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
             <!--<input type="button" class="add-row" value="Add Row">-->
         <input type="submit" onclick="query()" class="btn-default btn" style="color: #ffffff; background-color: #a7cb9f" value="Filter">
-        <button type="button" class="delete-row btn-default btn">Edit User(s)</button>
+        <button type="button" id="editUserButton" class="delete-row btn-default btn">Edit User(s)</button>
         <button type="button" class="delete-row btn-default btn">Delete User(s)</button>
     </div>
     <br>
@@ -175,7 +160,9 @@
         var queryString2;
         var table = $('#dataDisplay').DataTable();
         var tstring = "";
-        var querystr = queryString1 + queryString2;
+//        var table = $("#dataDisplay");
+//        var t = table.DataTable();
+
 
         $(document).ready(function(){
             $(function() {
@@ -184,23 +171,6 @@
                     time_24hr: true
                 });
             });
-
-            $(".add-row").click(function(){
-                var name = $("#name").val();
-                var email = $("#email").val();
-                var markup = "<tr><td><input type='checkbox' name='record'></td><td>" + name + "</td><td>" + email + "</td></tr>";
-                $("table tbody").append(markup);
-            });
-
-            // Find and remove selected table rows
-            $(".delete-row").click(function(){
-                $("table tbody").find('input[name="record"]').each(function(){
-                    if($(this).is(":checked")){
-                        $(this).parents("tr").remove();
-                    }
-                });
-            });
-
             $('#dataDisplay tbody').on( 'click', 'tr', function () {
                 if ( $(this).hasClass('selected') ) {
                     $(this).removeClass('selected');
@@ -284,12 +254,16 @@
                 alert ("edit Click!")
                 $.ajax({
                     url: '/editUser',
-                    type: 'GET',
+                    type: 'POST',
                     dataType: 'json',
-                    async: false,
+//                    async: false,
                     data: tstring,
-                    success: function (resp) {
-
+                    success: function (result) {
+                        if (!result.error) {
+                            window.location.replace('/editUserFinal')
+                        } else {
+                            alert (result.message)
+                        }
                     }
                 })
             });
@@ -316,6 +290,8 @@
             queryString1 = "dateCreatedFrom=" + dateCreatedFrom + "&dateCreatedTo=" + dateCreatedTo + "&dateModifiedFrom=" + dateModifiedFrom + "&dateModifiedTo=" + dateModifiedTo;
             queryString2 = "&firstName=" + firstName + "&lastName=" + lastName + "&Admin=" + Admin + "&Regular=" + Regular;
 
+
+            var querystr = queryString1 + queryString2;
             alert(querystr);
 
             if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !Admin || !Regular) {
@@ -327,6 +303,7 @@
         }
 
         var queryAndDisplay = function (querystr) {
+            alert(querystr);
 
             $.ajax({
                 url: '/filterUser',
