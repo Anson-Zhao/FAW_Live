@@ -112,6 +112,7 @@ module.exports = function (app, passport) {
         });
     });
 
+
     // =====================================
     // SIGNOUT =========================
     // =====================================
@@ -120,7 +121,6 @@ module.exports = function (app, passport) {
         // render the page and pass in any flash data if it exists
         res.render('signout.ejs', {message: req.flash('signoutMessage')});
     });
-
     app.post('/signout', passport.authenticate('local-login', {
             successRedirect: '/userhome', // redirect to the secure profile section
             failureRedirect: '/signout', // redirect back to the signup page if there is an error
@@ -129,14 +129,12 @@ module.exports = function (app, passport) {
         function (req, res) {
             if (req.body.remember) {
                 req.session.cookie.maxAge = 1000 * 60 * 3;
-            } else {
                 req.session.cookie.expires = false;
-            }
             res.redirect('/signout');
+            };
         });
 
-
-    // =====================================
+        // =====================================
     // PROFILE SECTION ==================
     // =====================================
     // we will want this protected so you have to be logged in to visit
@@ -589,9 +587,9 @@ module.exports = function (app, passport) {
         }
     });
 
-    app.get('/editUser', isLoggedIn, function (req, res) {
-        console.log("query Name: " + req.query.ColName);
-        console.log("query Value: " + req.query.Valu);
+    app.get('/editUser', isLoggedIn, function(req, res) {
+        console.log("query Name: " + req.query.First_Name);
+        console.log("query Role: " + req.query.User_Role);
         var queryStatementTest = "SELECT userrole FROM Login_DB.userss WHERE username = '" + req.user.username + "';";
 
         connection.query(queryStatementTest, function (err, results, fields) {
@@ -602,9 +600,11 @@ module.exports = function (app, passport) {
                 // process the signup form
                 res.render('userEdit_Admin.ejs', {
                     user: req.user, // get the user out of session and pass to template
-                    editUser: req.body.username,
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
+                    editUser: req.query.Username,
+                    firstName: req.query.First_Name,
+                    lastName: req.query.Last_Name,
+                    userrole: req.query.User_Role,
+                    status: req.query.Status,
                     message: req.flash('Data Entry Message')
                 });
             }
@@ -622,4 +622,66 @@ function isLoggedIn(req, res, next) {
 
     // if they aren't redirect them to the home page
     res.redirect('/');
+}
+
+function statusUpD (req, res, next) {
+
+    res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+    connection.query('USE ' + config.Login_db); // Locate Login DB
+    var today = new Date();
+    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date + ' ' + time2;
+
+
+    var changeUser = {
+        username: req.user.username
+    };
+    // console.log(req.user.username);
+
+    //var insertQuery2 = "UPDATE userss SET status = '" + changeUser.status + "', lastLoginTime = '" + changeUser.lastLoginTime + "' WHERE username = '" + changeUser.username +"';";
+    var statusUpdate = "UPDATE userss SET status = 'Active', lastLoginTime = ? WHERE username = ?";
+
+    connection.query(statusUpdate,[dateTime, changeUser.username],function(err, rows) {
+        // console.log(dateTime, changeUser.username);
+
+        //newUser.id = rows.insertId;
+
+        if (err) {
+            console.log(err);
+            res.send("Login Fail!");
+            res.end();
+        } else {
+            // res.redirect('/profile', {
+            //     user: req.user // get the user out of session and pass to template
+            // });
+        }
+    });
+
+    return next();
+}
+
+function userQuery() {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+
+    connection.query(queryStat, function (err, results, fields) {
+
+        var status = [{errStatus: ""}];
+
+        if (err) {
+            console.log(err);
+            status[0].errStatus = "fail";
+            res.send(status);
+            res.end();
+        } else if (results.length === 0) {
+            status[0].errStatus = "no data entry";
+            res.send(status);
+            res.end();
+        } else {
+            var JSONresult = JSON.stringify(results, null, "\t");
+            console.log(JSONresult);
+            res.send(JSONresult);
+            res.end();
+        }
+    });
 }

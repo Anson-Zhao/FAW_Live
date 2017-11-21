@@ -1,3 +1,4 @@
+<!-- views/profile.ejs -->
 <!doctype html>
 <html>
 <head>
@@ -102,8 +103,7 @@
             <h4 class="floatingBox"><strong>Date Modified:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <h6 class="floatingBox">From:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateModified" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;
             <h6 class="floatingBox">To:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateModified" placeholder="Select Date">
-        </div>
-        <br>
+        </div><br>
         <div class="row">
             <h4 class="floatingBox"><strong>User Name:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <h6 class="floatingBox">First Name:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate" type="text" id="firstName" placeholder="Enter First Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -120,7 +120,6 @@
             <!--<input type="radio" name="userrole" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
             <!--<input type="radio" name="userrole" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
             <!--<input type="button" class="add-row" value="Add Row">-->
-
         <input type="submit" onclick="query()" class="btn-default btn" style="color: #ffffff; background-color: #a7cb9f" value="Filter">
         <button type="button" class="delete-row btn-default btn">Edit User(s)</button>
         <button type="button" class="delete-row btn-default btn">Delete User(s)</button>
@@ -174,10 +173,9 @@
         var rowSelected = [];
         var queryString1;
         var queryString2;
-        var querystr = queryString1 + queryString2;
         var table = $('#dataDisplay').DataTable();
-//        var table = $("#dataDisplay");
-//        var t = table.DataTable();
+        var tstring = "";
+        var querystr = queryString1 + queryString2;
 
         $(document).ready(function(){
             $(function() {
@@ -211,20 +209,16 @@
                     $(this).addClass('selected');
 
                     d = table.row( this ).data();
-
                     d.counter++;
-                    console.log(d);
-                    alert (d);
-
                     table.row( this ).data( d ).draw();
 
                     rowSelected = [
                         {
-                            Name: "First Name",
+                            Name: "First_Name",
                             Value: d[0]
                         },
                         {
-                            Name: "Last Name",
+                            Name: "Last_Name",
                             Value: d[1]
                         },
                         {
@@ -236,23 +230,23 @@
                             Value: d[3]
                         },
                         {
-                            Name: "User Role",
+                            Name: "User_Role",
                             Value: d[4]
                         },
                         {
-                            Name: "Date Created",
+                            Name: "Date_Created",
                             Value: d[5]
                         },
                         {
-                            Name: "Created By",
+                            Name: "Created_By",
                             Value: d[6]
                         },
                         {
-                            Name: "Date Last Modified",
+                            Name: "Date_Last_Modified",
                             Value: d[7]
                         },
                         {
-                            Name: "Last Modified By",
+                            Name: "Last_Modified_By",
                             Value: d[8]
                         },
                         {
@@ -260,37 +254,46 @@
                             Value: d[9]
                         },
                         {
-                            Name: "Last Login Time",
+                            Name: "Last_Login_Time",
                             Value: d[10]
                         }
                     ]
 
                 }
+
+                alert(d);
+                alert("Row: " + rowSelected[1].Name);
+                console.log(rowSelected[2].Name);
+                console.log(rowSelected[2].Value);
+
+                for ( var i = 0; i < rowSelected.length; i++ ) {
+                    if ( i === 0 ) {
+                        tstring += rowSelected[i].Name + "=" + rowSelected[i].Value;
+                    } else {
+                        tstring += "&" + rowSelected[i].Name + "=" + rowSelected[i].Value;
+                    }
+
+                }
+
+                console.log("tstring for loop: " + tstring);
+
             } );
 
             $("#editUserButton").on("click", function () {
+                console.log("tstring: " + tstring);
                 alert ("edit Click!")
                 $.ajax({
                     url: '/editUser',
                     type: 'GET',
                     dataType: 'json',
                     async: false,
-                    data: str12,
+                    data: tstring,
                     success: function (resp) {
 
                     }
                 })
             });
         });
-
-        function dataPrepare () {
-            alert (d);
-            alert ("Row: " + rowSelected[1].Name);
-            console.log(rowSelected[2].Name);
-            console.log(rowSelected[2].Value);
-
-            //var str12 = "ColName=123&Valu=456";
-        }
 
         function query() {
             //alert("a");
@@ -316,10 +319,8 @@
             alert(querystr);
 
             if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !Admin || !Regular) {
-
                 table.clear();
                 queryAndDisplay(querystr);
-
             } else {
                 alert("Please Select Both Dates!");
             }
@@ -371,11 +372,15 @@
 //                        table.append($("<tr id='dataColumn" + (i + 1) + "' >"));
 //                        $("#dataColumn" + (i + 1)).append($("<td>" + "<input type='checkbox' name='record'>" + "</td>" + "<td contenteditable='true' >" + resp[i].firstName + "</td>" + "<td contenteditable='true'>" + resp[i].lastName + "</td>" + "<td contenteditable='true'>" + resp[i].username + "</td>" + "<td>" + resp[i].password + "</td>" + "<td contenteditable='true'>" + resp[i].userrole + "</td>" + "<td contenteditable='true'>" + resp[i].dateCreated + "</td>" + "<td contenteditable='true'>" + resp[i].dateModified + "</td>"));
 
+
 //                        table.append($("</tr>"));
                     }
                 }
+
             });
         }
+
+
 
         //        $(function () {
         //            $("td").dblclick(function () {
