@@ -13,8 +13,8 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="//unpkg.com/flatpickr"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//unpkg.com/flatpickr"></script>
 
     <style>
         #Username{
@@ -311,14 +311,14 @@
                 console.log("tstring: " + tstring);
                 alert ("edit Click!")
                 $.ajax({
-                    url: '/editUser',
-                    type: 'POST',
+                    url: '/editUserQuery',
+                    type: 'GET',
                     dataType: 'json',
-//                    async: false,
+                    async: false,
                     data: tstring,
                     success: function (result) {
                         if (!result.error) {
-                            window.location.replace('/editUserFinal')
+                            window.location.replace('/editUser')
                         } else {
                             alert (result.message)
                         }
@@ -362,6 +362,7 @@
 
         var queryAndDisplay = function (querystr) {
             alert(querystr);
+            console.log("querystr: " + querystr);
 
             $.ajax({
                 url: '/filterUser',
