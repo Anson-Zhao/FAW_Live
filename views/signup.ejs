@@ -2,18 +2,20 @@
 <!doctype html>
 <html>
 <head>
-	<title>FAW/Locust - User Signup</title>
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+	<title>FAW/Locust -  User Management - Add User</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+	<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="//unpkg.com/flatpickr"></script>
 	<style>
 		.floatingBox {
 			display: inline-block;
 		}
 		body 		{ padding-top:80px; }
 	</style>
-	<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
-	<script src="//unpkg.com/flatpickr"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 </head>
 <body>
 <div class="container">
@@ -63,8 +65,8 @@
 			<input type="text" id="status" class="form-control" name="status" value="Never Logged In" readonly >
 		</div>
 
-		<button type="submit" class="btn btn-warning btn-lg"> Signup </button>
-
+		<button type="submit" class="btn btn-warning btn-lg"> Add User </button>
+		<a href="/userManagement" class="btn btn-warning btn-sm">Cancel</a>
 	</form>
 
 	<hr>

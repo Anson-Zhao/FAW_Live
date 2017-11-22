@@ -3,26 +3,88 @@
 <html>
 <head>
 	<title>FAW/Locust Project</title>
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+	<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+	<script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+	<script src="//unpkg.com/flatpickr"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 	<style>
+		#Username{
+			position:relative;
+			left:998px;
+			top:35px;
+		}
+		.banner{
+			position:relative;
+			left:67px;
+			top:30px;
+			width:65%;
+		}
+		#class1{
+			position:relative;
+			left:300px;
+			top:60px;
+			width:16%;
+		}
+		#class2{
+			position:relative;
+			left:500px;
+			top:60px;
+			width:16%;
+		}
+		#button{
+			width:3%;
+		}
+		.select{
+			width:60%;
+		}
+		.center {
+			margin-left:170px;
+			width:300%;
+		}
 		.floatingBox {
 			display: inline-block;
+			width:350px;
 		}
-		body 		{ padding-top:80px; word-wrap:break-word; }
+		.floating-Box{
+			display: inline;
+		}
+		.floatingBox1{
+			display: inline-block;
+			width:350px;
+		}
+		.floatingBox3{
+			display: inline-table;
+			width:250px;
+		}
+		table, th{
+			border: 1px solid black;
+			text-align:center;
+
+		}
+		body { padding-top:80px; word-wrap:break-word; }
 	</style>
+
 </head>
 <body>
 <div class="container">
 
 	<div class="page-header text-center">
 		<a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px" /></a>
-		<h1><span class="fa fa-anchor"></span> FAW/Locust - Edit User(s) </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
-		<a href="/dataEntry" class="btn btn-default btn-sm"> Data Entry </a>
-		<a href="/dataQuery" class="btn btn-default btn-sm"> Data Query </a>
-		<a href="/userManagement" class="btn btn-default btn-sm"> User Management </a>
-		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
-		<a href="/signup" class="btn btn-default btn-sm">Sign Up</a>
+		<h1><span class="fa fa-anchor"></span> FAW/Locust - Edit User(s) </h1>
+        <h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
+		<!--<a href="/dataEntry" class="btn btn-default btn-sm"> Data Entry </a>-->
+		<!--<a href="/dataQuery" class="btn btn-default btn-sm"> Data Query </a>-->
+		<!--<a href="/userManagement" class="btn btn-default btn-sm"> User Management </a>-->
+		<!--<a href="/logout" class="btn btn-default btn-sm">Logout</a>-->
+		<!--<a href="/signup" class="btn btn-default btn-sm">Sign Up</a>-->
 	</div>
 	<div class="col-sm-6 col-sm-offset-3">
 
