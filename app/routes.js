@@ -371,10 +371,6 @@ module.exports = function (app, passport) {
                             res.redirect('/detailedForm');
 
                         } else if (req.user.userrole === "Regular") {
-                            // res.render('insert_Armyworm_Regular.ejs', {
-                            //     user: req.user, // get the user out of session and pass to template
-                            //     message: req.flash('Data Entry Message')
-                            // });
                             res.redirect('/generalForm');
                         }
                     }
@@ -483,7 +479,7 @@ module.exports = function (app, passport) {
                 //res.send("Error uploading file.");
             } else {
                 console.log("Success:" + filePathName);
-                res.json({"error": false, "message": filePathName});
+                res.json({"error": true, "message": filePathName});
                 filePathName = "";
                 //res.send("File is uploaded");
             }
