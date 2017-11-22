@@ -95,16 +95,31 @@
 	<div class="center">
 		<h6 class="floating-Box">Display per Page:</h6><input  class="floatingBox" type="text" name="dislay per page" value="20" style="background:WhiteSmoke;" readonly>
 		<h4 class="floatingBox1"><strong>User Name</strong></h4>
-		<h6 class="floating-Box">First Name:</h6><input type="text" name="first name" style="background:WhiteSmoke" readonly>
-		<h6 class="floating-Box">Last Name:</h6><input type="text" name="first name" style="background:WhiteSmoke" readonly>
+		<h6 class="floating-Box">First Name:</h6><input type="text" name="first name" style="background:WhiteSmoke" value="<%= user.firstName %>" readonly>
+		<h6 class="floating-Box">Last Name:</h6><input type="text" name="first name" style="background:WhiteSmoke"  value="<%= user.lastName %>" readonly>
 	</div>
 	<div class="center">
 		<h4><strong>Other Customized Filters</strong></h4>
-		<h5 class="floatingBox3">Category1:<select class="select"></select></h5>
+		<h5 class="floatingBox3">Category1:
+            <select class="select">
+                <option></option>
+                <option></option>
+                <option></option>
+                <option></option>
+            </select>
+        </h5>
 		<h5 class="floatingBox3">Content:<input></h5><br>
-		<h5 class="floatingBox3">Category2:<select class="select"></select></h5>
+		<h5 class="floatingBox3">Category2:
+            <select class="select">
+
+            </select>
+        </h5>
 		<h5 class="floatingBox3">Content:<input></h5><br>
-		<h5 class="floatingBox3">Category3:<select class="select"></select></h5>
+		<h5 class="floatingBox3">Category3:
+            <select class="select">
+
+            </select>
+        </h5>
 		<h5 class="floatingBox3">Content:<input></h5>
 	</div><br>
 	<div class="center">
