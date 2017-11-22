@@ -557,6 +557,7 @@ app.get('/signout', function (req, res) {
     res.redirect('/login');
 });
 
+
 // route middleware to make sure
 function isLoggedIn(req, res, next) {
 
