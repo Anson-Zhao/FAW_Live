@@ -545,17 +545,17 @@ module.exports = function (app, passport) {
         });
     });
 
-};
+    // =====================================
+    // SIGNOUT =============================
+    // =====================================
+    //shouw the signout form
+    app.get('/signout', function (req, res) {
+        req.session.destroy();
+        req.logout();
+        res.redirect('/login');
+    });
 
-// =====================================
-// SIGNOUT =============================
-// =====================================
-//shouw the signout form
-app.get('/signout', function (req, res) {
-    req.session.destroy();
-    req.logout();
-    res.redirect('/login');
-});
+};
 
 
 // route middleware to make sure
