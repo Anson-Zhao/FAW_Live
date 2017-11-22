@@ -302,12 +302,23 @@ module.exports = function (app, passport) {
         }
     });
 
+    // Retrieve user data from user management page
+    var edit_User, edit_firstName, edit_lastName, edit_userrole, edit_status;
+    app.get('/editUserQuery', isLoggedIn, function(req, res) {
+
+        edit_User = req.query.Username;
+        edit_firstName = req.query.First_Name;
+        edit_lastName = req.query.Last_Name;
+        edit_userrole = req.query.User_Role;
+        edit_status = req.query.Status;
+        res.json({"error": false, "message": "/editUser"});
+    });
 
     // Show user edit form
     app.get('/editUser', isLoggedIn, function(req, res) {
         res.render('userEdit.ejs', {
             user: req.user, // get the user out of session and pass to template
-            editUser: edit_User,
+            userName: edit_User,
             firstName: edit_firstName,
             lastName: edit_lastName,
             userrole: edit_userrole,
@@ -316,17 +327,8 @@ module.exports = function (app, passport) {
         });
     });
 
-    // Retrieve user data from user management page
-    var edit_User, edit_firstName, edit_lastName, edit_userrole, edit_status;
     app.post('/editUser', isLoggedIn, function(req, res) {
-        //console.log("Body: " + req.body.Last_Name);
 
-        edit_User = req.body.Username;
-        edit_firstName = req.body.First_Name;
-        edit_lastName = req.body.Last_Name;
-        edit_userrole = req.body.User_Role;
-        edit_status = req.body.Status;
-        res.json({"error": false, "message": "/editUser"});
     });
 
     // =====================================

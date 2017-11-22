@@ -17,7 +17,8 @@
     <script src="//unpkg.com/flatpickr"></script>
 
     <style>
-        #Username{
+        body { padding-top:80px; word-wrap:break-word; }
+        #Username {
             position:relative;
             left:998px;
             top:35px;
@@ -33,48 +34,7 @@
             left:300px;
             top:60px;
             width:16%;
-        }
-        #class2{
-            position:relative;
-            left:500px;
-            top:60px;
-            width:16%;
-        }
-        #button{
-            width:3%;
-        }
-        .select{
-            width:60%;
-        }
-        .center {
-            margin-left:170px;
-            width:300%;
-        }
-        .floatingBox {
-            display: inline-block;
-            width:350px;
-        }
-        .floating-Box{
-            display: inline;
-        }
-        .floatingBox1{
-            display: inline-block;
-            width:350px;
-        }
-        .floatingBox3{
-            display: inline-table;
-            width:250px;
-        }
-        table, th{
-            border: 1px solid black;
-            text-align:center;
-
-        }
-    </style>
-
-    <style>
-        body 		{ padding-top:80px; word-wrap:break-word; }
-        form{
+        }form{
             margin: 20px 0;
         }
         form input, button{
@@ -87,6 +47,7 @@
         }
         table, th, td{
             border: 1px solid #cdcdcd;
+            text-align:center;
         }
         table th, table td{
             padding: 10px;
@@ -94,6 +55,7 @@
         }
         .floatingBox {
             display: inline-block;
+            width:350px;
         }
         .inputBoxDate {
             width: 10%;
@@ -104,9 +66,6 @@
         }
         #userListForm {
             margin: 0 10% 0 10%;
-        }
-        #subtitles {
-            margin-right: 10%;
         }
         #dataDisplay {
             overflow-x: auto;
@@ -308,11 +267,9 @@
             } );
 
             $("#editUserButton").on("click", function () {
-//                console.log("tstring: " + tstring);
-//                alert ("edit Click!")
                 $.ajax({
-                    url: '/editUser',
-                    type: 'POST',
+                    url: '/editUserQuery',
+                    type: 'GET',
                     dataType: 'json',
                     async: false,
                     data: tstring,
