@@ -107,18 +107,18 @@
                 <!--<input id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" multiple/><br>-->
                 <!--<img id="photoOfDamageImage" src="" alt="Image preview..."><br><br>-->
                 <!--<input type="submit" value="Submit the Form">-->
-                <input type="submit" value="Submit the Form">
             </div>
 		</form>
         <form id="uploadForm" enctype="multipart/form-data" method="post">
             <div class="FAW">
                 <h2>Photos</h2>
                 <h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>
-                <input id="photoOfPest" type="file" name="photoOfPest" accept="image/*" onchange="previewFile()" multiple/><br>
+                <input id="photoOfPest" type="file" name="photoOfPest" accept="image/*" onchange="previewFile()" required multiple/><br>
                 <img id="photoOfPestImage" src="" alt="Image preview..."><br>
                 <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
-                <input id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" multiple/><br>
+                <input id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" required multiple/><br>
                 <img id="photoOfDamageImage" src="" alt="Image preview..."><br><br>
+                <input type="submit" value="Submit the Form">
             </div>
         </form>
 	</div>
@@ -127,70 +127,13 @@
 <script>
 
     $(function(){
-
-        $('#insertForm').submit(function(e) {
-            alert("A");
-            // Prevent form submission
-            e.preventDefault();
-
-            $.ajax({
-                type: "post",
-                url: $(this).attr("action"),
-                dataType: 'json',
-                data: $(this).serialize(),
-                beforeSend: showRequest,
-                success: function (result) {
-                    if (!result.error) {
-                        window.location.replace('/submit')
-                    } else {
-                        alert (result.message)
-                    }
-                }
-            })
-        })
-
-//        var options = {
-//            url:       '/submit',    // override for form's 'action' attribute
-//            type:      'post',        // 'get' or 'post', override for form's 'method' attribute
-//            dataType:  'json',        // 'xml', 'script', or 'json' (expected server response type)
-//            clearForm: true,        // clear all form fields after successful submit
-//            success:       showResponse  // post-submit callback
-//
-//            //target:        '#output2',   // target element(s) to be updated with server response
-//            // other available options:
-//            //resetForm: true        // reset the form after successful submit
-//            // $.ajax options can be used here too, for example:
-//            //timeout:   3000
-//        };
-//
-//        $('#insertForm').submit(function(e) {
-//            // Prevent form submission
-//            e.preventDefault();
-//
-//            $(this).ajaxSubmit(options);
-//        })
-    });
-
-    function showRequest() {
-        var status;
         var options = {
-            url:       '/upload',    // override for form's 'action' attribute
-            type:      'post',        // 'get' or 'post', override for form's 'method' attribute
-            dataType:  'json',        // 'xml', 'script', or 'json' (expected server response type)
+            url: '/upload',    // override for form's 'action' attribute
+            type: 'post',        // 'get' or 'post', override for form's 'method' attribute
+            dataType: 'json',        // 'xml', 'script', or 'json' (expected server response type)
             clearForm: true,        // clear all form fields after successful submit
-            success:       function(responseText, statusText, xhr, $form) {
-                if(responseText.error) {
-                    status = "fail";
-                    alert("There is an Unexpected Error happens !");
-                    return false
-                } else {
-                    return true
-                }
-            },  // post-submit callback
-            error: function() {
-                alert("There is an Unexpected Error happens !");
-                return false
-            }
+            beforeSubmit:  showRequest,  // pre-submit callback
+            success:       showResponse  // post-submit callback
 
             //target:        '#output2',   // target element(s) to be updated with server response
             // other available options:
@@ -199,21 +142,50 @@
             //timeout:   3000
         };
 
-        $("#uploadForm").ajaxSubmit(options);
-        alert("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        setTimeout(function(){ alert(status); }, 10000);
+        $('#uploadForm').submit(function(e) {
+            alert("A");
+            $(this).ajaxSubmit(options);
+            // Prevent form submission
+            e.preventDefault();
+        });
+    });
 
+    function showRequest(formData, jqForm, options) {
+        var queryString = $.param(formData);
+        var isValid = true;
+        $('#insertForm').each(function() {
+            alert($(this).val);
+            if ($(this).val() === '') {
+                isValid = false;
+                return isValid
+            }
+        });
+
+        return isValid;
+
+
+    }
+
+    function showResponse(responseText, statusText, xhr, $form) {
+        if (!responseText.error) {
+            alert(responseText.message);
+
+        } else {
+            alert(responseText.message);
+        }
     }
 
 	function pestSelect() {
 	    var pestsPresent = document.getElementById("pestsPresent").value;
 	    if (!pestsPresent) {
-            document.getElementById("FAW").style.display = "none";
+            document.getElementsByClassName("FAW")[0].style.display = "none";
+            document.getElementsByClassName("FAW")[1].style.display = "none";
 		} else if (pestsPresent === "FAW") {
             document.getElementsByClassName("FAW")[0].style.display = "block";
             document.getElementsByClassName("FAW")[1].style.display = "block";
 		} else {
-            document.getElementById("FAW").style.display = "none";
+            document.getElementsByClassName("FAW")[0].style.display = "none";
+            document.getElementsByClassName("FAW")[1].style.display = "none";
 	        alert("To be Developed")
 		}
 	}
