@@ -47,7 +47,7 @@
 			width:60%;
 		}
 		.center {
-			margin-left:100px;
+			margin-left:150px;
 			width:300%;
 		}
 		.floatingBox {
@@ -89,35 +89,104 @@
 	<div class="center">
 		<h4 class="floatingBox"><strong> Num of Records Displayed</strong></h4>
 		<h4 class="floating-Box"><strong>Date Range</strong></h4>
-		<h6 class="floating-Box">From:</h6><input type="text">
-		<h6 class="floating-Box">To:</h6><input type="text">
+		<h6 class="floating-Box">From:</h6>
+        <input style="width: 3%; background:WhiteSmoke;" type="text" readonly>
+		<h6 class="floating-Box">To:</h6>
+        <input class="date" style="width: 3%;" type="text" placeholder="Select Date">
 	</div>
 	<div class="center">
-		<h6 class="floating-Box">Display per Page:</h6><input  class="floatingBox" type="text" name="dislay per page" value="20" style="background:WhiteSmoke;" readonly>
+		<h6 class="floating-Box">Display per Page:</h6>
+        <input type="text" name="dislay per page" value="25" style="background:WhiteSmoke; width: 4%;" readonly>
 		<h4 class="floatingBox1"><strong>User Name</strong></h4>
-		<h6 class="floating-Box">First Name:</h6><input type="text" name="first name" style="background:WhiteSmoke" value="<%= user.firstName %>" readonly>
-		<h6 class="floating-Box">Last Name:</h6><input type="text" name="first name" style="background:WhiteSmoke"  value="<%= user.lastName %>" readonly>
+		<h6 class="floating-Box">First Name:</h6><input type="text" name="first name" style="background:WhiteSmoke; width: 3%;" value="<%= user.firstName %>" readonly>
+		<h6 class="floating-Box">Last Name:</h6><input type="text" name="first name" style="background:WhiteSmoke; width: 3%;"  value="<%= user.lastName %>" readonly>
 	</div>
 	<div class="center">
 		<h4><strong>Other Customized Filters</strong></h4>
 		<h5 class="floatingBox3">Category1:
             <select class="select">
-                <option></option>
-                <option></option>
-                <option></option>
-                <option></option>
+                <option>1A.Trap Owner</option>
+                <option>1B.Location Name</option>
+                <option>1C.Location Type</option>
+                <option>1D.GeoLocation</option>
+                <option>1E.Country</option>
+                <option>1F.Province</option>
+                <option>1G.District</option>
+                <option>1H.Cropping System</option>
+                <option>1I.Rotation/Intercropping Crop</option>
+                <option>1J.Maize Variety</option>
+                <option>1K.Maize Planting Date</option>
+                <option>1L.Field Size</option>
+                <option>1M.General Health of Maize</option>
+                <option>1N.Date of Last Rain</option>
+                <option>1O.Entry Type</option>
+                <option>2A.Pests Present</option>
+                <option>2B.FAW Stage</option>
+                <option>2C.Early Damage Level</option>
+                <option>2D.Late Damage Level</option>
+                <option>2E.Natural Enemies Present</option>
+                <option>2F.Dead larvae killed by natural enemies </option>
+                <option>2G.% Plants Infested</option>
+                <option>2H.Control Undertaken</option>
+                <option>2I.Pesticide Litres Sprayed</option>
             </select>
         </h5>
-		<h5 class="floatingBox3">Content:<input></h5><br>
+		<h5 class="floatingBox3" >Content:<input></h5><br>
 		<h5 class="floatingBox3">Category2:
             <select class="select">
-
+                <option>1A.Trap Owner</option>
+                <option>1B.Location Name</option>
+                <option>1C.Location Type</option>
+                <option>1D.GeoLocation</option>
+                <option>1E.Country</option>
+                <option>1F.Province</option>
+                <option>1G.District</option>
+                <option>1H.Cropping System</option>
+                <option>1I.Rotation/Intercropping Crop</option>
+                <option>1J.Maize Variety</option>
+                <option>1K.Maize Planting Date</option>
+                <option>1L.Field Size</option>
+                <option>1M.General Health of Maize</option>
+                <option>1N.Date of Last Rain</option>
+                <option>1O.Entry Type</option>
+                <option>2A.Pests Present</option>
+                <option>2B.FAW Stage</option>
+                <option>2C.Early Damage Level</option>
+                <option>2D.Late Damage Level</option>
+                <option>2E.Natural Enemies Present</option>
+                <option>2F.Dead larvae killed by natural enemies </option>
+                <option>2G.% Plants Infested</option>
+                <option>2H.Control Undertaken</option>
+                <option>2I.Pesticide Litres Sprayed</option>
             </select>
         </h5>
 		<h5 class="floatingBox3">Content:<input></h5><br>
 		<h5 class="floatingBox3">Category3:
             <select class="select">
-
+                <option>1A.Trap Owner</option>
+                <option>1B.Location Name</option>
+                <option>1C.Location Type</option>
+                <option>1D.GeoLocation</option>
+                <option>1E.Country</option>
+                <option>1F.Province</option>
+                <option>1G.District</option>
+                <option>1H.Cropping System</option>
+                <option>1I.Rotation/Intercropping Crop</option>
+                <option>1J.Maize Variety</option>
+                <option>1K.Maize Planting Date</option>
+                <option>1L.Field Size</option>
+                <option>1M.General Health of Maize</option>
+                <option>1N.Date of Last Rain</option>
+                <option>1O.Entry Type</option>
+                <option>2A.Pests Present</option>
+                <option>2B.FAW Stage</option>
+                <option>2C.Early Damage Level</option>
+                <option>2D.Late Damage Level</option>
+                <option>2E.Natural Enemies Present</option>
+                <option>2F.Dead larvae killed by natural enemies </option>
+                <option>2G.% Plants Infested</option>
+                <option>2H.Control Undertaken</option>
+                <option>2I.Pesticide Litres Sprayed</option>
             </select>
         </h5>
 		<h5 class="floatingBox3">Content:<input></h5>
