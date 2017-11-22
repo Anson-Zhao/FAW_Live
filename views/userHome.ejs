@@ -18,12 +18,13 @@
     <style>
 		#Username{
 			position:relative;
-			left:998px;
+			left:990px;
 			top:35px;
+            width:14%;
 		}
 		.banner{
 			position:relative;
-			left:67px;
+			left:25px;
 			top:30px;
 			width:65%;
 		}
@@ -46,7 +47,7 @@
 			width:60%;
 		}
 		.center {
-			margin-left:170px;
+			margin-left:100px;
 			width:300%;
 		}
 		.floatingBox {
@@ -58,7 +59,6 @@
 		}
 		.floatingBox1{
 			display: inline-block;
-			width:350px;
 		}
 		.floatingBox3{
 			display: inline-table;
@@ -74,7 +74,7 @@
 <body>
 <div class="container">
 	<div class="dropdown">
-		<button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="Username"><%= user.firstName%>
+		<button class="btn btn-primary btn-lg" type="button" data-toggle="dropdown" id="Username"><%= user.firstName%>
 			<span class="caret"></span></button>
 		<a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
 		<ul id="userMenu" class="dropdown-menu dropdown-menu-right">

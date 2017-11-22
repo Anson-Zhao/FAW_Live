@@ -17,51 +17,15 @@
     <style>
         #Username{
             position:relative;
-            left:998px;
-            top:35px;
+            left:980px;
+            top:2px;
+            width:14%;
         }
         .banner{
-            position:relative;
-            left:67px;
-            top:30px;
-            width:65%;
-        }
-        #class1{
-            position:relative;
-            left:300px;
-            top:60px;
-            width:16%;
-        }
-        #class2{
-            position:relative;
-            left:500px;
-            top:60px;
-            width:16%;
-        }
-        #button{
-            width:3%;
-        }
-        .select{
+            position:fixed;
+            left:240px;
+            top:34px;
             width:60%;
-        }
-        .center {
-            margin-left:170px;
-            width:300%;
-        }
-        .floatingBox {
-            display: inline-block;
-            width:350px;
-        }
-        .floating-Box{
-            display: inline;
-        }
-        .floatingBox1{
-            display: inline-block;
-            width:350px;
-        }
-        .floatingBox3{
-            display: inline-table;
-            width:250px;
         }
         table, th{
             border: 1px solid black;
@@ -69,6 +33,10 @@
 
         }
         body { padding-top:80px; word-wrap:break-word; }
+
+        .container{
+            margin-left:90px;
+        }
     </style>
 
 </head>
@@ -83,9 +51,10 @@
 
         </ul>
     </div>
-
-    <form onsubmit="return checkForm()" action="/userProfile" method="post">
-        <h3><strong>User Name</strong>:
+    <div class="container">
+        <br><br><br>
+        <form onsubmit="return checkForm()" action="/userProfile" method="post">
+        <h4><strong>User Name</strong>:
             <label for="usernameF">First Name:</label>
             <input type="text" id="usernameF" name="usernameF"  value="<%= user.firstName %>">
             <label for="usernameL">Last Name:</label>
@@ -97,7 +66,7 @@
 
             <br>
             <div><strong>Password Change</strong>:    </div>
-        </h3>
+        </h4>
         <div >
             <label for="currentpassword">Current Password:</label>
             <input type="text" id="currentpassword" name="currentpassword" maxlength="2000px">
@@ -113,7 +82,8 @@
 
         <button id="SS"  type="submit" class="btn btn-warning btn-sm"> Submit </button>
         <a href="/userhome" class="btn btn-warning btn-sm">Cancel</a>
-    </form>
+        </form>
+    </div>
 </div>
 
 <script>
