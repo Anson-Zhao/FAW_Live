@@ -308,20 +308,16 @@
             } );
 
             $("#editUserButton").on("click", function () {
-                console.log("tstring: " + tstring);
-                alert ("edit Click!")
+//                console.log("tstring: " + tstring);
+//                alert ("edit Click!")
                 $.ajax({
-                    url: '/editUserQuery',
-                    type: 'GET',
+                    url: '/editUser',
+                    type: 'POST',
                     dataType: 'json',
                     async: false,
                     data: tstring,
                     success: function (result) {
-                        if (!result.error) {
-                            window.location.replace('/editUser')
-                        } else {
-                            alert (result.message)
-                        }
+                        window.location.replace('/editUser')
                     }
                 })
             });

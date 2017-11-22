@@ -318,21 +318,15 @@ module.exports = function (app, passport) {
 
     // Retrieve user data from user management page
     var edit_User, edit_firstName, edit_lastName, edit_userrole, edit_status;
-    app.get('/editUserQuery', isLoggedIn, function(req, res) {
-        console.log("Query: " + req.query.First_Name);
-        //console.log("Body: " + req.body);
+    app.post('/editUser', isLoggedIn, function(req, res) {
+        //console.log("Body: " + req.body.Last_Name);
 
-        // if (err) {
-        //     console.log(err);
-        //     res.json({"error": true, "message": "No user data found!"});
-        // } else {
-            edit_User = req.query.Username;
-            edit_firstName = req.query.First_Name;
-            edit_lastName = req.query.Last_Name;
-            edit_userrole = req.query.User_Role;
-            edit_status = req.query.Status;
-            res.json({"error": false, "message": "/editUser"});
-        // }
+        edit_User = req.body.Username;
+        edit_firstName = req.body.First_Name;
+        edit_lastName = req.body.Last_Name;
+        edit_userrole = req.body.User_Role;
+        edit_status = req.body.Status;
+        res.json({"error": false, "message": "/editUser"});
     });
 
     // =====================================
