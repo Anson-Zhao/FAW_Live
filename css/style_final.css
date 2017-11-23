@@ -67,7 +67,7 @@ input[type='file']{
 
 }
 
-input[type='submit']{
+input[type='submit'], #continue, #previous, .cancel, .clear {
     padding: 10px;
     background-color: #daf3ca;
     border-radius: 10px;

@@ -37,7 +37,7 @@
 
 	<h1 id="title">Step 1/2: General Form</h1>
 	<div id="container">
-		<form id = "uploadForm" method = "post" action = "/continue">
+		<form id = "uploadForm" method = "post" action = "/generalForm">
             <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= transactionID %>" readonly><br><br>
 			<h4>Your Name: &nbsp;&nbsp;&nbsp;</h4><input id="firstName" type="text" value="<%= firstname %>" readonly><input id="lastName" type="text" value="<%= lastname %>" readonly><br><br>
             <h4>Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE1" name="date" class="date" value=""><br><br>
@@ -131,7 +131,7 @@
                 data: $(this).serialize(),
                 success: function (result) {
                     if (!result.error) {
-                        window.location.replace('/submit')
+                        window.location.replace('/detailedForm')
                     } else {
                         alert (result.message)
                     }
@@ -309,7 +309,7 @@
     function rotationInterCropSystem() {
         $("#mainCrop").remove();
         $("#otherMainCrop").remove();
-        if (document.getElementById("cropSystem").value !== "SEASONAL") {
+        if (document.getElementById("cropSystem").value !== "SEASONAL" || document.getElementById("cropSystem").value === "") {
             var mainCropList = ["MAIZE", "RICE", "SORGHUM", "VEGETABLES", "OTHER"];
             var mainCropTitle = $("#mainCropTitle");
             var mainCropSelect = $("<select id='mainCrop' name='rota_inter_crop' onchange='otherMainCrop()' required>");
@@ -363,7 +363,7 @@
 //    function Continue() {
 //        $.ajax({
 //            type: "post",
-//            url: "/continue",
+//            url: "/generalForm",
 //            dataType: 'json',
 //            data: formData,
 //            success: function(result) {
