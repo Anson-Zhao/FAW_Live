@@ -328,6 +328,54 @@ module.exports = function (app, passport) {
     });
 
     app.post('/editUser', isLoggedIn, function(req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+
+        console.log("New Pass: " + req.body.newPassword);
+
+        if (req.body.newPassword !== "") {
+            var updatedUserPass = {
+                firstName: req.body.First_Name,
+                lastName: req.body.Last_Name,
+                userrole: req.body.User_Role,
+                status: req.body.Status,
+                newPassword: bcrypt.hashSync(req.body.newPassword, null, null)
+            };
+
+            var userUpdateStatPass = "UPDATE Users SET firstName = ?, lastName = ?, password = ?, userrole = ?, status = ?  WHERE username = ?";
+
+
+            connection.query(userUpdateStatPass,[updatedUserPass.firstName, updatedUserPass.lastName, updatedUserPass.newPassword, updatedUserPass.userrole, updatedUserPass.status, edit_User],function(err, rows) {
+                // console.log(dateTime, req.user.username);
+
+                if (err) {
+                    console.log(err);
+                    res.json({"error": true, "message": "Update failed!"});
+                } else {
+                    res.json({"error": false, "message": "/userManagement"});
+                }
+            })
+
+        } else {
+            var updatedUser = {
+                firstName: req.body.First_Name,
+                lastName: req.body.Last_Name,
+                userrole: req.body.User_Role,
+                status: req.body.Status
+            };
+
+            var userUpdateStat = "UPDATE Users SET firstName = ?, lastName = ?, userrole = ?, status = ?  WHERE username = ?";
+
+            connection.query(userUpdateStat,[updatedUser.firstName, updatedUser.lastName, updatedUser.userrole, updatedUser.status, edit_User],function(err, rows) {
+                // console.log(dateTime, req.user.username);
+
+                if (err) {
+                    console.log(err);
+                    res.json({"error": true, "message": "Update failed!"});
+                } else {
+                    res.json({"error": false, "message": "/userManagement"});
+                }
+            })
+        }
 
     });
 
