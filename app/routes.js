@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt-nodejs');
 
 var filePathName = "";
+var filePath;
 var transactionID;
 
 var storage = multer.diskStorage({
@@ -375,8 +376,14 @@ module.exports = function (app, passport) {
                         console.log(err);
                     } else {
                         if (req.user.userrole === "Admin") {
-                            console.log(req.user.firstName);
-                            res.redirect('/detailedForm');
+                            // console.log(req.user.firstName);
+                            res.render('form.ejs', {
+                                user: req.user, // get the user out of session and pass to template
+                                message: req.flash('Data Entry Message'),
+                                firstname: req.user.firstName,
+                                lastname: req.user.lastName,
+                                transactionID: transactionID
+                            });
 
                         } else if (req.user.userrole === "Regular") {
                             res.redirect('/generalForm');
@@ -384,6 +391,22 @@ module.exports = function (app, passport) {
                     }
                 });
             }
+        });
+    });
+    // check
+    app.get('/check', isLoggedIn, function (req, res) {
+        res.json({"error": false, "message": "complete"});
+    });
+
+    // Show form
+    app.get('/form', isLoggedIn, function (req, res) {
+        // console.log("A01");
+        res.render('form.ejs', {
+            user: req.user, // get the user out of session and pass to template
+            message: req.flash('Data Entry Message'),
+            firstname: req.user.firstName,
+            lastname: req.user.lastName,
+            transactionID: transactionID
         });
     });
 
@@ -487,7 +510,8 @@ module.exports = function (app, passport) {
                 //res.send("Error uploading file.");
             } else {
                 console.log("Success:" + filePathName);
-                res.json({"error": true, "message": filePathName});
+                res.json({"error": false, "message": filePathName});
+                filePath = filePathName;
                 filePathName = "";
                 //res.send("File is uploaded");
             }
@@ -497,6 +521,60 @@ module.exports = function (app, passport) {
     // Submit detailed form
     app.post('/detailedForm', isLoggedIn, function (req, res) {
         console.log("AZ");
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        console.log(req.body);
+
+        var result = Object.keys(req.body).map(function (key) {
+            return [String(key), req.body[key]];
+        });
+
+        var name = "";
+        var value = "";
+
+        for (var i = 0; i < result.length; i++) {
+            name += result[i][0] + ", ";
+            value += '"' + result[i][1] + '"' + ", ";
+        }
+        name = name.substring(0, name.length - 2);
+        value = value.substring(0, value.length - 2);
+
+        var path = filePath.split(";");
+        var pest = "";
+        var damage = "";
+
+        for (var i = 0; i < path.length; i++) {
+            if (path[i].substring(0,11) === "photoOfPest") {
+                pest += "https://faw.aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+            } else if (path[i].substring(0,13) === "photoOfDamage") {
+                damage += "https://faw.aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+            }
+        }
+        pest = pest.substring(0, pest.length - 1);
+        damage = damage.substring(0, damage.length - 1);
+
+        name += ", pestPhoto, damagePhoto";
+        value += ", '" + pest + "', '" + damage + "'";
+        console.log(transactionID);
+        var deleteStatement = "DELETE FROM FAW.Detailed_Form WHERE transactionID = '" + transactionID + "'; ";
+        var insertStatement = "INSERT INTO FAW.Detailed_Form (" + name + ") VALUES (" + value + ");";
+        console.log(insertStatement);
+
+        connection.query(deleteStatement + insertStatement, function (err, results, fields) {
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "Insert Error! Check your entry."});
+            } else {
+                res.json({"error": false, "message": "/detailedForm"});
+                // var type = req.body.entryType;
+                // if (type === "SCOUTING") {
+                //     console.log("A1");
+                //     res.redirect('/detailedForm');
+                // } else if (type === "TRAP") {
+                //     console.log("B1");// console.log("B");
+                //     res.redirect('/detailedForm');
+                // }
+            }
+        });
     });
 
     // show the data query form
