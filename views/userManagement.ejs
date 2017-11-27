@@ -122,7 +122,7 @@
 
         <input type="submit" onclick="query()" class="btn-default btn" style="color: #ffffff; background-color: #a7cb9f" value="Filter">
         <button type="button" id="editUserButton" class="delete-row btn-default btn">Edit User(s)</button>
-        <!--<button type="button" class="delete-row btn-default btn">Delete User(s)</button>-->
+        <button type="button" id="suspendUserButton" class="btn-default btn">Suspend User(s)</button>
     </div>
     <br>
     <h4 style="margin-left:75px;"><strong>Most Recent Records:</strong></h4>
@@ -288,6 +288,21 @@
                     }
                 })
             });
+
+
+
+            $("#suspendUserButton").on("click", function () {
+                $.ajax({
+                    url: '/suspendUserQuery',
+                    type: 'GET',
+                    dataType: 'json',
+                    async: false,
+                    data: tstring,
+                    success: function (result) {
+
+                    }
+                })
+            });
         });
 
         function query() {
@@ -297,7 +312,11 @@
             var dateModifiedTo = document.getElementsByClassName("datePicker")[3].value;
             var firstName = document.getElementById("firstName").value;
             var lastName = document.getElementById("lastName").value;
-            var userrole = $("input[name='userrole']:checked").val();
+            if ($("input[name='userrole']").prop("checked")) {
+                var userrole = $("input[name='userrole']:checked").val();
+            } else {
+                userrole = "";
+            }
 
             queryString1 = "dateCreatedFrom=" + dateCreatedFrom + "&dateCreatedTo=" + dateCreatedTo + "&dateModifiedFrom=" + dateModifiedFrom + "&dateModifiedTo=" + dateModifiedTo;
             queryString2 = "&firstName=" + firstName + "&lastName=" + lastName + "&userrole=" + userrole;
@@ -327,6 +346,7 @@
                 success: function (resp) {
                     for (var i = 0; i < resp.length; i++) {
                         table.row.add( [
+                            resp.[i].("<td><input type="checkbox" />    &nbsp;   </td>"),
                             resp[i].firstName,
                             resp[i].lastName,
                             resp[i].username,

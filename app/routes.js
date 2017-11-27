@@ -240,7 +240,7 @@ module.exports = function (app, passport) {
     // Filter by search criteria
     app.get('/filterUser', isLoggedIn, function (req, res) {
 
-        console.log("dQ: " + req.query.dateCreatedFrom);
+        //console.log("dQ: " + req.query.dateCreatedFrom);
         // connection.query('USE ' + config.Login_db);
 
         var queryStat = "SELECT * FROM Users WHERE ";
@@ -291,6 +291,7 @@ module.exports = function (app, passport) {
 
         function userQuery() {
             res.setHeader("Access-Control-Allow-Origin", "*");
+            console.log("Query Statement: " + queryStat);
 
             connection.query(queryStat, function (err, results, fields) {
 
@@ -314,19 +315,32 @@ module.exports = function (app, passport) {
             });
         }
 
+        var j = 0;
+
         for (var i = 0; i < myQuery.length; i++) {
-            if (!!myQuery[i].fieldVal) {
-                if (i == 0) {
-                    queryStat += myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                } else {
-                    queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                    if (i == myQuery.length - 1) {
+            console.log("i = " + i);
+            console.log("field Value: " + !!myQuery[i].fieldVal);
+            if (i === myQuery.length - 1) {
+                if (!!myQuery[i].fieldVal) {
+                    if (j === 0) {
+                        queryStat += myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        j = 1;
+                        userQuery()
+                    } else {
+                        queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
                         userQuery()
                     }
+                } else {
+                    userQuery()
                 }
             } else {
-                if (i == myQuery.length - 1) {
-                    userQuery()
+                if (!!myQuery[i].fieldVal) {
+                    if (j === 0) {
+                        queryStat += myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        j = 1;
+                    } else {
+                        queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                    }
                 }
             }
         }
@@ -359,6 +373,10 @@ module.exports = function (app, passport) {
 
     app.post('/editUser', isLoggedIn, function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time2;
 
         console.log("New Pass: " + req.body.newPassword);
 
@@ -367,14 +385,15 @@ module.exports = function (app, passport) {
                 firstName: req.body.First_Name,
                 lastName: req.body.Last_Name,
                 userrole: req.body.User_Role,
+                modifiedUser: req.user.username,
                 status: req.body.Status,
                 newPassword: bcrypt.hashSync(req.body.newPassword, null, null)
             };
 
-            var userUpdateStatPass = "UPDATE Users SET firstName = ?, lastName = ?, password = ?, userrole = ?, status = ?  WHERE username = ?";
+            var userUpdateStatPass = "UPDATE Users SET firstName = ?, lastName = ?, password = ?, userrole = ?, modifiedUser = ?, dateModified = ?, status = ?  WHERE username = ?";
 
 
-            connection.query(userUpdateStatPass,[updatedUserPass.firstName, updatedUserPass.lastName, updatedUserPass.newPassword, updatedUserPass.userrole, updatedUserPass.status, edit_User],function(err, rows) {
+            connection.query(userUpdateStatPass,[updatedUserPass.firstName, updatedUserPass.lastName, updatedUserPass.newPassword, updatedUserPass.userrole, updatedUserPass.modifiedUser, dateTime, updatedUserPass.status, edit_User],function(err, rows) {
                 // console.log(dateTime, req.user.username);
 
                 if (err) {
@@ -390,12 +409,13 @@ module.exports = function (app, passport) {
                 firstName: req.body.First_Name,
                 lastName: req.body.Last_Name,
                 userrole: req.body.User_Role,
+                modifiedUser: req.user.username,
                 status: req.body.Status
             };
 
-            var userUpdateStat = "UPDATE Users SET firstName = ?, lastName = ?, userrole = ?, status = ?  WHERE username = ?";
+            var userUpdateStat = "UPDATE Users SET firstName = ?, lastName = ?, userrole = ?, modifiedUser = ?, dateModified = ?, status = ?  WHERE username = ?";
 
-            connection.query(userUpdateStat,[updatedUser.firstName, updatedUser.lastName, updatedUser.userrole, updatedUser.status, edit_User],function(err, rows) {
+            connection.query(userUpdateStat,[updatedUser.firstName, updatedUser.lastName, updatedUser.userrole, updatedUser.modifiedUser, dateTime, updatedUser.status, edit_User],function(err, rows) {
                 // console.log(dateTime, req.user.username);
 
                 if (err) {
@@ -458,6 +478,22 @@ module.exports = function (app, passport) {
                     }
                 });
             }
+        });
+    });
+    // check
+    app.get('/check', isLoggedIn, function (req, res) {
+        res.json({"error": false, "message": "complete"});
+    });
+
+    // Show form
+    app.get('/form', isLoggedIn, function (req, res) {
+        // console.log("A01");
+        res.render('form.ejs', {
+            user: req.user, // get the user out of session and pass to template
+            message: req.flash('Data Entry Message'),
+            firstname: req.user.firstName,
+            lastname: req.user.lastName,
+            transactionID: transactionID
         });
     });
 
