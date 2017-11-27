@@ -82,8 +82,10 @@
         });
     });
     var today = new Date();
-    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-    document.getElementById("DATE").value = date;
+    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date + ' ' + time2;
+    document.getElementById("DATE").value = dateTime;
 </script>
 </body>
 </html>

@@ -186,7 +186,6 @@ module.exports = function (app, passport) {
             userrole: req.body.userrole,
             dateCreated: req.body.dateCreated,
             createdUser: req.body.createdUser,
-            dateModified: req.body.dateCreated,
             status: req.body.status
         };
 
@@ -289,20 +288,30 @@ module.exports = function (app, passport) {
         var j = 0;
 
         for (var i = 0; i < myQuery.length; i++) {
-
-            if (!!myQuery[i].fieldVal) {
-                 if (j === 0) {
-                     queryStat += myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                     j = 1;
-                     if (i === myQuery.length - 1) {
-                         userQuery()
-                     }
-                 } else {
-                     queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                     if (i === myQuery.length - 1) {
-                         userQuery()
-                     }
-                 }
+            console.log("i = " + i);
+            console.log("field Value: " + !!myQuery[i].fieldVal);
+            if (i === myQuery.length - 1) {
+                if (!!myQuery[i].fieldVal) {
+                    if (j === 0) {
+                        queryStat += myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        j = 1;
+                        userQuery()
+                    } else {
+                        queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        userQuery()
+                    }
+                } else {
+                    userQuery()
+                }
+            } else {
+                if (!!myQuery[i].fieldVal) {
+                    if (j === 0) {
+                        queryStat += myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        j = 1;
+                    } else {
+                        queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                    }
+                }
             }
         }
     });
@@ -346,14 +355,15 @@ module.exports = function (app, passport) {
                 firstName: req.body.First_Name,
                 lastName: req.body.Last_Name,
                 userrole: req.body.User_Role,
+                modifiedUser: req.user.username,
                 status: req.body.Status,
                 newPassword: bcrypt.hashSync(req.body.newPassword, null, null)
             };
 
-            var userUpdateStatPass = "UPDATE Users SET firstName = ?, lastName = ?, password = ?, userrole = ?, dateModified = ?, status = ?  WHERE username = ?";
+            var userUpdateStatPass = "UPDATE Users SET firstName = ?, lastName = ?, password = ?, userrole = ?, modifiedUser = ?, dateModified = ?, status = ?  WHERE username = ?";
 
 
-            connection.query(userUpdateStatPass,[updatedUserPass.firstName, updatedUserPass.lastName, updatedUserPass.newPassword, updatedUserPass.userrole, dateTime, updatedUserPass.status, edit_User],function(err, rows) {
+            connection.query(userUpdateStatPass,[updatedUserPass.firstName, updatedUserPass.lastName, updatedUserPass.newPassword, updatedUserPass.userrole, updatedUserPass.modifiedUser, dateTime, updatedUserPass.status, edit_User],function(err, rows) {
                 // console.log(dateTime, req.user.username);
 
                 if (err) {
@@ -369,12 +379,13 @@ module.exports = function (app, passport) {
                 firstName: req.body.First_Name,
                 lastName: req.body.Last_Name,
                 userrole: req.body.User_Role,
+                modifiedUser: req.user.username,
                 status: req.body.Status
             };
 
-            var userUpdateStat = "UPDATE Users SET firstName = ?, lastName = ?, userrole = ?, dateModified = ?, status = ?  WHERE username = ?";
+            var userUpdateStat = "UPDATE Users SET firstName = ?, lastName = ?, userrole = ?, modifiedUser = ?, dateModified = ?, status = ?  WHERE username = ?";
 
-            connection.query(userUpdateStat,[updatedUser.firstName, updatedUser.lastName, updatedUser.userrole, dateTime, updatedUser.status, edit_User],function(err, rows) {
+            connection.query(userUpdateStat,[updatedUser.firstName, updatedUser.lastName, updatedUser.userrole, updatedUser.modifiedUser, dateTime, updatedUser.status, edit_User],function(err, rows) {
                 // console.log(dateTime, req.user.username);
 
                 if (err) {
