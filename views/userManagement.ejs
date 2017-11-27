@@ -2,18 +2,38 @@
 <!doctype html>
 <html>
 <head>
-    <title>FAW/Locust -  User Management</title>
-    <meta charset="UTF-8">
-    <!--<link rel="stylesheet" href="/css/style_query.css" type="text/css">-->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+    <title>FAW/Locust - User Management</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//unpkg.com/flatpickr"></script>
 
     <style>
-        body 		{ padding-top:80px; word-wrap:break-word; }
-        form{
+        #Username{
+            position:relative;
+            left:990px;
+            width:14%;
+        }
+        .banner{
+            position:relative;
+            left:67px;
+            top:30px;
+            width:60%;
+        }
+        #class1{
+            position:relative;
+            left:300px;
+            top:45px;
+            width:16%;
+        }form{
             margin: 20px 0;
         }
         form input, button{
@@ -26,6 +46,7 @@
         }
         table, th, td{
             border: 1px solid #cdcdcd;
+            text-align:center;
         }
         table th, table td{
             padding: 10px;
@@ -33,6 +54,7 @@
         }
         .floatingBox {
             display: inline-block;
+            /*width:350px;*/
         }
         .inputBoxDate {
             width: 10%;
@@ -44,70 +66,55 @@
         #userListForm {
             margin: 0 10% 0 10%;
         }
-        #subtitles {
-            margin-right: 10%;
-        }
-        #dataDisplay {
+        #dvData {
             overflow-x: auto;
+            width: 70%;
+            margin-left:150px;
         }
     </style>
-    <script src="//unpkg.com/flatpickr"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
 
 </head>
 <body>
 <div class="container">
-    <div class="page-header text-center">
-        <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px" /></a>
-        <h1><span class="fa fa-anchor"></span> FAW Project -  User Management </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
-        <a href="/profile" class="btn btn-default btn-sm"> User Home </a>
-        <a href="/dataEntry" class="btn btn-default btn-sm"> Data Entry </a>
-        <!--<a href="/signup" class="btn btn-default btn-sm"> Sign Up </a>-->
-        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-        <a type="button"  href="/signup" class="btn-default btn"> Add User </a>
+    <div class="dropdown">
+        <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="Username"><%= user.firstName%>
+            <span class="caret"></span></button>
+        <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
+        <ul id="userMenu" class="dropdown-menu dropdown-menu-right">
+
+        </ul>
     </div>
+    <!--<a href="/newEntry" class="btn btn-default btn-lg" id="class1">New Entry</a>-->
+    <!--<a href="/query" class="btn btn-default btn-lg" id="class2">Data History</a>-->
+    <a href="/userhome" class="btn btn-default btn-lg" id="class1">User Home</a>
+    <a type="button"  href="/signup" class="btn btn-default btn-lg" id="class2"> Add User </a>
 
-    <!--<form>-->
-        <!--<input type="text" id="username" placeholder="Enter New Username">-->
-        <!--<input type="text" id="firstName" placeholder="Enter New First Name">-->
-        <!--<input type="text" id="lastName" placeholder="Enter New Last Name">-->
-        <!--<input type="text" id="password" placeholder="Enter New Password">-->
-        <!--<input type="radio" name="userrole" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
-        <!--<input type="radio" name="userrole" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
-        <!--<input type="button" class="add-row" value="Add Row">-->
-    <!--</form>-->
+    <div class="container">
+        <br><br><br>
+        <div id="userListForm">
+            <div class="row">
+                <h4 class="floatingBox"><strong>Date Created:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <h6 class="floatingBox">From:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateCreated" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <h6 class="floatingBox">To:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateCreated" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-    <div id="userListForm">
-        <div class="row">
-            <h4 class="floatingBox"><strong>Date Created:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <h6 class="floatingBox">From:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateCreated" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <h6 class="floatingBox">To:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateCreated" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <h4 class="floatingBox"><strong>Date Modified:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <h6 class="floatingBox">From:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateModified" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;
+                <h6 class="floatingBox">To:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateModified" placeholder="Select Date">
+            </div><br>
+            <div class="row">
+                <h4 class="floatingBox"><strong>User Name:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <h6 class="floatingBox">First Name:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate" type="text" id="firstName" placeholder="Enter First Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <h6 class="floatingBox">Last Name:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate" type="text" id="lastName" placeholder="Enter Last Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-            <h4 class="floatingBox"><strong>Date Modified:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <h6 class="floatingBox">From:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateModified" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;
-            <h6 class="floatingBox">To:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateModified" placeholder="Select Date">
-        </div><br>
-        <div class="row">
-            <h4 class="floatingBox"><strong>User Name:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <h6 class="floatingBox">First Name:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate" type="text" id="firstName" placeholder="Enter First Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <h6 class="floatingBox">Last Name:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate" type="text" id="lastName" placeholder="Enter Last Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <h4 class="floatingBox"><strong>User Role:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="userrole" id="Admin" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="userrole" id="Regular" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <br>
 
-            <h4 class="floatingBox"><strong>User Role:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="radio" name="userrole" id="Admin" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="radio" name="userrole" id="Regular" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;
-        </div>
-        <br>
-
-            <!--<input type="text" id="lastName" placeholder="Enter New Last Name">-->
-            <!--<input type="text" id="password" placeholder="Enter New Password">-->
-            <!--<input type="radio" name="userrole" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
-            <!--<input type="radio" name="userrole" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;-->
-            <!--<input type="button" class="add-row" value="Add Row">-->
         <input type="submit" onclick="query()" class="btn-default btn" style="color: #ffffff; background-color: #a7cb9f" value="Filter">
         <button type="button" id="editUserButton" class="delete-row btn-default btn">Edit User(s)</button>
-        <button type="button" class="delete-row btn-default btn">Delete User(s)</button>
+        <!--<button type="button" class="delete-row btn-default btn">Delete User(s)</button>-->
     </div>
     <br>
     <h4 style="margin-left:75px;"><strong>Most Recent Records:</strong></h4>
@@ -149,7 +156,6 @@
             </tr>
             </tfoot>
         </table>
-
     </div>
 
     <script type="text/javascript">
@@ -160,9 +166,8 @@
         var queryString2;
         var table = $('#dataDisplay').DataTable();
         var tstring = "";
-//        var table = $("#dataDisplay");
-//        var t = table.DataTable();
-
+        var UserRole = "<%= user.userrole %>";
+        var DropMenu;
 
         $(document).ready(function(){
             $(function() {
@@ -170,7 +175,21 @@
                     dateFormat: "Y-m-d",
                     time_24hr: true
                 });
+
+                if (UserRole === "Admin") {
+                    DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
+                        "\t\t\t<li><a href=\"/userManagement\">User Management</a></li>\n" +
+                        "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
+                    $("#userMenu").empty();
+                    $("#userMenu").append(DropMenu)
+                } else if ( UserRole === "Regular") {
+                    DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
+                        "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
+                    $("#userMenu").empty();
+                    $("#userMenu").append(DropMenu)
+                }
             });
+
             $('#dataDisplay tbody').on( 'click', 'tr', function () {
                 if ( $(this).hasClass('selected') ) {
                     $(this).removeClass('selected');
@@ -250,20 +269,14 @@
             } );
 
             $("#editUserButton").on("click", function () {
-                console.log("tstring: " + tstring);
-                alert ("edit Click!")
                 $.ajax({
-                    url: '/editUser',
-                    type: 'POST',
+                    url: '/editUserQuery',
+                    type: 'GET',
                     dataType: 'json',
-//                    async: false,
+                    async: false,
                     data: tstring,
                     success: function (result) {
-                        if (!result.error) {
-                            window.location.replace('/editUserFinal')
-                        } else {
-                            alert (result.message)
-                        }
+                        window.location.replace('/editUser')
                     }
                 })
             });
@@ -304,6 +317,7 @@
 
         var queryAndDisplay = function (querystr) {
             alert(querystr);
+            console.log("querystr: " + querystr);
 
             $.ajax({
                 url: '/filterUser',
@@ -326,59 +340,12 @@
                             resp[i].status,
                             resp[i].lastLoginTime
                         ] ).draw( false );
-
-//                    $("#dvData").append($("<table id='dataDisplay'></table>"));
-//
-//                      table.append($("<tr id='title'>"));
-//                    var field = [
-//                        "Select",
-//                        "First Name",
-//                        "Last Name",
-//                        "Username",
-//                        "Password",
-//                        "User Role",
-//                        "Date Created",
-//                        "Date Last Modified"
-//                    ];
-//
-//                    for (var i = 0; i < field.length; i++) {
-//                        $("#title").append($("<th>" + field[i] + "</th>"));
-//                    }
-//                    table.append($("</tr>"));
-
-//                        table.append($("<tr id='dataColumn" + (i + 1) + "' >"));
-//                        $("#dataColumn" + (i + 1)).append($("<td>" + "<input type='checkbox' name='record'>" + "</td>" + "<td contenteditable='true' >" + resp[i].firstName + "</td>" + "<td contenteditable='true'>" + resp[i].lastName + "</td>" + "<td contenteditable='true'>" + resp[i].username + "</td>" + "<td>" + resp[i].password + "</td>" + "<td contenteditable='true'>" + resp[i].userrole + "</td>" + "<td contenteditable='true'>" + resp[i].dateCreated + "</td>" + "<td contenteditable='true'>" + resp[i].dateModified + "</td>"));
-
-
-//                        table.append($("</tr>"));
                     }
                 }
 
             });
         }
 
-
-
-        //        $(function () {
-        //            $("td").dblclick(function () {
-        //                var OriginalContent = $(this).text();
-        //
-        //                $(this).addClass("cellEditing");
-        //                $(this).html(" " + OriginalContent + " ");
-        //                $(this).children().first().focus();
-        //                $(this).children().first().keypress(function (e) {
-        //                    if (e.which === 13) {
-        //                        var newContent = $(this).val();
-        //                        $(this).parent().text(newContent);
-        //                        $(this).parent().removeClass("cellEditing");
-        //                    }
-        //                });
-        //                $(this).children().first().blur(function(){
-        //                    $(this).parent().text(OriginalContent);
-        //                    $(this).parent().removeClass("cellEditing");
-        //                });
-        //            });
-        //        });
     </script>
 </div>
 </body>

@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt-nodejs');
 
 var filePathName = "";
+var filePath;
 var transactionID;
 
 var storage = multer.diskStorage({
@@ -51,7 +52,7 @@ module.exports = function (app, passport) {
 
     // process the login form
     app.post('/login', passport.authenticate('local-login', {
-            successRedirect: '/userhome', // redirect to the secure profile section
+            successRedirect: '/statusUpdate', // redirect to the secure profile section
             failureRedirect: '/login', // redirect back to the signup page if there is an error
             failureFlash: true // allow flash messages
         }),
@@ -63,9 +64,105 @@ module.exports = function (app, passport) {
             res.redirect('/login');
         });
 
+    // Update user login status
+    app.get('/statusUpdate', isLoggedIn, function (req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time2;
+
+        var statusUpdate = "UPDATE Users SET status = 'Active', lastLoginTime = ? WHERE username = ?";
+
+        connection.query(statusUpdate,[dateTime, req.user.username],function(err, rows) {
+            // console.log(dateTime, req.user.username);
+
+            if (err) {
+                console.log(err);
+                res.render('login.ejs', {message: req.flash('Please try to login again')});
+            } else {
+                res.redirect('/userhome');
+                // render the page and pass in any flash data if it exists
+            }
+        })
+    });
+
     // =====================================
-    // SIGNUP ==============================
+    // USER PROFILE SECTION ================
     // =====================================
+    // we will want this protected so you have to be logged in to visit
+    // we will use route middleware to verify this (the isLoggedIn function)
+
+    // Show user profile page
+    app.get('/userProfile', function (req, res) {
+        res.render('userProfile.ejs', {user: req.user});
+    });
+
+    // Update user profile page
+    app.post('/userProfile', function (req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+        // connection.query('USE ' + config.Login_db); // Locate Login DB
+        var user = req.user;
+        var newPassword = {
+            firestname: req.body.usernameF,
+            lastname: req.body.usernameL,
+            username: req.body.username,
+            currentpassword: req.body.currentpassword,
+            Newpassword: bcrypt.hashSync(req.body.newpassword, null, null),
+            ConfirmPassword: bcrypt.hashSync(req.body.Confirmpassword, null, null)
+        };
+        // var changeusername = "'UPDATE Users Set password = '" + newPassword.usernameF + "' WHERE username        "
+
+        var changepassword = "UPDATE Users SET password = '" + newPassword.Newpassword + "' WHERE username = '" + user.username + "'";
+        console.log(newPassword.Newpassword, user.username);
+        connection.query("SELECT * FROM Users WHERE username = ?", [user.username], function (err, rows) {
+            // console.log(rows);
+            var result = bcrypt.compareSync(newPassword.currentpassword, user.password);
+            console.log(result);
+            if (result) {
+                console.log("Password correct");
+                connection.query(changepassword, function (err, rows) {
+
+                    if (err) {
+                        console.log(err);
+                        res.send("New Password Change Fail!");
+                        res.end();
+                    } else {
+                        res.render('userHome.ejs', {
+                            user: req.user // get the user out of session and pass to template
+                        });
+                    }
+                })
+            } else {
+                console.log("Password wrong");
+            }
+
+        });
+    });
+
+    // =====================================
+    // USER MANAGEMENT SECTION =============
+    // =====================================
+    // we will want this protected so you have to be logged in to visit
+    // we will use route middleware to verify this (the isLoggedIn function)
+
+    // Show user management home page
+    app.get('/userManagement', isLoggedIn, function (req, res) {
+        var UserQuery = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
+
+        connection.query(UserQuery, function (err, results, fields) {
+
+            if (!results[0].userrole) {
+                console.log("Error");
+            } else if (results[0].userrole === "Admin" || "Regular") {
+                // process the signup form
+                res.render('userManagement.ejs', {
+                    user: req.user // get the user out of session and pass to template
+                });
+            }
+        });
+    });
+
     // show the signup form
     app.get('/signup', isLoggedIn, function (req, res) {
 
@@ -104,465 +201,15 @@ module.exports = function (app, passport) {
                 res.send("New User Insert Fail!");
                 res.end();
             } else {
-                res.render('user_home_Admin.ejs', {
+                res.render('userHome.ejs', {
                     user: req.user // get the user out of session and pass to template
                 });
             }
         });
     });
 
-
-    // =====================================
-    // SIGNOUT =========================
-    // =====================================
-    //shouw the signout form
-    app.get('/signout', function (req, res) {
-        // render the page and pass in any flash data if it exists
-        res.render('signout.ejs', {message: req.flash('signoutMessage')});
-    });
-    app.post('/signout', passport.authenticate('local-login', {
-            successRedirect: '/userhome', // redirect to the secure profile section
-            failureRedirect: '/signout', // redirect back to the signup page if there is an error
-            failureFlash: true // allow flash messages
-        }),
-        function (req, res) {
-            if (req.body.remember) {
-                req.session.cookie.maxAge = 1000 * 60 * 3;
-                req.session.cookie.expires = false;
-            res.redirect('/signout');
-            }
-        });
-
-    app.post('/session', function(req, res) {
-        User.findOne({ username: req.body.username })
-            .select('salt') // my mongoose schema doesn't fetches salt
-            .select('password') // and password by default
-            .exec(function(err, user) {
-                if (err || user === null) throw err; // awful error handling here
-                // mongoose schema methods which checks if the sent credentials
-                // are equal to the hashed password (allows callback)
-                user.hasEqualPassword(req.body.password, function(hasEqualPassword) {
-                    if (hasEqualPassword) {
-                        // if the password matches we do this:
-                        req.session.authenticated = true; // flag the session, all logged-in check now check if authenticated is true (this is required for the secured-area-check-middleware)
-                        req.session.user = user; // this is optionally. I have done this because I want to have the user credentials available
-                        // another benefit of storing the user instance in the session is
-                        // that we can gain from the speed of redis. If the user logs out we would have to save the user instance in the session (didn't tried this)
-                        res.send(200); // sent the client that everything gone ok
-                    } else {
-                        res.send("wrong password", 500); // tells the client that the password was wrong (on production sys you want to hide what gone wronge)
-                    }
-                });
-            });
-    });
-    app.delete('/session', function(req, res) {
-        // here is our security check
-        // if you use a isAuthenticated-middleware you could make this shorter
-        if (req.session.authenticated) {
-            // this destroys the current session (not really necessary because you get a new one
-            req.session.destroy(function() {
-                // if you don't want destroy the whole session, because you anyway get a new one you also could just change the flags and remove the private informations
-                // req.session.user.save(callback(err, user)) // didn't checked this
-                //delete req.session.user;  // remove credentials
-                //req.session.authenticated = false; // set flag
-                //res.clearCookie('connect.sid', { path: '/' }); // see comments above                res.send('removed session', 200); // tell the client everything went well
-            });
-        } else {
-            res.send('cant remove public session', 500); // public sessions don't containt sensible information so we leave them
-        }
-    });
-
-    // =====================================
-    // PROFILE SECTION ==================
-    // =====================================
-    // we will want this protected so you have to be logged in to visit
-    // we will use route middleware to verify this (the isLoggedIn function)
-    app.get('/userhome', isLoggedIn, function (req, res) {
-        var queryStatementTest = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
-
-        connection.query(queryStatementTest, function (err, results, fields) {
-            //console.log(results);
-
-            if (!results[0].userrole) {
-                console.log("Error");
-            } else if (results[0].userrole === "Admin") {
-                // process the signup form
-                res.render('user_home_Admin.ejs', {
-                    user: req.user // get the user out of session and pass to template
-                });
-            } else if (results[0].userrole === "Regular") {
-                res.render('user_home_Regular.ejs', {
-                    user: req.user // get the user out of session and pass to template
-                });
-            }
-        });
-    });
-
-    // =====================================
-    // LOGOUT ===========================
-    // =====================================
-    app.get('/logout', function (req, res) {
-        req.logout();
-        req.session.destroy();
-        res.redirect('/login');
-    });
-
-    app.post('/upload', fileUpload, function (req,res) {
-        console.log("ABC");
-        //console.log(req.headers.origin);
-        res.setHeader("Access-Control-Allow-Origin", "*");
-
-        fileUpload(req, res, function (err) {
-            if (err) {
-                console.log(err);
-                res.json({"error": true, "message": "Fail"});
-                filePathName = "";
-                //res.send("Error uploading file.");
-            } else {
-                console.log("Success:" + filePathName);
-                res.json({"error": false, "message": filePathName});
-                filePathName = "";
-                //res.send("File is uploaded");
-            }
-        });
-    });
-
-    app.get('/submit', isLoggedIn, function (req, res) {
-        res.render('detailedForm.ejs', {
-            user: req.user, // get the user out of session and pass to template
-            message: req.flash('Data Entry Message'),
-            transactionID: transactionID
-        });
-    });
-
-    app.post('/submit', isLoggedIn, function (req, res) {
-        console.log("AZ");
-    });
-
-    app.get('/continue', isLoggedIn, function (req, res) {
-        // console.log("A01");
-        res.render('generalForm.ejs', {
-            user: req.user, // get the user out of session and pass to template
-            message: req.flash('Data Entry Message'),
-            firstname: req.user.firstName,
-            lastname: req.user.lastName,
-            transactionID: transactionID
-        });
-    });
-
-    app.post('/continue', isLoggedIn, function (req, res) {
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        console.log(req.body);
-
-        var result = Object.keys(req.body).map(function (key) {
-            return [String(key), req.body[key]];
-        });
-
-        var name = "";
-        var value = "";
-
-        for (var i = 0; i < result.length; i++) {
-            if (result[i][0] === "latitudeDirection" || result[i][0] === "longitudeDirection") {
-                // lati and long
-                name += result[i][0].substring(0, result[i][0].length - 9) + ", ";
-                value += '"' + result[i][1] + " " + result[i + 1][1] + "° " + result[i + 2][1] + "' " + result[i + 3][1] + "''" + '"' + ", ";
-                i = i + 3;
-            } else if (result[i][0] === "rota_inter_crop" && result[i][1] === "OTHER") {
-                // other main crop
-                name += result[i][0] + ", ";
-                value += '"' + result[i + 1][1] + '"' + ", ";
-                i = i + 1;
-            } else if (result[i][0] === "fieldSizeInteger") {
-                // field size
-                name += result[i][0].substring(0, result[i][0].length - 7) + ", ";
-                // one decimal place = divide by 10
-                value += '"' + (parseFloat(result[i][1]) + (result[i + 1][1] / 10)) + '"' + ", ";
-                i = i + 1;
-            } else {
-                // normal
-                if (result[i][1] !== "") {
-                    name += result[i][0] + ", ";
-                    value += '"' + result[i][1] + '"' + ", ";
-                }
-            }
-        }
-        name = name.substring(0, name.length - 2);
-        value = value.substring(0, value.length - 2);
-
-        // console.log(name);
-        // console.log(value);
-        var deleteStatement = "DELETE FROM FAW.General_Form WHERE transactionID = '" + transactionID + "'; ";
-        var insertStatement = "INSERT INTO FAW.General_Form (" + name + ") VALUES (" + value + ");";
-        console.log(insertStatement);
-
-        connection.query(deleteStatement + insertStatement, function (err, results, fields) {
-            console.log("Z");
-            if (err) {
-                console.log(err);
-                res.json({"error": true, "message": "Insert Error! Check your entry."});
-            } else {
-                res.json({"error": false, "message": "/submit"});
-                // var type = req.body.entryType;
-                // if (type === "SCOUTING") {
-                //     console.log("A1");
-                //     res.redirect('/submit');
-                // } else if (type === "TRAP") {
-                //     console.log("B1");// console.log("B");
-                //     res.redirect('/submit');
-                // }
-            }
-        });
-    });
-
-    app.get('/dataEntry', isLoggedIn, function (req, res) {
-        var queryStatementTest = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
-
-        connection.query(queryStatementTest, function (err, results, fields) {
-
-            if (!results[0].userrole) {
-                console.log("Error");
-            } else if (results[0].userrole === "Admin") {
-                // process the signup form
-                res.render('dataEntry_Home_Admin.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Entry Message')
-                });
-            } else if (results[0].userrole === "Regular") {
-                res.render('dataEntry_Home_Regular.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Entry Message')
-                });
-            }
-        });
-    });
-
-    app.get('/dataEntry1', isLoggedIn, function (req, res) {
-        var d = new Date();
-        var utcDateTime = d.getUTCFullYear() + "-" + ('0' + (d.getUTCMonth() + 1)).slice(-2) + "-" + ('0' + d.getUTCDate()).slice(-2);
-        var queryStatementTest = "SELECT COUNT(transactionID) AS number FROM FAW.Transaction WHERE transactionID LIKE '" + utcDateTime + "%';";
-
-        connection.query(queryStatementTest, function (err, results, fields) {
-            transactionID = utcDateTime + "_" + ('0000' + (results[0].number + 1)).slice(-5);
-            if (err) {
-                console.log(err);
-            } else {
-                var queryStatementTest2 = "INSERT INTO FAW.Transaction (transactionID, Cr_UN) VALUE (" + "'" + transactionID + "', '" + req.user.username + "');";
-                connection.query(queryStatementTest2, function (err, results, fields) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        if (req.user.userrole === "Admin") {
-                            console.log(req.user.firstName);
-                            res.redirect('/submit');
-
-                        } else if (req.user.userrole === "Regular") {
-                            // res.render('insert_Armyworm_Regular.ejs', {
-                            //     user: req.user, // get the user out of session and pass to template
-                            //     message: req.flash('Data Entry Message')
-                            // });
-                            res.redirect('/continue');
-                        }
-                    }
-                });
-            }
-        });
-    });
-
-    app.get('/dataEntry2', isLoggedIn, function (req, res) {
-        var queryStatementTest = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
-
-        connection.query(queryStatementTest, function (err, results, fields) {
-
-            if (!results[0].userrole) {
-                console.log("Error");
-            } else if (results[0].userrole === "Admin") {
-                // process the signup form
-                res.render('insert_Armyworm_Admin.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Entry Message')
-                });
-            } else if (results[0].userrole === "Regular") {
-                res.render('insert_Armyworm_Regular.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Entry Message')
-                });
-            }
-        });
-    });
-
-    app.get('/dataEntry3', isLoggedIn, function (req, res) {
-        var queryStatementTest = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
-
-        connection.query(queryStatementTest, function (err, results, fields) {
-
-            if (!results[0].userrole) {
-                console.log("Error");
-            } else if (results[0].userrole === "Admin") {
-                // process the signup form
-                res.render('insert_Armyworm_Admin.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Entry Message')
-                });
-            } else if (results[0].userrole === "Regular") {
-                res.render('insert_Armyworm_Regular.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Entry Message')
-                });
-            }
-        });
-    });
-
-    app.get('/insert', function (req, res) {
-
-        connection.query('USE ' + config.Upload_db);
-
-        var insertInfo = req.query.statement;
-        var insertStatement = "INSERT INTO FAW_Data_Entry VALUES (" + insertInfo + ");";
-
-        res.setHeader("Access-Control-Allow-Origin", "*");
-
-        connection.query(insertStatement, function (err, results, fields) {
-            if (err) {
-                console.log(err);
-                res.send("fail");
-                res.end();
-            } else {
-                res.send("success");
-                res.end();
-            }
-        });
-    });
-
-    // show the data query form
-    app.get('/dataQuery', isLoggedIn, function (req, res) {
-        var queryStatementTest = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
-
-        connection.query(queryStatementTest, function (err, results, fields) {
-
-            if (!results[0].userrole) {
-                console.log("Error");
-            } else if (results[0].userrole === "Admin") {
-                // process the signup form
-                res.render('query_Admin.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Entry Message')
-                });
-            } else if (results[0].userrole === "Regular") {
-                res.render('query_Regular.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Query Message')
-                });
-            }
-        });
-    });
-
-    app.get('/reset', function (req, res) {
-        res.render('userprofile.ejs', {user: req.user});
-    });
-
-    app.post('/reset', function (req, res) {
-        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
-        // connection.query('USE ' + config.Login_db); // Locate Login DB
-        var user = req.user;
-        var newPassword = {
-            firestname: req.body.usernameF,
-            lastname: req.body.usernameL,
-            username: req.body.username,
-            currentpassword: req.body.currentpassword,
-            Newpassword: bcrypt.hashSync(req.body.newpassword, null, null),
-            ConfirmPassword: bcrypt.hashSync(req.body.Confirmpassword, null, null)
-        };
-        // var changeusername = "'UPDATE Users Set password = '" + newPassword.usernameF + "' WHERE username        "
-
-        var changepassword = "UPDATE Users SET password = '" + newPassword.Newpassword + "' WHERE username = '" + user.username + "'";
-        console.log(newPassword.Newpassword, user.username);
-        connection.query("SELECT * FROM Users WHERE username = ?", [user.username], function (err, rows) {
-            // console.log(rows);
-            var result = bcrypt.compareSync(newPassword.currentpassword, user.password);
-            console.log(result);
-            if (result) {
-                console.log("Password correct");
-                connection.query(changepassword, function (err, rows) {
-
-                    if (err) {
-                        console.log(err);
-                        res.send("New Password Change Fail!");
-                        res.end();
-                    } else {
-                        res.render('user_home_Admin.ejs', {
-                            user: req.user // get the user out of session and pass to template
-                        });
-                    }
-                })
-            } else {
-                console.log("Password wrong");
-            }
-
-        });
-    });
-
-    app.get('/userprofilecancel', function (req, res) {
-        res.render('user_home_Admin.ejs', {user: req.user});
-    });
-
-    app.get('/userprofile', function (req, res) {
-        res.render('userprofile.ejs', {user: req.user});
-    });
-
-    app.get('/userManagement', isLoggedIn, function (req, res) {
-        var queryStatementTest = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
-
-        connection.query(queryStatementTest, function (err, results, fields) {
-
-            if (!results[0].userrole) {
-                console.log("Error");
-            } else if (results[0].userrole === "Admin") {
-                // process the signup form
-                res.render('userManagement_Admin.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Entry Message')
-                });
-            } else if (results[0].userrole === "Regular") {
-                res.render('userManagement_Regular.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Query Message')
-                });
-            }
-        });
-    });
-
-    app.get('/query', function (req, res) {
-
-        connection.query('USE ' + config.Upload_db);
-
-        var startDate = req.query.startDate;
-        var endDate = req.query.endDate;
-        var queryStatement = "SELECT * FROM FAW_Data_Entry WHERE Date >= '" + startDate + "' AND Date <= '" + endDate + "' ORDER BY Date;";
-
-        res.setHeader("Access-Control-Allow-Origin", "*");
-
-        connection.query(queryStatement, function (err, results, fields) {
-
-            var status = [{errStatus: ""}];
-
-            if (err) {
-                console.log(err);
-                status[0].errStatus = "fail";
-                res.send(status);
-                res.end();
-            } else if (results.length === 0) {
-                status[0].errStatus = "no data entry";
-                res.send(status);
-                res.end();
-            } else {
-                var JSONresult = JSON.stringify(results, null, "\t");
-                res.send(JSONresult);
-                res.end();
-            }
-        });
-    });
-
-    app.get('/filterUser', function (req, res) {
+    // Filter by search criteria
+    app.get('/filterUser', isLoggedIn, function (req, res) {
 
         console.log("dQ: " + req.query.dateCreatedFrom);
         // connection.query('USE ' + config.Login_db);
@@ -613,15 +260,6 @@ module.exports = function (app, passport) {
             }
         ];
 
-        // console.log("length: " + myQuery.length);
-        //
-        // for (var j = 0; j < myQuery.length; j++) {
-        //     console.log("myQuery[" + j + "].fieldVal: " + !!myQuery[j].fieldVal);
-        //     // console.log([j] + ": " + myQuery[j].fieldName + ", " + myQuery[j].fieldVal + ", " + myQuery[j].dbCol);
-        //     // queryStat += myQuery[j].dbCol + myQuery[j].op + myQuery[j].fieldVal + "'";
-        //     // console.log("j = first," + "j = " + j + ":" + queryStat);
-        // }
-
         function userQuery() {
             res.setHeader("Access-Control-Allow-Origin", "*");
 
@@ -648,58 +286,365 @@ module.exports = function (app, passport) {
         }
 
         for (var i = 0; i < myQuery.length; i++) {
-            //console.log("myQuery[" + i + "].fieldVal: " + !!myQuery[i].fieldVal);
             if (!!myQuery[i].fieldVal) {
-                //console.log(i);
                 if (i == 0) {
                     queryStat += myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                    //console.log("i = " + i + ":" + queryStat);
                 } else {
                     queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                    //console.log("i = " + i + ":" + queryStat);
-                    if (i == myQuery.length -1) {
+                    if (i == myQuery.length - 1) {
                         userQuery()
                     }
                 }
             } else {
-                if (i == myQuery.length -1) {
+                if (i == myQuery.length - 1) {
                     userQuery()
                 }
             }
         }
     });
 
-    app.get('/editUserFinal', isLoggedIn, function(req, res) {
-                res.render('userEdit_Admin.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    editUser: req.query.Username,
-                    firstName: req.query.First_Name,
-                    lastName: req.query.Last_Name,
-                    userrole: req.query.User_Role,
-                    status: req.query.Status,
-                    message: req.flash('Data Entry Message')
-                });
+    // Retrieve user data from user management page
+    var edit_User, edit_firstName, edit_lastName, edit_userrole, edit_status;
+    app.get('/editUserQuery', isLoggedIn, function(req, res) {
+
+        edit_User = req.query.Username;
+        edit_firstName = req.query.First_Name;
+        edit_lastName = req.query.Last_Name;
+        edit_userrole = req.query.User_Role;
+        edit_status = req.query.Status;
+        res.json({"error": false, "message": "/editUser"});
     });
 
-    app.post('/editUser', isLoggedIn, function(err, res, field) {
+    // Show user edit form
+    app.get('/editUser', isLoggedIn, function(req, res) {
+        res.render('userEdit.ejs', {
+            user: req.user, // get the user out of session and pass to template
+            userName: edit_User,
+            firstName: edit_firstName,
+            lastName: edit_lastName,
+            userrole: edit_userrole,
+            status: edit_status,
+            message: req.flash('Data Entry Message')
+        });
+    });
 
+    app.post('/editUser', isLoggedIn, function(req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+
+        console.log("New Pass: " + req.body.newPassword);
+
+        if (req.body.newPassword !== "") {
+            var updatedUserPass = {
+                firstName: req.body.First_Name,
+                lastName: req.body.Last_Name,
+                userrole: req.body.User_Role,
+                status: req.body.Status,
+                newPassword: bcrypt.hashSync(req.body.newPassword, null, null)
+            };
+
+            var userUpdateStatPass = "UPDATE Users SET firstName = ?, lastName = ?, password = ?, userrole = ?, status = ?  WHERE username = ?";
+
+
+            connection.query(userUpdateStatPass,[updatedUserPass.firstName, updatedUserPass.lastName, updatedUserPass.newPassword, updatedUserPass.userrole, updatedUserPass.status, edit_User],function(err, rows) {
+                // console.log(dateTime, req.user.username);
+
+                if (err) {
+                    console.log(err);
+                    res.json({"error": true, "message": "Update failed!"});
+                } else {
+                    res.json({"error": false, "message": "/userManagement"});
+                }
+            })
+
+        } else {
+            var updatedUser = {
+                firstName: req.body.First_Name,
+                lastName: req.body.Last_Name,
+                userrole: req.body.User_Role,
+                status: req.body.Status
+            };
+
+            var userUpdateStat = "UPDATE Users SET firstName = ?, lastName = ?, userrole = ?, status = ?  WHERE username = ?";
+
+            connection.query(userUpdateStat,[updatedUser.firstName, updatedUser.lastName, updatedUser.userrole, updatedUser.status, edit_User],function(err, rows) {
+                // console.log(dateTime, req.user.username);
+
+                if (err) {
+                    console.log(err);
+                    res.json({"error": true, "message": "Update failed!"});
+                } else {
+                    res.json({"error": false, "message": "/userManagement"});
+                }
+            })
+        }
+
+    });
+
+    // =====================================
+    // TRANSACTION SECTION =================
+    // =====================================
+    // we will want this protected so you have to be logged in to visit
+    // we will use route middleware to verify this (the isLoggedIn function)
+
+    app.get('/userhome', isLoggedIn, function (req, res) {
+        var queryStatementTest = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
+
+        connection.query(queryStatementTest, function (err, results, fields) {
+            //console.log(results);
+
+            if (!results[0].userrole) {
+                console.log("Error");
+            } else {
+                res.render('userHome.ejs', {
+                    user: req.user // get the user out of session and pass to template
+                });
+            }
+        });
+    });
+
+    // Prepare and assign new transaction ID
+    app.get('/newEntry', isLoggedIn, function (req, res) {
+        var d = new Date();
+        var utcDateTime = d.getUTCFullYear() + "-" + ('0' + (d.getUTCMonth() + 1)).slice(-2) + "-" + ('0' + d.getUTCDate()).slice(-2);
+        var queryTransID = "SELECT COUNT(transactionID) AS number FROM FAW.Transaction WHERE transactionID LIKE '" + utcDateTime + "%';";
+
+        connection.query(queryTransID, function (err, results, fields) {
+            transactionID = utcDateTime + "_" + ('0000' + (results[0].number + 1)).slice(-5);
+            if (err) {
+                console.log(err);
+            } else {
+                var insertTransID = "INSERT INTO FAW.Transaction (transactionID, Cr_UN) VALUE (" + "'" + transactionID + "', '" + req.user.username + "');";
+                connection.query(insertTransID, function (err, results, fields) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        // Show general form
+                        res.render('form.ejs', {
+                            user: req.user, // get the user out of session and pass to template
+                            message: req.flash('Data Entry Message'),
+                            firstname: req.user.firstName,
+                            lastname: req.user.lastName,
+                            transactionID: transactionID
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+
+    // Submit general form
+    app.post('/generalForm', isLoggedIn, function (req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        console.log(req.body);
+
+        var result = Object.keys(req.body).map(function (key) {
+            return [String(key), req.body[key]];
+        });
+
+        var name = "";
+        var value = "";
+
+        for (var i = 0; i < result.length; i++) {
+            if (result[i][0] === "latitudeDirection" || result[i][0] === "longitudeDirection") {
+                // lati and long
+                name += result[i][0].substring(0, result[i][0].length - 9) + ", ";
+                value += '"' + result[i][1] + " " + result[i + 1][1] + "° " + result[i + 2][1] + "' " + result[i + 3][1] + "''" + '"' + ", ";
+                i = i + 3;
+            } else if (result[i][0] === "rota_inter_crop" && result[i][1] === "OTHER") {
+                // other main crop
+                name += result[i][0] + ", ";
+                value += '"' + result[i + 1][1] + '"' + ", ";
+                i = i + 1;
+            } else if (result[i][0] === "fieldSizeInteger") {
+                // field size
+                name += result[i][0].substring(0, result[i][0].length - 7) + ", ";
+                // one decimal place = divide by 10
+                value += '"' + (parseFloat(result[i][1]) + (result[i + 1][1] / 10)) + '"' + ", ";
+                i = i + 1;
+            } else {
+                // normal
+                if (result[i][1] !== "") {
+                    name += result[i][0] + ", ";
+                    value += '"' + result[i][1] + '"' + ", ";
+                }
+            }
+        }
+        name = name.substring(0, name.length - 2);
+        value = value.substring(0, value.length - 2);
+
+        // console.log(name);
+        // console.log(value);
+        var deleteStatement = "DELETE FROM FAW.General_Form WHERE transactionID = '" + transactionID + "'; ";
+        var insertStatement = "INSERT INTO FAW.General_Form (" + name + ") VALUES (" + value + ");";
+        console.log(insertStatement);
+
+        connection.query(deleteStatement + insertStatement, function (err, results, fields) {
+            console.log("Z");
             if (err) {
                 console.log(err);
                 res.json({"error": true, "message": "Insert Error! Check your entry."});
             } else {
-                res.json({"error": false, "message": "/editUserFinal"});
+                res.json({"error": false, "message": "/detailedForm"});
                 // var type = req.body.entryType;
                 // if (type === "SCOUTING") {
                 //     console.log("A1");
-                //     res.redirect('/submit');
+                //     res.redirect('/detailedForm');
                 // } else if (type === "TRAP") {
                 //     console.log("B1");// console.log("B");
-                //     res.redirect('/submit');
+                //     res.redirect('/detailedForm');
                 // }
             }
+        });
+    });
+
+    // Upload photos
+    app.post('/upload', fileUpload, function (req,res) {
+        console.log("ABC");
+        //console.log(req.headers.origin);
+        res.setHeader("Access-Control-Allow-Origin", "*");
+
+        fileUpload(req, res, function (err) {
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "Fail"});
+                filePathName = "";
+                //res.send("Error uploading file.");
+            } else {
+                console.log("Success:" + filePathName);
+                res.json({"error": false, "message": filePathName});
+                filePath = filePathName;
+                filePathName = "";
+                //res.send("File is uploaded");
+            }
+        });
+    });
+
+    // Submit detailed form
+    app.post('/detailedForm', isLoggedIn, function (req, res) {
+        console.log("AZ");
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        console.log(req.body);
+
+        var result = Object.keys(req.body).map(function (key) {
+            return [String(key), req.body[key]];
+        });
+
+        var name = "";
+        var value = "";
+
+        for (var i = 0; i < result.length; i++) {
+            name += result[i][0] + ", ";
+            value += '"' + result[i][1] + '"' + ", ";
+        }
+        name = name.substring(0, name.length - 2);
+        value = value.substring(0, value.length - 2);
+
+        var path = filePath.split(";");
+        var pest = "";
+        var damage = "";
+
+        for (var i = 0; i < path.length; i++) {
+            if (path[i].substring(0,11) === "photoOfPest") {
+                pest += "https://faw.aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+            } else if (path[i].substring(0,13) === "photoOfDamage") {
+                damage += "https://faw.aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+            }
+        }
+        pest = pest.substring(0, pest.length - 1);
+        damage = damage.substring(0, damage.length - 1);
+
+        name += ", pestPhoto, damagePhoto";
+        value += ", '" + pest + "', '" + damage + "'";
+        console.log(transactionID);
+        var deleteStatement = "DELETE FROM FAW.Detailed_Form WHERE transactionID = '" + transactionID + "'; ";
+        var insertStatement = "INSERT INTO FAW.Detailed_Form (" + name + ") VALUES (" + value + ");";
+        console.log(insertStatement);
+
+        connection.query(deleteStatement + insertStatement, function (err, results, fields) {
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "Insert Error! Check your entry."});
+            } else {
+                res.json({"error": false, "message": "/detailedForm"});
+                // var type = req.body.entryType;
+                // if (type === "SCOUTING") {
+                //     console.log("A1");
+                //     res.redirect('/detailedForm');
+                // } else if (type === "TRAP") {
+                //     console.log("B1");// console.log("B");
+                //     res.redirect('/detailedForm');
+                // }
+            }
+        });
+    });
+
+    // show the data query form
+    app.get('/query', isLoggedIn, function (req, res) {
+        var DataQuery = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
+
+        connection.query(DataQuery, function (err, results, fields) {
+
+            if (!results[0].userrole) {
+                console.log("Error");
+            } else if (results[0].userrole === "Admin") {
+                // process the signup form
+                res.render('query_Admin.ejs', {
+                    user: req.user, // get the user out of session and pass to template
+                    message: req.flash('Data Entry Message')
+                });
+            } else if (results[0].userrole === "Regular") {
+                res.render('query_Regular.ejs', {
+                    user: req.user, // get the user out of session and pass to template
+                    message: req.flash('Data Query Message')
+                });
+            }
+        });
+    });
+
+
+
+    app.get('/DataQuery', isLoggedIn, function (req, res) {
+
+        var startDate = req.query.startDate;
+        var endDate = req.query.endDate;
+        var queryStatement = "SELECT * FROM FAW_Data_Entry WHERE Date >= '" + startDate + "' AND Date <= '" + endDate + "' ORDER BY Date;";
+
+        res.setHeader("Access-Control-Allow-Origin", "*");
+
+        connection.query(queryStatement, function (err, results, fields) {
+
+            var status = [{errStatus: ""}];
+
+            if (err) {
+                console.log(err);
+                status[0].errStatus = "fail";
+                res.send(status);
+                res.end();
+            } else if (results.length === 0) {
+                status[0].errStatus = "no data entry";
+                res.send(status);
+                res.end();
+            } else {
+                var JSONresult = JSON.stringify(results, null, "\t");
+                res.send(JSONresult);
+                res.end();
+            }
+        });
+    });
+
+    // =====================================
+    // SIGNOUT =============================
+    // =====================================
+    //shouw the signout form
+    app.get('/signout', function (req, res) {
+        req.session.destroy();
+        req.logout();
+        res.redirect('/login');
     });
 
 };
+
 
 // route middleware to make sure
 function isLoggedIn(req, res, next) {
@@ -712,40 +657,39 @@ function isLoggedIn(req, res, next) {
     res.redirect('/');
 }
 
-function statusUpD (req, res, next) {
-
-    res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
-    // connection.query('USE ' + config.Login_db); // Locate Login DB
-    var today = new Date();
-    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-    var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    var dateTime = date + ' ' + time2;
-
-
-    var changeUser = {
-        username: req.user.username
-    };
-    // console.log(req.user.username);
-
-    //var insertQuery2 = "UPDATE Users SET status = '" + changeUser.status + "', lastLoginTime = '" + changeUser.lastLoginTime + "' WHERE username = '" + changeUser.username +"';";
-    var statusUpdate = "UPDATE Users SET status = 'Active', lastLoginTime = ? WHERE username = ?";
-
-    connection.query(statusUpdate,[dateTime, changeUser.username],function(err, rows) {
-        // console.log(dateTime, changeUser.username);
-
-        //newUser.id = rows.insertId;
-
-        if (err) {
-            console.log(err);
-            res.send("Login Fail!");
-            res.end();
-        } else {
-            // res.redirect('/profile', {
-            //     user: req.user // get the user out of session and pass to template
-            // });
-        }
-    });
-
-    return next();
-}
-
+// // check
+// app.get('/check', isLoggedIn, function (req, res) {
+//     res.json({"error": false, "message": "complete"});
+// });
+//
+// // Show form
+// app.get('/form', isLoggedIn, function (req, res) {
+//     // console.log("A01");
+//     res.render('form.ejs', {
+//         user: req.user, // get the user out of session and pass to template
+//         message: req.flash('Data Entry Message'),
+//         firstname: req.user.firstName,
+//         lastname: req.user.lastName,
+//         transactionID: transactionID
+//     });
+// });
+//
+// // Show general form
+// app.get('/generalForm', isLoggedIn, function (req, res) {
+//     // console.log("A01");
+//     res.render('form.ejs', {
+//         user: req.user, // get the user out of session and pass to template
+//         message: req.flash('Data Entry Message'),
+//         firstname: req.user.firstName,
+//         lastname: req.user.lastName,
+//         transactionID: transactionID
+//     });
+// });
+// //Show detailed form
+// app.get('/detailedForm', isLoggedIn, function (req, res) {
+//     res.render('detailedForm.ejs', {
+//         user: req.user, // get the user out of session and pass to template
+//         message: req.flash('Data Entry Message'),
+//         transactionID: transactionID
+//     });
+// });

@@ -1,0 +1,342 @@
+<!-- views/user_home.ejs -->
+<!doctype html>
+<html>
+<head>
+	<title>FAW/Locust Project - User Home</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//unpkg.com/flatpickr"></script>
+
+    <style>
+		#Username{
+			position:relative;
+			left:990px;
+			top:35px;
+            width:14%;
+		}
+		.banner{
+			position:relative;
+			left:25px;
+			top:30px;
+			width:65%;
+		}
+		#class1{
+			position:relative;
+			left:300px;
+			top:60px;
+			width:16%;
+		}
+		#class2{
+			position:relative;
+			left:500px;
+			top:60px;
+			width:16%;
+		}
+		#button{
+			 width:3%;
+		 }
+		.select{
+			width:60%;
+		}
+		.center {
+			margin-left:150px;
+			width:300%;
+		}
+		.floatingBox {
+			display: inline-block;
+			width:350px;
+		}
+		.floating-Box{
+			display: inline;
+		}
+		.floatingBox1{
+			display: inline-block;
+		}
+		.floatingBox3{
+			display: inline-table;
+			width:250px;
+		}
+		table, th{
+			border: 1px solid black;
+			text-align:center;
+
+		}
+	</style>
+</head>
+<body>
+<div class="container">
+	<div class="dropdown">
+		<button class="btn btn-primary btn-lg" type="button" data-toggle="dropdown" id="Username"><%= user.firstName%>
+			<span class="caret"></span></button>
+		<a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
+		<ul id="userMenu" class="dropdown-menu dropdown-menu-right">
+
+		</ul>
+	</div>
+	<a href="/newEntry" class="btn btn-default btn-lg" id="class1">New Entry</a>
+	<a href="/query" class="btn btn-default btn-lg" id="class2">Data History</a>
+</div>
+<br><br><br><br>
+<div class="container">
+	<div class="center">
+		<h4 class="floatingBox"><strong> Num of Records Displayed</strong></h4>
+		<h4 class="floating-Box"><strong>Date Range</strong></h4>
+		<h6 class="floating-Box">From:</h6>
+        <input style="width: 3%; background:WhiteSmoke;" type="text" readonly>
+		<h6 class="floating-Box">To:</h6>
+        <input class="date" style="width: 3%;" type="text" placeholder="Select Date">
+	</div>
+	<div class="center">
+		<h6 class="floating-Box">Display per Page:</h6>
+        <input type="text" name="dislay per page" value="25" style="background:WhiteSmoke; width: 4%;" readonly>
+		<h4 class="floatingBox1"><strong>User Name</strong></h4>
+		<h6 class="floating-Box">First Name:</h6><input type="text" name="first name" style="background:WhiteSmoke; width: 3%;" value="<%= user.firstName %>" readonly>
+		<h6 class="floating-Box">Last Name:</h6><input type="text" name="first name" style="background:WhiteSmoke; width: 3%;"  value="<%= user.lastName %>" readonly>
+	</div>
+	<div class="center">
+		<h4><strong>Other Customized Filters</strong></h4>
+		<h5 class="floatingBox3">Category1:
+            <select class="select">
+                <option>1A.Trap Owner</option>
+                <option>1B.Location Name</option>
+                <option>1C.Location Type</option>
+                <option>1D.GeoLocation</option>
+                <option>1E.Country</option>
+                <option>1F.Province</option>
+                <option>1G.District</option>
+                <option>1H.Cropping System</option>
+                <option>1I.Rotation/Intercropping Crop</option>
+                <option>1J.Maize Variety</option>
+                <option>1K.Maize Planting Date</option>
+                <option>1L.Field Size</option>
+                <option>1M.General Health of Maize</option>
+                <option>1N.Date of Last Rain</option>
+                <option>1O.Entry Type</option>
+                <option>2A.Pests Present</option>
+                <option>2B.FAW Stage</option>
+                <option>2C.Early Damage Level</option>
+                <option>2D.Late Damage Level</option>
+                <option>2E.Natural Enemies Present</option>
+                <option>2F.Dead larvae killed by natural enemies </option>
+                <option>2G.% Plants Infested</option>
+                <option>2H.Control Undertaken</option>
+                <option>2I.Pesticide Litres Sprayed</option>
+            </select>
+        </h5>
+		<h5 class="floatingBox3" >Content:<input></h5><br>
+		<h5 class="floatingBox3">Category2:
+            <select class="select">
+                <option>1A.Trap Owner</option>
+                <option>1B.Location Name</option>
+                <option>1C.Location Type</option>
+                <option>1D.GeoLocation</option>
+                <option>1E.Country</option>
+                <option>1F.Province</option>
+                <option>1G.District</option>
+                <option>1H.Cropping System</option>
+                <option>1I.Rotation/Intercropping Crop</option>
+                <option>1J.Maize Variety</option>
+                <option>1K.Maize Planting Date</option>
+                <option>1L.Field Size</option>
+                <option>1M.General Health of Maize</option>
+                <option>1N.Date of Last Rain</option>
+                <option>1O.Entry Type</option>
+                <option>2A.Pests Present</option>
+                <option>2B.FAW Stage</option>
+                <option>2C.Early Damage Level</option>
+                <option>2D.Late Damage Level</option>
+                <option>2E.Natural Enemies Present</option>
+                <option>2F.Dead larvae killed by natural enemies </option>
+                <option>2G.% Plants Infested</option>
+                <option>2H.Control Undertaken</option>
+                <option>2I.Pesticide Litres Sprayed</option>
+            </select>
+        </h5>
+		<h5 class="floatingBox3">Content:<input></h5><br>
+		<h5 class="floatingBox3">Category3:
+            <select class="select">
+                <option>1A.Trap Owner</option>
+                <option>1B.Location Name</option>
+                <option>1C.Location Type</option>
+                <option>1D.GeoLocation</option>
+                <option>1E.Country</option>
+                <option>1F.Province</option>
+                <option>1G.District</option>
+                <option>1H.Cropping System</option>
+                <option>1I.Rotation/Intercropping Crop</option>
+                <option>1J.Maize Variety</option>
+                <option>1K.Maize Planting Date</option>
+                <option>1L.Field Size</option>
+                <option>1M.General Health of Maize</option>
+                <option>1N.Date of Last Rain</option>
+                <option>1O.Entry Type</option>
+                <option>2A.Pests Present</option>
+                <option>2B.FAW Stage</option>
+                <option>2C.Early Damage Level</option>
+                <option>2D.Late Damage Level</option>
+                <option>2E.Natural Enemies Present</option>
+                <option>2F.Dead larvae killed by natural enemies </option>
+                <option>2G.% Plants Infested</option>
+                <option>2H.Control Undertaken</option>
+                <option>2I.Pesticide Litres Sprayed</option>
+            </select>
+        </h5>
+		<h5 class="floatingBox3">Content:<input></h5>
+	</div><br>
+	<div class="center">
+		<button id="button" class="btn btn-primary btn-sm" type="button">Filter</button>
+		<button id="button" class="btn btn-primary btn-sm" type="button">Edit</button>
+		<button id="button" class="btn btn-primary btn-sm" type="button">Delete</button>
+	</div>
+	<br>
+    <div class="center">
+	<h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
+    <div id="table">
+        <table style="width:28%;">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Entry Column 1</th>
+            <th>Entry Column 2</th>
+            <th>Entry Column 3</th>
+            <th>Entry Column 4</th>
+            <th>Entry Column 5</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Entry Column 1</th>
+            <th>Entry Column 2</th>
+            <th>Entry Column 3</th>
+            <th>Entry Column 4</th>
+            <th>Entry Column 5</th>
+        </tr>
+        </tfoot>
+        </table>
+    </div>
+</div>
+</div>
+<script type='text/javascript'>
+    var queryString1;
+    var queryString2;
+    var table = $("#dataDisplay");
+    var t = table.DataTable();
+    var UserRole = "<%= user.userrole %>";
+    var DropMenu;
+
+    $(document).ready(function(){
+        $(".add-row").click(function(){
+            var name = $("#name").val();
+            var email = $("#email").val();
+            var markup = "<tr><td><input type='checkbox' name='record'></td><td>" + name + "</td><td>" + email + "</td></tr>";
+            $("table tbody").append(markup);
+        });
+
+        // Find and remove selected table rows
+        $(".delete-row").click(function(){
+            $("table tbody").find('input[name="record"]').each(function(){
+                if($(this).is(":checked")){
+                    $(this).parents("tr").remove();
+                }
+            });
+        });
+
+        $(function() {
+            flatpickr(".date", {
+                dateFormat: "Y-m-d",
+                time_24hr: true
+            });
+            
+            if (UserRole === "Admin") {
+                DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
+                    "\t\t\t<li><a href=\"/userManagement\">User Management</a></li>\n" +
+                    "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
+                $("#userMenu").empty();
+                $("#userMenu").append(DropMenu)
+            } else if ( UserRole === "Regular") {
+                DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
+                    "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
+                $("#userMenu").empty();
+                $("#userMenu").append(DropMenu)
+            }
+        });});
+
+    function query() {
+        var dateCreatedFrom = document.getElementsByClassName("datePicker")[0].value;
+        var dateCreatedTo = document.getElementsByClassName("datePicker")[1].value;
+        var dateModifiedFrom = document.getElementsByClassName("datePicker")[2].value;
+        var dateModifiedTo = document.getElementsByClassName("datePicker")[3].value;
+        var firstName = document.getElementById("firstName").value;
+        var lastName = document.getElementById("lastName").value;
+        var Admin = document.getElementById("Admin").checked;
+        var Regular = document.getElementById("Admin").checked;
+        if (Admin) {
+            status = document.getElementById("Admin").value;
+        } else if (Regular) {
+            status = document.getElementById("Regular").value;
+        } else {
+            status = false;
+        }
+
+
+        queryString1 = "dateCreatedFrom=" + dateCreatedFrom + "&dateCreatedTo=" + dateCreatedTo + "&dateModifiedFrom=" + dateModifiedFrom + "&dateModifiedTo=" + dateModifiedTo;
+        queryString2 = "&firstName=" + firstName + "&lastName=" + lastName + "&Admin=" + Admin + "&Regular=" + Regular;
+
+
+        var querystr = queryString1 + queryString2;
+
+        if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !Admin || !Regular) {
+            $("table tbody").empty().append(queryAndDisplay(querystr));
+
+                queryAndDisplay(querystr);
+            // alert(dateCreatedFrom + "a");
+        } else {
+            alert("Please Select Both Dates!");
+        }
+    }
+
+    var queryAndDisplay = function (querystr) {
+
+        $.ajax({
+            url: '/Test',
+            type: 'GET',
+            dataType: 'json',
+            async: false,
+            data: querystr,
+            success: function (resp) {
+                for (var i = 0; i < resp.length; i++) {
+                    t.row.add( [
+                        resp[i].firstName,
+                        resp[i].lastName,
+                        resp[i].username,
+                        resp[i].password,
+                        resp[i].userrole,
+                        resp[i].dateCreated,
+                        resp[i].createdUser,
+                        resp[i].dateModified,
+                        resp[i].modifiedUser,
+                        resp[i].status,
+                        resp[i].lastLoginTime
+                    ] ).draw( false );
+                }
+            }
+
+        });
+    }
+</script>
+</body>
+</html>

@@ -38,7 +38,7 @@
 
 	<h1 id="title">Step 2: Detailed Form</h1>
 	<div id="container">
-		<form id="insertForm" method = "post" action="/submit">
+		<form id="insertForm" method = "post">
 			<div>
                 <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= transactionID %>" readonly><br><br>
                 <h4>A. Pests Present: &nbsp;&nbsp;&nbsp;</h4>
@@ -68,20 +68,20 @@
                     <option>HIGH</option>
                 </select><br><br>
                 <h4>D. Late Damage Level: &nbsp;&nbsp;&nbsp;</h4>
-                <select id='lastDamageLevel' name='lastDamageLevel' required>
+                <select id='lastDamageLevel' name='lateDamageLevel' required>
                     <option value=''>SELECT THE DAMAGE LEVEL</option>
                     <option>NONE</option>
                     <option>LOW</option>
                     <option>MEDIUM</option>
                     <option>HIGH</option>
                 </select><br><br>
-                <h4>E. Nature Enemies Present ?&nbsp;&nbsp;&nbsp;</h4>
-                <input type="radio" name="natureEnemies" value="yes"> YES
-                <input type="radio" name="natureEnemies" value="no"> NO <br><br>
+                <h4>E. Natural Enemies Present ?&nbsp;&nbsp;&nbsp;</h4>
+                <input type="radio" name="naturalEnemies" value="yes"> YES
+                <input type="radio" name="naturalEnemies" value="no"> NO <br><br>
                 <h4>F. Dead Larvae Killed By Natural Enemies ?&nbsp;&nbsp;&nbsp;</h4>
                 <input type="radio" name="deadLarvae" value="yes"> YES
                 <input type="radio" name="deadLarvae" value="no"> NO <br><br>
-                <h4>G. % Plants Infested (From 50 Plant Examples): &nbsp;&nbsp;&nbsp;</h4><input id="plantInfested" name="plantInfested" type="text" placeholder="Enter Number (Numerical) Here" required><br><br>
+                <h4>G. % Plants Infested (From 50 Plant Examples): &nbsp;&nbsp;&nbsp;</h4><input id="percentInfested" name="percentInfested" type="text" placeholder="Enter Number (Numerical) Here" required><br><br>
 
                 <h2>FAW Control</h2>
                 <h4>H. Control Undertaken: &nbsp;&nbsp;&nbsp;</h4>
@@ -107,18 +107,18 @@
                 <!--<input id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" multiple/><br>-->
                 <!--<img id="photoOfDamageImage" src="" alt="Image preview..."><br><br>-->
                 <!--<input type="submit" value="Submit the Form">-->
-                <input type="submit" value="Submit the Form">
             </div>
 		</form>
         <form id="uploadForm" enctype="multipart/form-data" method="post">
             <div class="FAW">
                 <h2>Photos</h2>
                 <h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>
-                <input id="photoOfPest" type="file" name="photoOfPest" accept="image/*" onchange="previewFile()" multiple/><br>
+                <input id="photoOfPest" type="file" name="photoOfPest" accept="image/*" onchange="previewFile()" required multiple/><br>
                 <img id="photoOfPestImage" src="" alt="Image preview..."><br>
                 <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
-                <input id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" multiple/><br>
+                <input id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" required multiple/><br>
                 <img id="photoOfDamageImage" src="" alt="Image preview..."><br><br>
+                <input type="submit" value="Submit the Form">
             </div>
         </form>
 	</div>
@@ -127,70 +127,13 @@
 <script>
 
     $(function(){
-
-        $('#insertForm').submit(function(e) {
-            alert("A");
-            // Prevent form submission
-            e.preventDefault();
-
-            $.ajax({
-                type: "post",
-                url: $(this).attr("action"),
-                dataType: 'json',
-                data: $(this).serialize(),
-                beforeSend: showRequest,
-                success: function (result) {
-                    if (!result.error) {
-                        window.location.replace('/submit')
-                    } else {
-                        alert (result.message)
-                    }
-                }
-            })
-        })
-
-//        var options = {
-//            url:       '/submit',    // override for form's 'action' attribute
-//            type:      'post',        // 'get' or 'post', override for form's 'method' attribute
-//            dataType:  'json',        // 'xml', 'script', or 'json' (expected server response type)
-//            clearForm: true,        // clear all form fields after successful submit
-//            success:       showResponse  // post-submit callback
-//
-//            //target:        '#output2',   // target element(s) to be updated with server response
-//            // other available options:
-//            //resetForm: true        // reset the form after successful submit
-//            // $.ajax options can be used here too, for example:
-//            //timeout:   3000
-//        };
-//
-//        $('#insertForm').submit(function(e) {
-//            // Prevent form submission
-//            e.preventDefault();
-//
-//            $(this).ajaxSubmit(options);
-//        })
-    });
-
-    function showRequest() {
-        var status;
         var options = {
-            url:       '/upload',    // override for form's 'action' attribute
-            type:      'post',        // 'get' or 'post', override for form's 'method' attribute
-            dataType:  'json',        // 'xml', 'script', or 'json' (expected server response type)
+            url: '/upload',    // override for form's 'action' attribute
+            type: 'post',        // 'get' or 'post', override for form's 'method' attribute
+            dataType: 'json',        // 'xml', 'script', or 'json' (expected server response type)
             clearForm: true,        // clear all form fields after successful submit
-            success:       function(responseText, statusText, xhr, $form) {
-                if(responseText.error) {
-                    status = "fail";
-                    alert("There is an Unexpected Error happens !");
-                    return false
-                } else {
-                    return true
-                }
-            },  // post-submit callback
-            error: function() {
-                alert("There is an Unexpected Error happens !");
-                return false
-            }
+            beforeSubmit:  showRequest,  // pre-submit callback
+            success:       showResponse  // post-submit callback
 
             //target:        '#output2',   // target element(s) to be updated with server response
             // other available options:
@@ -199,21 +142,70 @@
             //timeout:   3000
         };
 
-        $("#uploadForm").ajaxSubmit(options);
-        alert("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        setTimeout(function(){ alert(status); }, 10000);
+        $('#uploadForm').submit(function(e) {
+            //alert("A");
+            $(this).ajaxSubmit(options);
+            // Prevent form submission
+            e.preventDefault();
+        });
+    });
 
+    function showRequest(formData, jqForm, options) {
+        var queryString = $.param(formData);
+        var isValid = true;
+        var i = 0;
+        $('[required]').each(function() {
+            if ($(this).val() === '') {
+                isValid = false;
+            }
+        });
+
+        $('input[type=radio]:checked').each(function() {
+            i = i + 1;
+        });
+        //alert(i);
+
+        if (isValid && i === 3) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function showResponse(responseText, statusText, xhr, $form) {
+        if (!responseText.error) {
+            alert(responseText.message);
+            alert("A");
+            $.ajax({
+                type: "post",
+                url: "/detailedForm",
+                dataType: 'json',
+                data: $("#insertForm").serialize(),
+                success: function (result) {
+                    if (!result.error) {
+                        alert("success");
+                    } else {
+                        alert(result.message);
+                    }
+                }
+            })
+        } else {
+            // error
+            alert(responseText.message);
+        }
     }
 
 	function pestSelect() {
 	    var pestsPresent = document.getElementById("pestsPresent").value;
 	    if (!pestsPresent) {
-            document.getElementById("FAW").style.display = "none";
+            document.getElementsByClassName("FAW")[0].style.display = "none";
+            document.getElementsByClassName("FAW")[1].style.display = "none";
 		} else if (pestsPresent === "FAW") {
             document.getElementsByClassName("FAW")[0].style.display = "block";
             document.getElementsByClassName("FAW")[1].style.display = "block";
 		} else {
-            document.getElementById("FAW").style.display = "none";
+            document.getElementsByClassName("FAW")[0].style.display = "none";
+            document.getElementsByClassName("FAW")[1].style.display = "none";
 	        alert("To be Developed")
 		}
 	}

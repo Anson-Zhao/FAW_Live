@@ -1,0 +1,137 @@
+<!-- views/profileBK.ejs -->
+<!doctype html>
+<html>
+<head>
+	<title>FAW/Locust Project - User Profile</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/Profile.css" type="text/css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//unpkg.com/flatpickr"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        #Username{
+            position:relative;
+            left:980px;
+            top:2px;
+            width:14%;
+        }
+        .banner{
+            position:fixed;
+            left:240px;
+            top:34px;
+            width:60%;
+        }
+        table, th{
+            border: 1px solid black;
+            text-align:center;
+
+        }
+        body { padding-top:80px; word-wrap:break-word; }
+
+        .container{
+            margin-left:90px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+    <div class="dropdown">
+        <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="Username"><%= user.firstName%>
+            <span class="caret"></span></button>
+        <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
+        <ul id="userMenu" class="dropdown-menu dropdown-menu-right">
+
+        </ul>
+    </div>
+    <div class="container">
+        <br><br><br>
+        <form onsubmit="return checkForm()" action="/userProfile" method="post">
+        <h4><strong>User Name</strong>:
+            <label for="usernameF">First Name:</label>
+            <input type="text" id="usernameF" name="usernameF"  value="<%= user.firstName %>">
+            <label for="usernameL">Last Name:</label>
+            <input type="text" id="usernameL" name="usernameL" value="<%= user.lastName %>">
+            <div><strong>User Role</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.userrole%></div>
+            <div><strong>Date created</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.dateCreated %></div>
+            <strong>Last Modification</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.dateModified %>
+            <div><strong>LoginName/Email</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.username%></div>
+
+            <br>
+            <div><strong>Password Change</strong>:    </div>
+        </h4>
+        <div >
+            <label for="currentpassword">Current Password:</label>
+            <input type="password" id="currentpassword" name="currentpassword" maxlength="2000px">
+        </div>
+        <div>
+            <label for="newpassword">New Password:</label>
+            <input type="password" id="newpassword" name="newpassword" maxlength="2000px">
+        </div>
+        <div>
+            <label for="Confirmpassword">Confirm New Password:</label>
+            <input type="password" id="Confirmpassword" name="Confirmpassword" maxlength="2000px">
+        </div>
+
+        <button id="SS"  type="submit" class="btn btn-warning btn-sm"> Submit </button>
+        <a href="/userhome" class="btn btn-warning btn-sm">Cancel</a>
+        </form>
+    </div>
+</div>
+
+<script>
+
+    var UserRole = "<%= user.userrole %>";
+    var DropMenu;
+
+    $(document).ready(function(){
+        if (UserRole === "Admin") {
+            DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
+                "\t\t\t<li><a href=\"/userManagement\">User Management</a></li>\n" +
+                "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
+            $("#userMenu").empty();
+            $("#userMenu").append(DropMenu)
+        } else if ( UserRole === "Regular") {
+            DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
+                "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
+            $("#userMenu").empty();
+            $("#userMenu").append(DropMenu)
+        }
+    });
+
+    function checkForm() {
+        var oldP=document.getElementById("currentpassword").value;
+        var newP=document.getElementById("newpassword").value;
+        var confirmP =document.getElementById("Confirmpassword").value;
+
+        if(oldP!=""&&newP!=""&&confirmP!="")
+        {
+            if(oldP!=newP)
+            {
+                if(newP==confirmP)
+                {
+                    return true;
+                } else {
+                    alert("New password are not matched!");
+                    return false;
+                }
+            } else {
+                alert("Please try your new password different from old one!");
+                return false;
+            }
+        } else {
+            alert("All password fields are required");
+            return false;
+        }
+    }
+</script>
+
+</body>
+</html>
