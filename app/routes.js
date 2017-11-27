@@ -262,7 +262,7 @@ module.exports = function (app, passport) {
 
         function userQuery() {
             res.setHeader("Access-Control-Allow-Origin", "*");
-
+            console.log(queryStat);
             connection.query(queryStat, function (err, results, fields) {
 
                 var status = [{errStatus: ""}];
