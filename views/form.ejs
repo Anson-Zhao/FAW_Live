@@ -77,15 +77,17 @@
                     <option value="District"></option>
                 </select><br><br>
                 <h4>I. Cropping System: &nbsp;&nbsp;&nbsp;</h4>
-                <h4 id="cropSystemTitle">
-                    <select class="clearGen" id='cropSystem' name='croppingSystem' onchange='rotationInterCropSystem();' required>
-                        <option value=''>SELECT THE CROP SYSTEM</option>
-                        <option>SEASONAL</option>
-                        <option>ROTATION</option>
-                        <option>INTERCROPPING</option>
-                    </select>
-                    <h4 id="mainCropTitle"></h4>
-                </h4><br>
+                <input type="radio" name="croppingSystem" value="Seasonal" required> SEASONAL
+                <input type="radio" name="croppingSystem" value="Rotation/Intercropping" required> ROTATION/INTERCROPPING <br><br>
+                <!--<h4 id="cropSystemTitle">-->
+                    <!--<select class="clearGen" id='cropSystem' name='croppingSystem' onchange='rotationInterCropSystem();' required>-->
+                        <!--<option value=''>SELECT THE CROP SYSTEM</option>-->
+                        <!--<option>SEASONAL</option>-->
+                        <!--<option>ROTATION</option>-->
+                        <!--<option>INTERCROPPING</option>-->
+                    <!--</select>-->
+                    <!--<h4 id="mainCropTitle"></h4>-->
+                <!--</h4><br>-->
                 <h4>J. Maize Variety: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="maizeVariety" name="maizeVariety" type="text" placeholder="Enter Crop Variety Here" required><br><br>
                 <h4>K. Maize Planting Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE2" name="plantingDate" class="date" value="" required><br><br>
                 <h4>L. Field Size - ha (numerical XXXX.X): &nbsp;&nbsp;&nbsp;</h4>
@@ -152,11 +154,11 @@
                         <option>HIGH</option>
                     </select><br><br>
                     <h4>E. Natural Enemies Present ?&nbsp;&nbsp;&nbsp;</h4>
-                    <input type="radio" name="naturalEnemies" value="yes"> YES
-                    <input type="radio" name="naturalEnemies" value="no"> NO <br><br>
+                    <input type="radio" name="naturalEnemies" value="yes" required> YES
+                    <input type="radio" name="naturalEnemies" value="no" required> NO <br><br>
                     <h4>F. Dead Larvae Killed By Natural Enemies ?&nbsp;&nbsp;&nbsp;</h4>
-                    <input type="radio" name="deadLarvae" value="yes"> YES
-                    <input type="radio" name="deadLarvae" value="no"> NO <br><br>
+                    <input type="radio" name="deadLarvae" value="yes" required> YES
+                    <input type="radio" name="deadLarvae" value="no" required> NO <br><br>
                     <h4>G. % Plants Infested (From 50 Plant Examples): &nbsp;&nbsp;&nbsp;</h4><input class="clearDet" id="percentInfested" name="percentInfested" type="text" placeholder="Enter Number (Numerical) Here" required><br><br>
 
                     <h2>FAW Control</h2>
@@ -172,8 +174,8 @@
                         <option>PESTICIDE</option>
                     </select><br><br>
                     <h4>I. Pesticide Litres Sprayed ?&nbsp;&nbsp;&nbsp;</h4>
-                    <input type="radio" name="pesticide" value="yes"> YES
-                    <input type="radio" name="pesticide" value="no"> NO <br><br>
+                    <input type="radio" name="pesticide" value="yes" required> YES
+                    <input type="radio" name="pesticide" value="no" required> NO <br><br>
 
                     <!--<h2>Photos</h2>-->
                     <!--<h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>-->
