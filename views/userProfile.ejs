@@ -22,10 +22,10 @@
             width:14%;
         }
         .banner{
-            position:fixed;
-            left:240px;
-            top:34px;
-            width:60%;
+            position:absolute;
+            left:180px;
+            top:-45px;
+            width:65%;
         }
         table, th{
             border: 1px solid black;
@@ -37,6 +37,10 @@
         .container{
             margin-left:90px;
         }
+        .floating-Box{
+            display: inline;
+        }
+
     </style>
 
 </head>
@@ -54,30 +58,33 @@
     <div class="container">
         <br><br><br>
         <form onsubmit="return checkForm()" action="/userProfile" method="post">
-        <h4><strong>User Name</strong>:
-            <label for="usernameF">First Name:</label>
+        <h4 class="floating-Box"><strong>User Name:</strong></h4>
+            <h5 class="floating-Box">First Name:
             <input type="text" id="usernameF" name="usernameF"  value="<%= user.firstName %>">
-            <label for="usernameL">Last Name:</label>
+            Last Name:
             <input type="text" id="usernameL" name="usernameL" value="<%= user.lastName %>">
-            <div><strong>User Role</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.userrole%></div>
-            <div><strong>Date created</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.dateCreated %></div>
-            <strong>Last Modification</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.dateModified %>
-            <div><strong>LoginName/Email</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.username%></div>
-
+            </h5>
+            <h4><strong>User Role:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.userrole%></h4>
+            <h4><strong>Date created</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.dateCreated %></h4>
+            <h4><strong>Last Modification</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.dateModified %></h4>
+            <h4><strong>LoginName/Email</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.username%></h4>
             <br>
-            <div><strong>Password Change</strong>:    </div>
-        </h4>
-        <div >
-            <label for="currentpassword">Current Password:</label>
+            <div><h4><strong>Password Change:</strong></h4>    </div>
+
+        <div>
+            <h5>Current Password:
             <input type="password" id="currentpassword" name="currentpassword" maxlength="2000px">
+            </h5>
         </div>
         <div>
-            <label for="newpassword">New Password:</label>
+            <h5>New Password:
             <input type="password" id="newpassword" name="newpassword" maxlength="2000px">
+            </h5>
         </div>
         <div>
-            <label for="Confirmpassword">Confirm New Password:</label>
+            <h5>Confirm New Password:
             <input type="password" id="Confirmpassword" name="Confirmpassword" maxlength="2000px">
+            </h5>
         </div>
 
         <button id="SS"  type="submit" class="btn btn-warning btn-sm"> Submit </button>
