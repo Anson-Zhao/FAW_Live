@@ -258,8 +258,8 @@
 
                 }
 
-                alert(d);
-                alert("Row: " + rowSelected[1].Name);
+                // alert(d);
+                // alert("Row: " + rowSelected[1].Name);
                 console.log(rowSelected[2].Name);
                 console.log(rowSelected[2].Value);
 
@@ -291,7 +291,6 @@
         });
 
         function query() {
-            //alert("a");
             var dateCreatedFrom = document.getElementsByClassName("datePicker")[0].value;
             var dateCreatedTo = document.getElementsByClassName("datePicker")[1].value;
             var dateModifiedFrom = document.getElementsByClassName("datePicker")[2].value;
@@ -313,7 +312,7 @@
 
 
             var querystr = queryString1 + queryString2;
-            alert(querystr);
+            // alert(querystr);
 
             if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !Admin || !Regular) {
                 table.clear();
@@ -324,7 +323,7 @@
         }
 
         var queryAndDisplay = function (querystr) {
-            alert(querystr);
+            // alert(querystr);
             console.log("querystr: " + querystr);
 
             $.ajax({
