@@ -394,8 +394,7 @@ module.exports = function (app, passport) {
 
             if (!results[0].userrole) {
                 console.log("Error");
-            } else if (results[0].userrole === "Admin" || "Regular") {
-                // process the signup form
+            } else {
                 res.render('userHome.ejs', {
                     user: req.user // get the user out of session and pass to template
                 });
@@ -419,52 +418,20 @@ module.exports = function (app, passport) {
                     if (err) {
                         console.log(err);
                     } else {
-                        if (req.user.userrole === "Admin") {
-                            // console.log(req.user.firstName);
-                            res.render('form.ejs', {
-                                user: req.user, // get the user out of session and pass to template
-                                message: req.flash('Data Entry Message'),
-                                firstname: req.user.firstName,
-                                lastname: req.user.lastName,
-                                transactionID: transactionID
-                            });
-
-                        } else if (req.user.userrole === "Regular") {
-                            res.redirect('/generalForm');
-                        }
+                        // Show general form
+                        res.render('form.ejs', {
+                            user: req.user, // get the user out of session and pass to template
+                            message: req.flash('Data Entry Message'),
+                            firstname: req.user.firstName,
+                            lastname: req.user.lastName,
+                            transactionID: transactionID
+                        });
                     }
                 });
             }
         });
     });
-    // check
-    app.get('/check', isLoggedIn, function (req, res) {
-        res.json({"error": false, "message": "complete"});
-    });
 
-    // Show form
-    app.get('/form', isLoggedIn, function (req, res) {
-        // console.log("A01");
-        res.render('form.ejs', {
-            user: req.user, // get the user out of session and pass to template
-            message: req.flash('Data Entry Message'),
-            firstname: req.user.firstName,
-            lastname: req.user.lastName,
-            transactionID: transactionID
-        });
-    });
-
-    // Show general form
-    app.get('/generalForm', isLoggedIn, function (req, res) {
-        // console.log("A01");
-        res.render('generalForm.ejs', {
-            user: req.user, // get the user out of session and pass to template
-            message: req.flash('Data Entry Message'),
-            firstname: req.user.firstName,
-            lastname: req.user.lastName,
-            transactionID: transactionID
-        });
-    });
 
     // Submit general form
     app.post('/generalForm', isLoggedIn, function (req, res) {
@@ -528,15 +495,6 @@ module.exports = function (app, passport) {
                 //     res.redirect('/detailedForm');
                 // }
             }
-        });
-    });
-
-    //Show detailed form
-    app.get('/detailedForm', isLoggedIn, function (req, res) {
-        res.render('detailedForm.ejs', {
-            user: req.user, // get the user out of session and pass to template
-            message: req.flash('Data Entry Message'),
-            transactionID: transactionID
         });
     });
 
@@ -698,3 +656,40 @@ function isLoggedIn(req, res, next) {
     // if they aren't redirect them to the home page
     res.redirect('/');
 }
+
+// // check
+// app.get('/check', isLoggedIn, function (req, res) {
+//     res.json({"error": false, "message": "complete"});
+// });
+//
+// // Show form
+// app.get('/form', isLoggedIn, function (req, res) {
+//     // console.log("A01");
+//     res.render('form.ejs', {
+//         user: req.user, // get the user out of session and pass to template
+//         message: req.flash('Data Entry Message'),
+//         firstname: req.user.firstName,
+//         lastname: req.user.lastName,
+//         transactionID: transactionID
+//     });
+// });
+//
+// // Show general form
+// app.get('/generalForm', isLoggedIn, function (req, res) {
+//     // console.log("A01");
+//     res.render('form.ejs', {
+//         user: req.user, // get the user out of session and pass to template
+//         message: req.flash('Data Entry Message'),
+//         firstname: req.user.firstName,
+//         lastname: req.user.lastName,
+//         transactionID: transactionID
+//     });
+// });
+// //Show detailed form
+// app.get('/detailedForm', isLoggedIn, function (req, res) {
+//     res.render('detailedForm.ejs', {
+//         user: req.user, // get the user out of session and pass to template
+//         message: req.flash('Data Entry Message'),
+//         transactionID: transactionID
+//     });
+// });

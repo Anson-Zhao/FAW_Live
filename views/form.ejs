@@ -3,11 +3,18 @@
 <html>
 <head>
     <title>FAW/Locust Project -  Data Entry</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="/css/style_final.css" type="text/css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//unpkg.com/flatpickr"></script>
     <style>
         body 		{ padding-top:80px; word-wrap:break-word; }
         #detailedForm { display: none; }
@@ -16,11 +23,12 @@
         #stay, #cancel {  position: relative;  width: 20%;  left: 20%;  }
         #leave, #clear {  position: relative;  width: 20%;  left: 60%;  }
     </style>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.js"></script>
-    <script src="/scripts/jquery.form.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBX94wEDdQ52lCDhKAhcfR-flIw1NyLTMA"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/scripts/jquery.form.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.js"></script>
+
 </head>
 <body onload="getLocation()">
 <div class="container">
@@ -603,7 +611,7 @@
     }
 
     function goBack() {
-        alert("A");
+        // alert("A");
         document.getElementById("modal-footer").innerHTML = "";
 
         document.getElementById("modal-header").style.backgroundColor = "#f44242";
@@ -640,7 +648,7 @@
     }
 
     function clearGeneral() {
-        alert("A");
+        // alert("A");
         document.getElementById("modal-footer").innerHTML = "";
 
         document.getElementById("modal-header").style.backgroundColor = "#f44242";
@@ -690,7 +698,7 @@
     }
 
     function clearDetailed() {
-        alert("A");
+        // alert("A");
         document.getElementById("modal-footer").innerHTML = "";
 
         document.getElementById("modal-header").style.backgroundColor = "#f44242";

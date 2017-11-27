@@ -12,8 +12,8 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="//unpkg.com/flatpickr"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//unpkg.com/flatpickr"></script>
 
     <style>
 		#Username{
@@ -276,7 +276,6 @@
         });});
 
     function query() {
-        alert("a");
         var dateCreatedFrom = document.getElementsByClassName("datePicker")[0].value;
         var dateCreatedTo = document.getElementsByClassName("datePicker")[1].value;
         var dateModifiedFrom = document.getElementsByClassName("datePicker")[2].value;
@@ -304,7 +303,7 @@
             $("table tbody").empty().append(queryAndDisplay(querystr));
 
                 queryAndDisplay(querystr);
-            alert(dateCreatedFrom + "a");
+            // alert(dateCreatedFrom + "a");
         } else {
             alert("Please Select Both Dates!");
         }
@@ -319,29 +318,7 @@
             async: false,
             data: querystr,
             success: function (resp) {
-
-//                    $("#dvData").append($("<table id='dataDisplay'></table>"));
-
-
-                //table.append($("<tr id='title'>"));
-//                    var field = [
-//                        "Select",
-//                        "First Name",
-//                        "Last Name",
-//                        "Username",
-//                        "Password",
-//                        "User Role",
-//                        "Date Created",
-//                        "Date Last Modified"
-//                    ];
-//
-//                    for (var i = 0; i < field.length; i++) {
-//                        $("#title").append($("<th>" + field[i] + "</th>"));
-//                    }
-//                    table.append($("</tr>"));
-
                 for (var i = 0; i < resp.length; i++) {
-//                        table.append($("<tr id='dataColumn" + (i + Useless) + "' >"));
                     t.row.add( [
                         resp[i].firstName,
                         resp[i].lastName,
@@ -355,12 +332,6 @@
                         resp[i].status,
                         resp[i].lastLoginTime
                     ] ).draw( false );
-
-//                        table.append($("<tr id='dataColumn" + (i + Useless) + "' >"));
-//                        $("#dataColumn" + (i + Useless)).append($("<td>" + "<input type='checkbox' name='record'>" + "</td>" + "<td contenteditable='true' >" + resp[i].firstName + "</td>" + "<td contenteditable='true'>" + resp[i].lastName + "</td>" + "<td contenteditable='true'>" + resp[i].username + "</td>" + "<td>" + resp[i].password + "</td>" + "<td contenteditable='true'>" + resp[i].userrole + "</td>" + "<td contenteditable='true'>" + resp[i].dateCreated + "</td>" + "<td contenteditable='true'>" + resp[i].dateModified + "</td>"));
-
-
-//                        table.append($("</tr>"));
                 }
             }
 
