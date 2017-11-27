@@ -297,24 +297,16 @@
             var dateModifiedTo = document.getElementsByClassName("datePicker")[3].value;
             var firstName = document.getElementById("firstName").value;
             var lastName = document.getElementById("lastName").value;
-            var Admin = document.getElementById("Admin").checked;
-            var Regular = document.getElementById("Admin").checked;
-            if (Admin) {
-                status = document.getElementById("Admin").value;
-            } else if (Regular) {
-                status = document.getElementById("Regular").value;
-            } else {
-                status = false;
-            }
+            var userrole = $("input[name='userrole']:checked").val();
 
             queryString1 = "dateCreatedFrom=" + dateCreatedFrom + "&dateCreatedTo=" + dateCreatedTo + "&dateModifiedFrom=" + dateModifiedFrom + "&dateModifiedTo=" + dateModifiedTo;
-            queryString2 = "&firstName=" + firstName + "&lastName=" + lastName + "&Admin=" + Admin + "&Regular=" + Regular;
+            queryString2 = "&firstName=" + firstName + "&lastName=" + lastName + "&userrole=" + userrole;
 
 
             var querystr = queryString1 + queryString2;
             // alert(querystr);
 
-            if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !Admin || !Regular) {
+            if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !userrole) {
                 table.clear();
                 queryAndDisplay(querystr);
             } else {
