@@ -231,7 +231,7 @@
         }
 
         var options = {
-            url: '/upload',    // override for form's 'action' attribute
+            url: '/uploadfiles',    // override for form's 'action' attribute
             type: 'post',        // 'get' or 'post', override for form's 'method' attribute
             dataType: 'json',        // 'xml', 'script', or 'json' (expected server response type)
             clearForm: true,        // clear all form fields after successful submit
@@ -245,8 +245,8 @@
             //timeout:   3000
         };
 
-        $('#upload').submit(function(e) {
-            // $("#upload").ajaxSubmit(options);
+        $('#uploadfiles').submit(function(e) {
+            // $("#uploadfiles").ajaxSubmit(options);
             // Prevent form submission
             e.preventDefault();
             $("#hide").click();
@@ -256,7 +256,7 @@
             // Prevent form submission
             e.preventDefault();
             alert("Y");
-            $("#upload").ajaxSubmit(options);
+            $("#uploadfiles").ajaxSubmit(options);
             // Prevent form submission
             e.preventDefault();
         });

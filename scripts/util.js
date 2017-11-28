@@ -398,7 +398,7 @@ var qq = function(element) {
     };
 
     qq.isFileChunkingSupported = function() {
-        return !qq.androidStock() && //Android's stock browser cannot upload Blobs correctly
+        return !qq.androidStock() && //Android's stock browser cannot uploadfiles Blobs correctly
             qq.isXhrUploadSupported() &&
             (File.prototype.slice !== undefined || File.prototype.webkitSlice !== undefined || File.prototype.mozSlice !== undefined);
     };

@@ -94,12 +94,12 @@ module.exports = function (app, passport) {
     // we will use route middleware to verify this (the isLoggedIn function)
 
     // Show user profile page
-    app.get('/userProfile', function (req, res) {
+    app.get('/userProfile', isLoggedIn, function (req, res) {
         res.render('userProfile.ejs', {user: req.user});
     });
 
     // Update user profile page
-    app.post('/userProfile', function (req, res) {
+    app.post('/userProfile', isLoggedIn, function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
         var user = req.user;
         var newPass = {
@@ -631,7 +631,7 @@ module.exports = function (app, passport) {
     });
 
     // Upload photos
-    app.post('/upload', fileUpload, function (req,res) {
+    app.post('/uploadfiles', fileUpload, function (req,res) {
         console.log("ABC");
         //console.log(req.headers.origin);
         res.setHeader("Access-Control-Allow-Origin", "*");
