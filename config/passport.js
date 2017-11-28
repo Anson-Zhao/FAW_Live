@@ -26,8 +26,7 @@ module.exports = function(passport) {
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
-        connection.query("SELECT * FROM users WHERE id = ? ",[id], function(err, rows){
-            console.log("Dese: " + rows[0]);
+        connection.query("SELECT * FROM Users WHERE id = ? ",[id], function(err, rows){
             done(err, rows[0]);
         });
     });

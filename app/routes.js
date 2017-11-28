@@ -61,7 +61,7 @@ module.exports = function (app, passport) {
                 req.session.cookie.maxAge = 1000 * 60 * 3;
                 req.session.cookie.expires = false;
             }
-            res.redirect('/login');
+            //res.redirect('/login');
         });
 
     // Update user login status
