@@ -121,9 +121,6 @@ module.exports = function (app, passport) {
                 console.log(err);
                 res.json({"error": true, "message": "Fail !"});
             } else {
-                // res.render('userHome.ejs', {
-                //     user: req.user // get the user out of session and pass to template
-                // });
                 var passComp = bcrypt.compareSync(newPass.currentpassword, user.password);
                 if (!!req.body.newpassword && passComp) {
                     var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + user.username + "'";
@@ -142,24 +139,6 @@ module.exports = function (app, passport) {
                 }
             }
         });
-
-        // var passComp = bcrypt.compareSync(newPass.currentpassword, user.password);
-        // if (!!req.body.newpassword && passComp) {
-        //     var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + user.username + "'";
-        //
-        //     connection.query(passReset, function (err, rows) {
-        //         //console.log(result);
-        //         if (err) {
-        //             console.log(err);
-        //             res.send("Password reset failed!")
-        //         } else{
-        //             res.render('userHome.ejs', {
-        //                 user: req.user // get the user out of session and pass to template
-        //             });
-        //         }
-        //     });
-        // }
-
     });
 
     // =====================================
