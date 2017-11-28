@@ -101,43 +101,48 @@ module.exports = function (app, passport) {
     // Update user profile page
     app.post('/userProfile', function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
-        // connection.query('USE ' + config.Login_db); // Locate Login DB
         var user = req.user;
-        var newPassword = {
+        var newPass = {
             firestname: req.body.usernameF,
             lastname: req.body.usernameL,
-            username: req.body.username,
             currentpassword: req.body.currentpassword,
             Newpassword: bcrypt.hashSync(req.body.newpassword, null, null),
             ConfirmPassword: bcrypt.hashSync(req.body.Confirmpassword, null, null)
         };
         // var changeusername = "'UPDATE Users Set password = '" + newPassword.usernameF + "' WHERE username        "
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time2;
 
-        var changepassword = "UPDATE Users SET password = '" + newPassword.Newpassword + "' WHERE username = '" + user.username + "'";
-        console.log(newPassword.Newpassword, user.username);
-        connection.query("SELECT * FROM Users WHERE username = ?", [user.username], function (err, rows) {
-            // console.log(rows);
-            var result = bcrypt.compareSync(newPassword.currentpassword, user.password);
-            console.log(result);
-            if (result) {
-                console.log("Password correct");
-                connection.query(changepassword, function (err, rows) {
-
-                    if (err) {
-                        console.log(err);
-                        res.send("New Password Change Fail!");
-                        res.end();
-                    } else {
-                        res.render('userHome.ejs', {
-                            user: req.user // get the user out of session and pass to template
-                        });
-                    }
-                })
+        var statusUpdate = "UPDATE Users SET firstName =?, lastName = ?, dateModified  = ? WHERE username = ? ";
+        connection.query(statusUpdate, [newPass.firstname, newPass.lastname, dateTime, user.username], function (err, rows) {
+            if(err){
+                console.log(err);
             } else {
-                console.log("Password wrong");
+                res.render('userHome.ejs', {
+                    user: req.user // get the user out of session and pass to template
+                });
             }
-
         });
+
+        var passComp = bcrypt.compareSync(newPass.currentpassword, user.password);
+        if (!!req.body.newpassword && passComp) {
+            var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + user.username + "'";
+
+            connection.query(passReset, function (err, rows) {
+                //console.log(result);
+                if (err) {
+                    console.log(err);
+                    res.send("Password reset failed!")
+                } else{
+                    res.render('userHome.ejs', {
+                        user: req.user // get the user out of session and pass to template
+                    });
+                }
+            });
+        }
+
     });
 
     // =====================================
@@ -392,6 +397,33 @@ module.exports = function (app, passport) {
             })
         }
 
+    });
+
+    app.get('/suspendUser', isLoggedIn, function(req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time2;
+
+        var suspendedUser = {
+            username: req.query.Username,
+            modifiedUser: req.user.username
+        };
+
+        var statusUpdate2 = "UPDATE Users SET modifiedUser = ?, dateModified = ?, status = 'Suspended' WHERE username = ?";
+
+        connection.query(statusUpdate2,[suspendedUser.modifiedUser, dateTime, suspendedUser.username],function(err, rows) {
+            // console.log(dateTime, req.user.username);
+
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "Suspension failed!"});
+            } else {
+                res.json({"error": false, "message": "/userManagement"});
+                // render the page and pass in any flash data if it exists
+            }
+        })
     });
 
     // =====================================
