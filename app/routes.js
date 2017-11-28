@@ -263,7 +263,7 @@ module.exports = function (app, passport) {
 
         function userQuery() {
             res.setHeader("Access-Control-Allow-Origin", "*");
-            console.log("Query Statement: " + queryStat);
+            // console.log("Query Statement: " + queryStat);
 
             connection.query(queryStat, function (err, results, fields) {
 
@@ -290,8 +290,8 @@ module.exports = function (app, passport) {
         var j = 0;
 
         for (var i = 0; i < myQuery.length; i++) {
-            console.log("i = " + i);
-            console.log("field Value: " + !!myQuery[i].fieldVal);
+            // console.log("i = " + i);
+            // console.log("field Value: " + !!myQuery[i].fieldVal);
             if (i === myQuery.length - 1) {
                 if (!!myQuery[i].fieldVal) {
                     if (j === 0) {
@@ -345,8 +345,6 @@ module.exports = function (app, passport) {
 
     app.post('/editUser', isLoggedIn, function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
-
-        console.log("New Pass: " + req.body.newPassword);
 
         if (req.body.newPassword !== "") {
             var updatedUserPass = {
@@ -490,7 +488,7 @@ module.exports = function (app, passport) {
             }
         ];
 
-        function userQuery() {
+        function filterQuery() {
             res.setHeader("Access-Control-Allow-Origin", "*");
             //console.log("Query Statement: " + queryStat);
 
@@ -523,10 +521,10 @@ module.exports = function (app, passport) {
                 if (i === myQuery.length - 1) {
                     if (!!myQuery[i].fieldVal) {
                         queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                        userQuery()
+                        filterQuery()
                     } else {
                         queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
-                        userQuery()
+                        filterQuery()
                     }
                 } else {
                     if (!!myQuery[i].fieldVal) {
@@ -537,7 +535,7 @@ module.exports = function (app, passport) {
                 }
             } else {
                 if (i === myQuery.length - 1) {
-                    userQuery()
+                    filterQuery()
                 }
             }
         }
@@ -576,7 +574,7 @@ module.exports = function (app, passport) {
     // Submit general form
     app.post('/generalForm', isLoggedIn, function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*");
-        console.log(req.body);
+        // console.log(req.body);
 
         var result = Object.keys(req.body).map(function (key) {
             return [String(key), req.body[key]];
@@ -617,10 +615,9 @@ module.exports = function (app, passport) {
         // console.log(value);
         var deleteStatement = "DELETE FROM FAW.General_Form WHERE transactionID = '" + transactionID + "'; ";
         var insertStatement = "INSERT INTO FAW.General_Form (" + name + ") VALUES (" + value + ");";
-        console.log(insertStatement);
+        // console.log(insertStatement);
 
         connection.query(deleteStatement + insertStatement, function (err, results, fields) {
-            console.log("Z");
             if (err) {
                 console.log(err);
                 res.json({"error": true, "message": "Insert Error! Check your entry."});
@@ -632,7 +629,6 @@ module.exports = function (app, passport) {
 
     // Upload photos
     app.post('/uploadfiles', fileUpload, function (req,res) {
-        console.log("ABC");
         //console.log(req.headers.origin);
         res.setHeader("Access-Control-Allow-Origin", "*");
 
@@ -654,9 +650,7 @@ module.exports = function (app, passport) {
 
     // Submit detailed form
     app.post('/detailedForm', isLoggedIn, function (req, res) {
-        console.log("AZ");
         res.setHeader("Access-Control-Allow-Origin", "*");
-        console.log(req.body);
 
         var result = Object.keys(req.body).map(function (key) {
             return [String(key), req.body[key]];
@@ -688,10 +682,9 @@ module.exports = function (app, passport) {
 
         name += ", pestPhoto, damagePhoto";
         value += ", '" + pest + "', '" + damage + "'";
-        console.log(transactionID);
+
         var deleteStatement = "DELETE FROM FAW.Detailed_Form WHERE transactionID = '" + transactionID + "'; ";
         var insertStatement = "INSERT INTO FAW.Detailed_Form (" + name + ") VALUES (" + value + ");";
-        console.log(insertStatement);
 
         connection.query(deleteStatement + insertStatement, function (err, results, fields) {
             if (err) {
@@ -725,8 +718,6 @@ module.exports = function (app, passport) {
             }
         });
     });
-
-
 
     app.get('/DataQuery', isLoggedIn, function (req, res) {
 
@@ -768,7 +759,6 @@ module.exports = function (app, passport) {
     });
 
 };
-
 
 // route middleware to make sure
 function isLoggedIn(req, res, next) {
