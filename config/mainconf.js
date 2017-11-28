@@ -3,7 +3,7 @@ module.exports = {
     'commondb_connection': {
         'multipleStatements': true,
         'connectionLimit' : 100,
-        'host': '127.0.0.1',
+        'host': '10.11.4.97',
         'user': 'AppUser',
         'password': 'Special888%',
         'port'    :  3306
@@ -11,7 +11,7 @@ module.exports = {
     'session_connection': {
         'multipleStatements': true,
         'connectionLimit' : 100,
-        'host': '127.0.0.1',
+        'host': '10.11.4.97',
         'user': 'SessionManager',
         'password': 'SManager$44',
         'port'    :  3306
@@ -24,6 +24,6 @@ module.exports = {
 
     'Server_Port': 9090,
 
-    'Upload_Path': '/Users/ftaaworldbridgelab/Desktop/Test'
+    'Upload_Path': '/Users/iMacBig02/Desktop/Test'
 
 };

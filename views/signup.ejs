@@ -54,7 +54,7 @@
 		</div>
 		<div class="form-group">
 			<label>Date Created</label>
-			<input type="date" id="DATE" class="form-control" name="dateCreated" readonly>
+			<input id="DATE" class="form-control date" name="dateCreated" readonly>
 		</div>
 		<div class="form-group" hidden>
 			<label>Created By User</label>
@@ -75,17 +75,20 @@
 
 </div>
 <script>
-    $(function() {
-        flatpickr(".date", {
-            dateFormat: "Y-m-d",
-            time_24hr: true
+    $(document).ready(function() {
+        $(function() {
+            /*flatpickr(".date", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i:S",
+                time_24hr: true
+            });*/
         });
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time2;
+        document.getElementById("DATE").value = dateTime;
     });
-    var today = new Date();
-    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-    var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    var dateTime = date + ' ' + time2;
-    document.getElementById("DATE").value = dateTime;
 </script>
 </body>
 </html>
