@@ -79,6 +79,15 @@
             width: 70%;
             margin-left:150px;
         }
+        #dvData::-webkit-scrollbar-thumb {
+            border-radius: 2px;
+            background-color: rgba(0, 0, 0, .5);
+            -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+        }
+        #dvData::-webkit-scrollbar {
+            -webkit-appearance: none;
+            height: 7px;
+        }
     </style>
 
 </head>
@@ -121,8 +130,8 @@
             <br>
 
         <input type="submit" onclick="query()" class="btn-default btn" style="color: #ffffff; background-color: #a7cb9f" value="Filter">
-        <button type="button" id="editUserButton" class="delete-row btn-default btn">Edit User(s)</button>
-        <button type="button" id="suspendUserButton" class="btn-default btn">Suspend User(s)</button>
+        <button id="editUserButton" class="delete-row btn-default btn">Edit User</button>
+        <button id="suspendUserButton" class="btn-default btn">Suspend User(s)</button>
     </div>
     <br>
     <h4 style="margin-left:75px;"><strong>Most Recent Records:</strong></h4>
@@ -177,8 +186,8 @@
         var UserRole = "<%= user.userrole %>";
         var DropMenu;
 
-        $(document).ready(function(){
-            $(function() {
+        $(document).ready(function() {
+            $(function () {
                 flatpickr(".date", {
                     dateFormat: "Y-m-d",
                     time_24hr: true
@@ -190,7 +199,7 @@
                         "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
                     $("#userMenu").empty();
                     $("#userMenu").append(DropMenu)
-                } else if ( UserRole === "Regular") {
+                } else if (UserRole === "Regular") {
                     DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
                         "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
                     $("#userMenu").empty();
@@ -198,16 +207,16 @@
                 }
             });
 
-            $('#dataDisplay tbody').on( 'click', 'tr', function () {
-                if ( $(this).hasClass('selected') ) {
+            $('#dataDisplay tbody').on('click', 'tr', function () {
+                if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
                 } else {
-                    table.$('tr.selected').removeClass('selected');
+//                    table.$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
 
-                    d = table.row( this ).data();
+                    d = table.row(this).data();
                     d.counter++;
-                    table.row( this ).data( d ).draw();
+                    table.row(this).data(d).draw();
 
                     rowSelected = [
                         {
@@ -258,50 +267,76 @@
 
                 }
 
-                // alert(d);
-                // alert("Row: " + rowSelected[1].Name);
-                console.log(rowSelected[2].Name);
-                console.log(rowSelected[2].Value);
 
-                for ( var i = 0; i < rowSelected.length; i++ ) {
-                    if ( i === 0 ) {
-                        tstring += rowSelected[i].Name + "=" + rowSelected[i].Value;
-                    } else {
-                        tstring += "&" + rowSelected[i].Name + "=" + rowSelected[i].Value;
-                    }
 
-                }
-
-                console.log("tstring for loop: " + tstring);
-
-            } );
-
-            $("#editUserButton").on("click", function () {
-                $.ajax({
-                    url: '/editUserQuery',
-                    type: 'GET',
-                    dataType: 'json',
-                    async: false,
-                    data: tstring,
-                    success: function (result) {
-                        window.location.replace('/editUser')
-                    }
-                })
             });
 
 
+            $("#editUserButton").on("click", function () {
+                if (confirm("Please make sure to only select ONE of the users to edit.") === true) {
+                    // alert(d);
+                    // alert("Row: " + rowSelected[1].Name);
+                    console.log(rowSelected[2].Name);
+                    console.log(rowSelected[2].Value);
 
-            $("#suspendUserButton").on("click", function () {
-                $.ajax({
-                    url: '/suspendUserQuery',
-                    type: 'GET',
-                    dataType: 'json',
-                    async: false,
-                    data: tstring,
-                    success: function (result) {
+                    for (var i = 0; i < rowSelected.length; i++) {
+                        if (i === 0) {
+                            tstring += rowSelected[i].Name + "=" + rowSelected[i].Value;
+                        } else {
+                            tstring += "&" + rowSelected[i].Name + "=" + rowSelected[i].Value;
+                        }
 
                     }
-                })
+
+                    console.log("tstring for loop: " + tstring);
+
+                        $.ajax({
+                            url: '/editUserQuery',
+                            type: 'GET',
+                            dataType: 'json',
+                            async: false,
+                            data: tstring,
+                            success: function (result) {
+                                window.location.replace('/editUser')
+                            }
+                        })
+                } else {
+                    return false;
+                }
+            });
+
+
+            $("#suspendUserButton").on("click", function () {
+                if (confirm("Are you sure you would like to suspend this user(s)?")) {
+                    // alert(d);
+                    // alert("Row: " + rowSelected[1].Name);
+                    console.log(rowSelected[2].Name);
+                    console.log(rowSelected[2].Value);
+
+                    for (var i = 0; i < rowSelected.length; i++) {
+                        if (i === 0) {
+                            tstring += rowSelected[i].Name + "=" + rowSelected[i].Value;
+                        } else {
+                            tstring += "&" + rowSelected[i].Name + "=" + rowSelected[i].Value;
+                        }
+
+                    }
+
+                    console.log("tstring for loop: " + tstring);
+
+                    $.ajax({
+                        url: '/suspendUser',
+                        type: 'GET',
+                        dataType: 'json',
+                        async: false,
+                        data: tstring,
+                        success: function (result) {
+                            window.location.replace('/userManagement')
+                        }
+                    })
+                } else {
+                    return false;
+                }
             });
         });
 
@@ -346,7 +381,6 @@
                 success: function (resp) {
                     for (var i = 0; i < resp.length; i++) {
                         table.row.add( [
-                            resp.[i].("<td><input type="checkbox" />    &nbsp;   </td>"),
                             resp[i].firstName,
                             resp[i].lastName,
                             resp[i].username,

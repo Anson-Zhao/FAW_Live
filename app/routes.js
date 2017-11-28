@@ -429,6 +429,33 @@ module.exports = function (app, passport) {
 
     });
 
+    app.get('/suspendUser', isLoggedIn, function(req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time2;
+
+        var suspendedUser = {
+            username: req.query.Username,
+            modifiedUser: req.user.username
+        };
+
+        var statusUpdate2 = "UPDATE Users SET modifiedUser = ?, dateModified = ?, status = 'Suspended' WHERE username = ?";
+
+        connection.query(statusUpdate2,[suspendedUser.modifiedUser, dateTime, suspendedUser.username],function(err, rows) {
+            // console.log(dateTime, req.user.username);
+
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "Suspension failed!"});
+            } else {
+                res.json({"error": false, "message": "/userManagement"});
+                // render the page and pass in any flash data if it exists
+            }
+        })
+    });
+
     // =====================================
     // TRANSACTION SECTION =================
     // =====================================
