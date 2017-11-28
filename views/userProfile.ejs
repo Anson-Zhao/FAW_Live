@@ -120,25 +120,25 @@
         var newP=document.getElementById("newpassword").value;
         var confirmP =document.getElementById("Confirmpassword").value;
 
-        if(oldP!=""&&newP!=""&&confirmP!="")
-        {
-            if(oldP!=newP)
-            {
-                if(newP==confirmP)
-                {
-                    return true;
+        if (newP != "") {
+            if(oldP != "" && confirmP != "") {
+                if(oldP != newP) {
+                    if(newP == confirmP) {
+                        alert ("V");
+                        return true;
+                    } else {
+                        alert("New password are not matched!");
+                        return false;
+                    }
                 } else {
-                    alert("New password are not matched!");
+                    alert("Please try your new password different from old one!");
                     return false;
                 }
             } else {
-                alert("Please try your new password different from old one!");
+                alert("All password fields are required");
                 return false;
             }
-        } else {
-            alert("All password fields are required");
-            return false;
-        }
+        } else {return true}
     }
 </script>
 
