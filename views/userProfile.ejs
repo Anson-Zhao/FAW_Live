@@ -56,7 +56,7 @@
     </div>
     <div class="container1">
         <br><br><br>
-        <form onsubmit="return checkForm()" action="/userProfile" method="post">
+        <form id="submit" onsubmit="return checkForm()" action="/userProfile" method="post">
             <h4 class="floating-Box"><strong>User Name:</strong></h4>
             <h5 class="floating-Box">First Name:
             <input type="text" id="usernameF" name="usernameF"  value="<%= user.firstName %>">
@@ -140,6 +140,51 @@
             }
         } else {return true}
     }
+
+    function submit(e) {
+        e.preventDefault();
+        $.ajax({
+            type: "post",
+            url: "/detailedForm",
+            dataType: 'json',
+            data: $("#detailed").serialize(),
+            success: function (result) {
+                if (!result.error) {
+                    document.getElementById("modal-footer").style.display = "none";
+
+                    document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
+                    document.getElementById("close").innerHTML = "<a href='/userhome'>&times</a>";
+
+                    document.getElementById("header").innerHTML = "Congratulations, Your Data Entry is Successfully Complete !";
+                    document.getElementById("body").innerHTML = "<br>Click X to return to the Home Page.<br>";
+
+                    document.getElementById("modal").style.display = "block";
+                } else {
+                    alert(result.message);
+                }
+            }
+        })
+    }
+
+    $('#submit').submit(function(e) {
+        // Prevent form submission
+        e.preventDefault();
+
+        $.ajax({
+            type: "post",
+            url: "/userProfile",
+            dataType: 'json',
+            data: $(this).serialize(),
+            success: function (result) {
+                if (!result.error) {
+                    alert("SUCCESS");
+                    window.location.replace('/userHome')
+                } else {
+                    alert(result.message);
+                }
+            }
+        })
+    });
 </script>
 
 </body>
