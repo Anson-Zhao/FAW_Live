@@ -360,11 +360,11 @@
             var querystr = queryString1 + queryString2;
             // alert(querystr);
 
-            if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !userrole) {
+            if (dateCreatedFrom || dateCreatedTo || dateModifiedFrom || dateModifiedTo || firstName || lastName || userrole) {
                 table.clear();
                 queryAndDisplay(querystr);
             } else {
-                alert("Please Select Both Dates!");
+                queryAndDisplay(querystr);
             }
         }
 
