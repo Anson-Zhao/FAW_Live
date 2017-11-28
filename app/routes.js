@@ -477,23 +477,6 @@ module.exports = function (app, passport) {
             }
         });
     });
-    // check
-    app.get('/check', isLoggedIn, function (req, res) {
-        res.json({"error": false, "message": "complete"});
-    });
-
-    // Show form
-    app.get('/form', isLoggedIn, function (req, res) {
-        // console.log("A01");
-        res.render('form.ejs', {
-            user: req.user, // get the user out of session and pass to template
-            message: req.flash('Data Entry Message'),
-            firstname: req.user.firstName,
-            lastname: req.user.lastName,
-            transactionID: transactionID
-        });
-    });
-
 
     // Submit general form
     app.post('/generalForm', isLoggedIn, function (req, res) {
@@ -548,14 +531,6 @@ module.exports = function (app, passport) {
                 res.json({"error": true, "message": "Insert Error! Check your entry."});
             } else {
                 res.json({"error": false, "message": "/detailedForm"});
-                // var type = req.body.entryType;
-                // if (type === "SCOUTING") {
-                //     console.log("A1");
-                //     res.redirect('/detailedForm');
-                // } else if (type === "TRAP") {
-                //     console.log("B1");// console.log("B");
-                //     res.redirect('/detailedForm');
-                // }
             }
         });
     });
@@ -629,14 +604,6 @@ module.exports = function (app, passport) {
                 res.json({"error": true, "message": "Insert Error! Check your entry."});
             } else {
                 res.json({"error": false, "message": "/detailedForm"});
-                // var type = req.body.entryType;
-                // if (type === "SCOUTING") {
-                //     console.log("A1");
-                //     res.redirect('/detailedForm');
-                // } else if (type === "TRAP") {
-                //     console.log("B1");// console.log("B");
-                //     res.redirect('/detailedForm');
-                // }
             }
         });
     });
@@ -718,40 +685,3 @@ function isLoggedIn(req, res, next) {
     // if they aren't redirect them to the home page
     res.redirect('/');
 }
-
-// // check
-// app.get('/check', isLoggedIn, function (req, res) {
-//     res.json({"error": false, "message": "complete"});
-// });
-//
-// // Show form
-// app.get('/form', isLoggedIn, function (req, res) {
-//     // console.log("A01");
-//     res.render('form.ejs', {
-//         user: req.user, // get the user out of session and pass to template
-//         message: req.flash('Data Entry Message'),
-//         firstname: req.user.firstName,
-//         lastname: req.user.lastName,
-//         transactionID: transactionID
-//     });
-// });
-//
-// // Show general form
-// app.get('/generalForm', isLoggedIn, function (req, res) {
-//     // console.log("A01");
-//     res.render('form.ejs', {
-//         user: req.user, // get the user out of session and pass to template
-//         message: req.flash('Data Entry Message'),
-//         firstname: req.user.firstName,
-//         lastname: req.user.lastName,
-//         transactionID: transactionID
-//     });
-// });
-// //Show detailed form
-// app.get('/detailedForm', isLoggedIn, function (req, res) {
-//     res.render('detailedForm.ejs', {
-//         user: req.user, // get the user out of session and pass to template
-//         message: req.flash('Data Entry Message'),
-//         transactionID: transactionID
-//     });
-// });
