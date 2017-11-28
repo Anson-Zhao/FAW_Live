@@ -103,7 +103,7 @@ module.exports = function (app, passport) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
         var user = req.user;
         var newPass = {
-            firestname: req.body.usernameF,
+            firstname: req.body.usernameF,
             lastname: req.body.usernameL,
             currentpassword: req.body.currentpassword,
             Newpassword: bcrypt.hashSync(req.body.newpassword, null, null),
@@ -119,29 +119,46 @@ module.exports = function (app, passport) {
         connection.query(statusUpdate, [newPass.firstname, newPass.lastname, dateTime, user.username], function (err, rows) {
             if(err){
                 console.log(err);
+                res.json({"error": true, "message": "Fail !"});
             } else {
-                res.render('userHome.ejs', {
-                    user: req.user // get the user out of session and pass to template
-                });
+                // res.render('userHome.ejs', {
+                //     user: req.user // get the user out of session and pass to template
+                // });
+                var passComp = bcrypt.compareSync(newPass.currentpassword, user.password);
+                if (!!req.body.newpassword && passComp) {
+                    var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + user.username + "'";
+
+                    connection.query(passReset, function (err, rows) {
+                        //console.log(result);
+                        if (err) {
+                            console.log(err);
+                            res.json({"error": true, "message": "Fail !"});
+                        } else {
+                            res.json({"error": false, "message": "Success !"});
+                        }
+                    });
+                } else {
+                    res.json({"error": false, "message": "Success !"});
+                }
             }
         });
 
-        var passComp = bcrypt.compareSync(newPass.currentpassword, user.password);
-        if (!!req.body.newpassword && passComp) {
-            var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + user.username + "'";
-
-            connection.query(passReset, function (err, rows) {
-                //console.log(result);
-                if (err) {
-                    console.log(err);
-                    res.send("Password reset failed!")
-                } else{
-                    res.render('userHome.ejs', {
-                        user: req.user // get the user out of session and pass to template
-                    });
-                }
-            });
-        }
+        // var passComp = bcrypt.compareSync(newPass.currentpassword, user.password);
+        // if (!!req.body.newpassword && passComp) {
+        //     var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + user.username + "'";
+        //
+        //     connection.query(passReset, function (err, rows) {
+        //         //console.log(result);
+        //         if (err) {
+        //             console.log(err);
+        //             res.send("Password reset failed!")
+        //         } else{
+        //             res.render('userHome.ejs', {
+        //                 user: req.user // get the user out of session and pass to template
+        //             });
+        //         }
+        //     });
+        // }
 
     });
 
@@ -446,6 +463,105 @@ module.exports = function (app, passport) {
                 });
             }
         });
+    });
+
+    // Filter by search criteria
+    app.get('/filterQuery', isLoggedIn, function (req, res) {
+
+        //console.log("dQ: " + req.query.dateCreatedFrom);
+        // connection.query('USE ' + config.Login_db);
+
+        var queryStat = "SELECT General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID WHERE Cr_UN = '" + req.user.username + "'";
+        // adj: checking
+        var myQuery = [
+            {
+                fieldName: "startDate",
+                fieldVal: req.query.startDate,
+                dbCol: "date",
+                op: " >= '",
+                adj: req.query.startDate
+            },
+            {
+                fieldName: "endDate",
+                fieldVal: req.query.endDate,
+                dbCol: "date",
+                op: " <= '",
+                adj: req.query.endDate
+            },
+            {
+                fieldName: "field1",
+                fieldVal: req.query.content1,
+                dbCol: req.query.filter1,
+                op: " = '",
+                adj: req.query.content1
+            },
+            {
+                fieldName: "field2",
+                fieldVal: req.query.content2,
+                dbCol: req.query.filter2,
+                op: " = '",
+                adj: req.query.content2
+            },
+            {
+                fieldName: "field3",
+                fieldVal: req.query.content3,
+                dbCol: req.query.filter3,
+                op: " = '",
+                adj: req.query.content3
+            }
+        ];
+
+        function userQuery() {
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            //console.log("Query Statement: " + queryStat);
+
+            connection.query(queryStat, function (err, results, fields) {
+
+                var status = [{errStatus: ""}];
+
+                if (err) {
+                    console.log(err);
+                    status[0].errStatus = "fail";
+                    res.send(status);
+                    res.end();
+                } else if (results.length === 0) {
+                    status[0].errStatus = "no data entry";
+                    res.send(status);
+                    res.end();
+                } else {
+                    var JSONresult = JSON.stringify(results, null, "\t");
+                    //console.log(JSONresult);
+                    res.send(JSONresult);
+                    res.end();
+                }
+            });
+        }
+
+        for (var i = 0; i < myQuery.length; i++) {
+            //console.log("i = " + i);
+            //console.log("field Value: " + !!myQuery[i].fieldVal);
+            if (!!myQuery[i].adj) {
+                if (i === myQuery.length - 1) {
+                    if (!!myQuery[i].fieldVal) {
+                        queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        userQuery()
+                    } else {
+                        queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
+                        userQuery()
+                    }
+                } else {
+                    if (!!myQuery[i].fieldVal) {
+                        queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                    } else {
+                        queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
+                    }
+                }
+            } else {
+                if (i === myQuery.length - 1) {
+                    userQuery()
+                }
+            }
+        }
     });
 
     // Prepare and assign new transaction ID
