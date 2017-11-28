@@ -63,13 +63,23 @@
             Last Name:
             <input type="text" id="usernameL" name="usernameL" value="<%= user.lastName %>">
             </h5>
-            <h4>
-            <div><strong>User Role:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.userrole%></div>
-            <div><strong>Date created:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.dateCreated %></div>
-            <strong>Last Modification:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.dateModified %>
-            <div><strong>LoginName/Email:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.username%></div>
-            <div><strong>Last Modificated by:</strong> &nbsp;<%= user.username%></div>
-            </h4>
+            <br><br>
+        <div>
+            <h4 class="floating-Box"><strong>User Role:</strong></h4><input type="text" style="background:WhiteSmoke; width: 10%;" value="<%= user.userrole%>" readonly>
+        </div><br>
+        <div>
+            <h4 class="floating-Box"><strong>Date created:</strong></h4><input type="text" style="background:WhiteSmoke; width: 10%;" value="<%= user.dateCreated %>" readonly>
+        </div><br>
+        <div>
+            <h4 class="floating-Box"><strong>Last Modification:</strong></h4><input type="text" style="background:WhiteSmoke; width: 10%;" value="<%= user.dateModified %>" readonly>
+        </div><br>
+        <div>
+            <h4 class="floating-Box"><strong>LoginName/Email:</strong></h4><input type="text" style="background:WhiteSmoke; width: 10%;" value="<%= user.username%>" readonly>
+        </div><br>
+        <div>
+            <h4 class="floating-Box"><strong>Last Modificated by:</strong></h4><input type="text" style="background:WhiteSmoke; width: 10%;" value="<%= user.username%>" readonly>
+        </div>
+
             <br>
            <h4><strong>Password Change</strong>:   </h4>
 

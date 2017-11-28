@@ -41,18 +41,10 @@
 			width:16%;
 		}
 		#button{
-			 width:3%;
+			 width:8%;
 		 }
-		.select{
-			width:60%;
-		}
 		.center {
-			margin-left:150px;
-			width:300%;
-		}
-		.floatingBox {
-			display: inline-block;
-			width:350px;
+			margin:auto;
 		}
 		.floating-Box{
 			display: inline;
@@ -62,7 +54,7 @@
 		}
 		.floatingBox3{
 			display: inline-table;
-			width:250px;
+			width:450px;
 		}
         table{
             width: 100%;
@@ -79,8 +71,8 @@
         }
         #dvData {
             overflow-x: auto;
-            width: 70%;
-            margin-left:150px;
+            width: 100%;
+            margin-left:10px;
         }
 	</style>
 </head>
@@ -102,17 +94,17 @@
 	<div class="center">
 		<!--<h4 class="floatingBox"><strong> Num of Records Displayed</strong></h4>-->
 		<h4 class="floating-Box"><strong>Date Range</strong></h4>
-		<h6 class="floating-Box">From:</h6>
-        <input class="date" style="width: 3%; background:WhiteSmoke;" type="text" placeholder="Select Date">
-		<h6 class="floating-Box">To:</h6>
-        <input class="date" style="width: 3%;" type="text" placeholder="Select Date">
+		<h5 class="floating-Box">From:</h5>
+        <input class="date" style="width: 10%;" type="text" placeholder="Select Date">
+		<h5 class="floating-Box">To:</h5>
+        <input class="date" style="width: 10%;" type="text" placeholder="Select Date">
 	</div>
 	<div class="center">
 		<!--<h6 class="floating-Box">Display per Page:</h6>-->
         <!--<input type="text" name="dislay per page" value="25" style="background:WhiteSmoke; width: 4%;" readonly>-->
 		<h4 class="floatingBox1"><strong>User Name</strong></h4>
-		<h6 class="floating-Box">First Name:</h6><input type="text" name="first name" style="background:WhiteSmoke; width: 3%;" value="<%= user.firstName %>" readonly>
-		<h6 class="floating-Box">Last Name:</h6><input type="text" name="first name" style="background:WhiteSmoke; width: 3%;"  value="<%= user.lastName %>" readonly>
+		<h5 class="floating-Box">First Name:</h5><input type="text" name="first name" style="background:WhiteSmoke; width: 10%;" value="<%= user.firstName %>" readonly>
+		<h5 class="floating-Box">Last Name:</h5><input type="text" name="first name" style="background:WhiteSmoke; width: 10%;"  value="<%= user.lastName %>" readonly>
 	</div>
 	<div class="center">
 		<h4><strong>Other Customized Filters</strong></h4>
@@ -212,6 +204,7 @@
 	<br>
     <div class="center">
 	<h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
+
     <div id="dvData">
         <table id="dataDisplay" style="width:28%;">
         <thead>
