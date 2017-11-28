@@ -211,7 +211,7 @@ module.exports = function (app, passport) {
     // Filter by search criteria
     app.get('/filterUser', isLoggedIn, function (req, res) {
 
-        console.log("dQ: " + req.query.dateCreatedFrom);
+        //console.log("dQ: " + req.query.dateCreatedFrom);
         // connection.query('USE ' + config.Login_db);
 
         var queryStat = "SELECT * FROM Users WHERE ";
@@ -262,7 +262,8 @@ module.exports = function (app, passport) {
 
         function userQuery() {
             res.setHeader("Access-Control-Allow-Origin", "*");
-            console.log(queryStat);
+            console.log("Query Statement: " + queryStat);
+
             connection.query(queryStat, function (err, results, fields) {
 
                 var status = [{errStatus: ""}];
@@ -285,19 +286,32 @@ module.exports = function (app, passport) {
             });
         }
 
+        var j = 0;
+
         for (var i = 0; i < myQuery.length; i++) {
-            if (!!myQuery[i].fieldVal) {
-                if (i == 0) {
-                    queryStat += myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                } else {
-                    queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                    if (i == myQuery.length - 1) {
+            console.log("i = " + i);
+            console.log("field Value: " + !!myQuery[i].fieldVal);
+            if (i === myQuery.length - 1) {
+                if (!!myQuery[i].fieldVal) {
+                    if (j === 0) {
+                        queryStat += myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        j = 1;
+                        userQuery()
+                    } else {
+                        queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
                         userQuery()
                     }
+                } else {
+                    userQuery()
                 }
             } else {
-                if (i == myQuery.length - 1) {
-                    userQuery()
+                if (!!myQuery[i].fieldVal) {
+                    if (j === 0) {
+                        queryStat += myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        j = 1;
+                    } else {
+                        queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                    }
                 }
             }
         }
