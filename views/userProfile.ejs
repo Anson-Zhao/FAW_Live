@@ -81,7 +81,7 @@
         </div>
 
             <br>
-           <h4><strong>Password Change</strong>:   </h4>
+           <h4><strong>Password Change</strong> (optional):   </h4>
 
         <div >
            <h5>Current Password:
@@ -134,7 +134,7 @@
             if(oldP != "" && confirmP != "") {
                 if(oldP != newP) {
                     if(newP == confirmP) {
-                        alert ("V");
+//                        alert ("V");
                         return true;
                     } else {
                         alert("New password are not matched!");
@@ -187,7 +187,7 @@
             data: $(this).serialize(),
             success: function (result) {
                 if (!result.error) {
-                    alert("SUCCESS");
+//                    alert("SUCCESS");
                     window.location.replace('/userHome')
                 } else {
                     alert(result.message);
