@@ -349,10 +349,6 @@ module.exports = function (app, passport) {
 
     app.post('/editUser', isLoggedIn, function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
-        var today = new Date();
-        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-        var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-        var dateTime = date + ' ' + time2;
 
         console.log("New Pass: " + req.body.newPassword);
 
@@ -361,15 +357,14 @@ module.exports = function (app, passport) {
                 firstName: req.body.First_Name,
                 lastName: req.body.Last_Name,
                 userrole: req.body.User_Role,
-                modifiedUser: req.user.username,
                 status: req.body.Status,
                 newPassword: bcrypt.hashSync(req.body.newPassword, null, null)
             };
 
-            var userUpdateStatPass = "UPDATE Users SET firstName = ?, lastName = ?, password = ?, userrole = ?, modifiedUser = ?, dateModified = ?, status = ?  WHERE username = ?";
+            var userUpdateStatPass = "UPDATE Users SET firstName = ?, lastName = ?, password = ?, userrole = ?, status = ?  WHERE username = ?";
 
 
-            connection.query(userUpdateStatPass,[updatedUserPass.firstName, updatedUserPass.lastName, updatedUserPass.newPassword, updatedUserPass.userrole, updatedUserPass.modifiedUser, dateTime, updatedUserPass.status, edit_User],function(err, rows) {
+            connection.query(userUpdateStatPass,[updatedUserPass.firstName, updatedUserPass.lastName, updatedUserPass.newPassword, updatedUserPass.userrole, updatedUserPass.status, edit_User],function(err, rows) {
                 // console.log(dateTime, req.user.username);
 
                 if (err) {
@@ -385,13 +380,12 @@ module.exports = function (app, passport) {
                 firstName: req.body.First_Name,
                 lastName: req.body.Last_Name,
                 userrole: req.body.User_Role,
-                modifiedUser: req.user.username,
                 status: req.body.Status
             };
 
-            var userUpdateStat = "UPDATE Users SET firstName = ?, lastName = ?, userrole = ?, modifiedUser = ?, dateModified = ?, status = ?  WHERE username = ?";
+            var userUpdateStat = "UPDATE Users SET firstName = ?, lastName = ?, userrole = ?, status = ?  WHERE username = ?";
 
-            connection.query(userUpdateStat,[updatedUser.firstName, updatedUser.lastName, updatedUser.userrole, updatedUser.modifiedUser, dateTime, updatedUser.status, edit_User],function(err, rows) {
+            connection.query(userUpdateStat,[updatedUser.firstName, updatedUser.lastName, updatedUser.userrole, updatedUser.status, edit_User],function(err, rows) {
                 // console.log(dateTime, req.user.username);
 
                 if (err) {

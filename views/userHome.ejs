@@ -90,7 +90,7 @@
 		<h4 class="floatingBox"><strong> Num of Records Displayed</strong></h4>
 		<h4 class="floating-Box"><strong>Date Range</strong></h4>
 		<h6 class="floating-Box">From:</h6>
-        <input style="width: 3%;" type="text" placeholder="Select Date">
+        <input class="date" style="width: 3%; background:WhiteSmoke;" type="text" placeholder="Select Date">
 		<h6 class="floating-Box">To:</h6>
         <input class="date" style="width: 3%;" type="text" placeholder="Select Date">
 	</div>
@@ -104,20 +104,21 @@
 	<div class="center">
 		<h4><strong>Other Customized Filters</strong></h4>
 		<h5 class="floatingBox3">Category1:
-            <select class="select">
-                <option>1A.Trap Owner</option>
-                <option>1B.Location Name</option>
-                <option>1C.Location Type</option>
-                <option>1D.GeoLocation</option>
-                <option>1E.Country</option>
-                <option>1F.Province</option>
-                <option>1G.District</option>
-                <option>1H.Cropping System</option>
-                <option>1I.Rotation/Intercropping Crop</option>
+            <select class="filter">
+                <option value="">Select A Field</option>
+                <option>1B.Trap Owner</option>
+                <option>1C.Location Name</option>
+                <option>1D.Location Type</option>
+                <option>1E.GeoLocation</option>
+                <option>1F.Country</option>
+                <option>1G.Province</option>
+                <option>1H.District</option>
+                <option>1I.Cropping System</option>
+                <option>1I-I.Rotation/Intercropping Crop</option>
                 <option>1J.Maize Variety</option>
                 <option>1K.Maize Planting Date</option>
                 <option>1L.Field Size</option>
-                <option>1M.General Health of Maize</option>
+                <option>1M.General Healoption of Maize</option>
                 <option>1N.Date of Last Rain</option>
                 <option>1O.Entry Type</option>
                 <option>2A.Pests Present</option>
@@ -131,22 +132,23 @@
                 <option>2I.Pesticide Litres Sprayed</option>
             </select>
         </h5>
-		<h5 class="floatingBox3" >Content:<input></h5><br>
+		<h5 class="floatingBox3" >Content:<input type="text" class="content"></h5><br>
 		<h5 class="floatingBox3">Category2:
-            <select class="select">
-                <option>1A.Trap Owner</option>
-                <option>1B.Location Name</option>
-                <option>1C.Location Type</option>
-                <option>1D.GeoLocation</option>
-                <option>1E.Country</option>
-                <option>1F.Province</option>
-                <option>1G.District</option>
-                <option>1H.Cropping System</option>
-                <option>1I.Rotation/Intercropping Crop</option>
+            <select class="filter">
+                <option value="">Select A Field</option>
+                <option>1B.Trap Owner</option>
+                <option>1C.Location Name</option>
+                <option>1D.Location Type</option>
+                <option>1E.GeoLocation</option>
+                <option>1F.Country</option>
+                <option>1G.Province</option>
+                <option>1H.District</option>
+                <option>1I.Cropping System</option>
+                <option>1I-I.Rotation/Intercropping Crop</option>
                 <option>1J.Maize Variety</option>
                 <option>1K.Maize Planting Date</option>
                 <option>1L.Field Size</option>
-                <option>1M.General Health of Maize</option>
+                <option>1M.General Healoption of Maize</option>
                 <option>1N.Date of Last Rain</option>
                 <option>1O.Entry Type</option>
                 <option>2A.Pests Present</option>
@@ -160,22 +162,23 @@
                 <option>2I.Pesticide Litres Sprayed</option>
             </select>
         </h5>
-		<h5 class="floatingBox3">Content:<input></h5><br>
+		<h5 class="floatingBox3">Content:<input type="text" class="content"></h5><br>
 		<h5 class="floatingBox3">Category3:
-            <select class="select">
-                <option>1A.Trap Owner</option>
-                <option>1B.Location Name</option>
-                <option>1C.Location Type</option>
-                <option>1D.GeoLocation</option>
-                <option>1E.Country</option>
-                <option>1F.Province</option>
-                <option>1G.District</option>
-                <option>1H.Cropping System</option>
-                <option>1I.Rotation/Intercropping Crop</option>
+            <select class="filter">
+                <option value="">Select A Field</option>
+                <option>1B.Trap Owner</option>
+                <option>1C.Location Name</option>
+                <option>1D.Location Type</option>
+                <option>1E.GeoLocation</option>
+                <option>1F.Country</option>
+                <option>1G.Province</option>
+                <option>1H.District</option>
+                <option>1I.Cropping System</option>
+                <option>1I-I.Rotation/Intercropping Crop</option>
                 <option>1J.Maize Variety</option>
                 <option>1K.Maize Planting Date</option>
                 <option>1L.Field Size</option>
-                <option>1M.General Health of Maize</option>
+                <option>1M.General Healoption of Maize</option>
                 <option>1N.Date of Last Rain</option>
                 <option>1O.Entry Type</option>
                 <option>2A.Pests Present</option>
@@ -189,7 +192,7 @@
                 <option>2I.Pesticide Litres Sprayed</option>
             </select>
         </h5>
-		<h5 class="floatingBox3">Content:<input></h5>
+		<h5 class="floatingBox3">Content:<input type="text" class="content"></h5>
 	</div><br>
 	<div class="center">
 		<button id="button" class="btn btn-primary btn-sm" type="button">Filter</button>
@@ -203,13 +206,32 @@
         <table style="width:28%;">
         <thead>
         <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Entry Column 1</th>
-            <th>Entry Column 2</th>
-            <th>Entry Column 3</th>
-            <th>Entry Column 4</th>
-            <th>Entry Column 5</th>
+            <th>Transaction ID</th>
+            <th>1A.Date</th>
+            <th>1B.Trap Owner</th>
+            <th>1C.Location Name</th>
+            <th>1D.Location Type</th>
+            <th>1E.GeoLocation</th>
+            <th>1F.Country</th>
+            <th>1G.Province</th>
+            <th>1H.District</th>
+            <th>1I.Cropping System</th>
+            <th>1I-I.Rotation/Intercropping Crop</th>
+            <th>1J.Maize Variety</th>
+            <th>1K.Maize Planting Date</th>
+            <th>1L.Field Size</th>
+            <th>1M.General Health of Maize</th>
+            <th>1N.Date of Last Rain</th>
+            <th>1O.Entry Type</th>
+            <th>2A.Pests Present</th>
+            <th>2B.FAW Stage</th>
+            <th>2C.Early Damage Level</th>
+            <th>2D.Late Damage Level</th>
+            <th>2E.Natural Enemies Present</th>
+            <th>2F.Dead larvae killed by natural enemies </th>
+            <th>2G.% Plants Infested</th>
+            <th>2H.Control Undertaken</th>
+            <th>2I.Pesticide Litres Sprayed</th>
         </tr>
         </thead>
         <tbody>
@@ -217,13 +239,32 @@
         </tbody>
         <tfoot>
         <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Entry Column 1</th>
-            <th>Entry Column 2</th>
-            <th>Entry Column 3</th>
-            <th>Entry Column 4</th>
-            <th>Entry Column 5</th>
+            <th>Transaction ID</th>
+            <th>1A.Date</th>
+            <th>1B.Trap Owner</th>
+            <th>1C.Location Name</th>
+            <th>1D.Location Type</th>
+            <th>1E.GeoLocation</th>
+            <th>1F.Country</th>
+            <th>1G.Province</th>
+            <th>1H.District</th>
+            <th>1I.Cropping System</th>
+            <th>1I-I.Rotation/Intercropping Crop</th>
+            <th>1J.Maize Variety</th>
+            <th>1K.Maize Planting Date</th>
+            <th>1L.Field Size</th>
+            <th>1M.General Health of Maize</th>
+            <th>1N.Date of Last Rain</th>
+            <th>1O.Entry Type</th>
+            <th>2A.Pests Present</th>
+            <th>2B.FAW Stage</th>
+            <th>2C.Early Damage Level</th>
+            <th>2D.Late Damage Level</th>
+            <th>2E.Natural Enemies Present</th>
+            <th>2F.Dead larvae killed by natural enemies </th>
+            <th>2G.% Plants Infested</th>
+            <th>2H.Control Undertaken</th>
+            <th>2I.Pesticide Litres Sprayed</th>
         </tr>
         </tfoot>
         </table>
@@ -276,37 +317,48 @@
         });});
 
     function query() {
-        var dateCreatedFrom = document.getElementsByClassName("datePicker")[0].value;
-        var dateCreatedTo = document.getElementsByClassName("datePicker")[1].value;
-        var dateModifiedFrom = document.getElementsByClassName("datePicker")[2].value;
-        var dateModifiedTo = document.getElementsByClassName("datePicker")[3].value;
-        var firstName = document.getElementById("firstName").value;
-        var lastName = document.getElementById("lastName").value;
-        var Admin = document.getElementById("Admin").checked;
-        var Regular = document.getElementById("Admin").checked;
-        if (Admin) {
-            status = document.getElementById("Admin").value;
-        } else if (Regular) {
-            status = document.getElementById("Regular").value;
-        } else {
-            status = false;
-        }
+//        var dateCreatedFrom = document.getElementsByClassName("datePicker")[0].value;
+//        var dateCreatedTo = document.getElementsByClassName("datePicker")[1].value;
+//        var dateModifiedFrom = document.getElementsByClassName("datePicker")[2].value;
+//        var dateModifiedTo = document.getElementsByClassName("datePicker")[3].value;
+//        var firstName = document.getElementById("firstName").value;
+//        var lastName = document.getElementById("lastName").value;
+//        var Admin = document.getElementById("Admin").checked;
+//        var Regular = document.getElementById("Admin").checked;
+//        if (Admin) {
+//            status = document.getElementById("Admin").value;
+//        } else if (Regular) {
+//            status = document.getElementById("Regular").value;
+//        } else {
+//            status = false;
+//        }
+//
+//
+//        queryString1 = "dateCreatedFrom=" + dateCreatedFrom + "&dateCreatedTo=" + dateCreatedTo + "&dateModifiedFrom=" + dateModifiedFrom + "&dateModifiedTo=" + dateModifiedTo;
+//        queryString2 = "&firstName=" + firstName + "&lastName=" + lastName + "&Admin=" + Admin + "&Regular=" + Regular;
+//
+//
+//        var querystr = queryString1 + queryString2;
+//
+//        if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !Admin || !Regular) {
+//            $("table tbody").empty().append(queryAndDisplay(querystr));
+//
+//                queryAndDisplay(querystr);
+//            // alert(dateCreatedFrom + "a");
+//        } else {
+//            alert("Please Select Both Dates!");
+//        }
+        var startDate = document.getElementsByClassName("date")[0].value;
+        var endDate = document.getElementsByClassName("date")[1].value;
+        var filter1 = document.getElementsByClassName("filter")[0].value;
+        var filter2 = document.getElementsByClassName("filter")[1].value;
+        var filter3 = document.getElementsByClassName("filter")[2].value;
+        var content1 = document.getElementsByClassName("content")[0].value;
+        var content2 = document.getElementsByClassName("content")[1].value;
+        var content3 = document.getElementsByClassName("content")[2].value;
 
+        var queryStr = "startDate=" + startDate + "&endDate=" + endDate + "&filter1=" + filter1 + "&filter2=" + filter2 + "&filter3=" + filter3 + "&content1=" + content1 + "&content2=" + content2 + "&content3=" + content3;
 
-        queryString1 = "dateCreatedFrom=" + dateCreatedFrom + "&dateCreatedTo=" + dateCreatedTo + "&dateModifiedFrom=" + dateModifiedFrom + "&dateModifiedTo=" + dateModifiedTo;
-        queryString2 = "&firstName=" + firstName + "&lastName=" + lastName + "&Admin=" + Admin + "&Regular=" + Regular;
-
-
-        var querystr = queryString1 + queryString2;
-
-        if (!dateCreatedFrom || !dateCreatedTo || !dateModifiedFrom || !dateModifiedTo || !firstName || !lastName || !Admin || !Regular) {
-            $("table tbody").empty().append(queryAndDisplay(querystr));
-
-                queryAndDisplay(querystr);
-            // alert(dateCreatedFrom + "a");
-        } else {
-            alert("Please Select Both Dates!");
-        }
     }
 
     var queryAndDisplay = function (querystr) {
