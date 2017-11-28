@@ -100,7 +100,7 @@
 <br><br><br><br>
 <div class="container">
 	<div class="center">
-		<h4 class="floatingBox"><strong> Num of Records Displayed</strong></h4>
+		<!--<h4 class="floatingBox"><strong> Num of Records Displayed</strong></h4>-->
 		<h4 class="floating-Box"><strong>Date Range</strong></h4>
 		<h6 class="floating-Box">From:</h6>
         <input class="date" style="width: 3%; background:WhiteSmoke;" type="text" placeholder="Select Date">
@@ -108,8 +108,8 @@
         <input class="date" style="width: 3%;" type="text" placeholder="Select Date">
 	</div>
 	<div class="center">
-		<h6 class="floating-Box">Display per Page:</h6>
-        <input type="text" name="dislay per page" value="25" style="background:WhiteSmoke; width: 4%;" readonly>
+		<!--<h6 class="floating-Box">Display per Page:</h6>-->
+        <!--<input type="text" name="dislay per page" value="25" style="background:WhiteSmoke; width: 4%;" readonly>-->
 		<h4 class="floatingBox1"><strong>User Name</strong></h4>
 		<h6 class="floating-Box">First Name:</h6><input type="text" name="first name" style="background:WhiteSmoke; width: 3%;" value="<%= user.firstName %>" readonly>
 		<h6 class="floating-Box">Last Name:</h6><input type="text" name="first name" style="background:WhiteSmoke; width: 3%;"  value="<%= user.lastName %>" readonly>
@@ -310,6 +310,8 @@
         });
 
         $(function() {
+            queryAndDisplay();
+
             flatpickr(".date", {
                 dateFormat: "Y-m-d",
                 time_24hr: true

@@ -215,7 +215,7 @@ module.exports = function (app, passport) {
         //console.log("dQ: " + req.query.dateCreatedFrom);
         // connection.query('USE ' + config.Login_db);
 
-        var queryStat = "SELECT * FROM Users WHERE ";
+        var queryStat = "SELECT * FROM Users";
         var myQuery = [
             {
                 fieldName: "dateCreatedFrom",
@@ -295,7 +295,7 @@ module.exports = function (app, passport) {
             if (i === myQuery.length - 1) {
                 if (!!myQuery[i].fieldVal) {
                     if (j === 0) {
-                        queryStat += myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        queryStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
                         j = 1;
                         userQuery()
                     } else {
@@ -308,7 +308,7 @@ module.exports = function (app, passport) {
             } else {
                 if (!!myQuery[i].fieldVal) {
                     if (j === 0) {
-                        queryStat += myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        queryStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
                         j = 1;
                     } else {
                         queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
