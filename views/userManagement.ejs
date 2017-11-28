@@ -48,9 +48,12 @@
             padding: 5px;
         }
         table{
+            overflow-x: scroll;
             width: 100%;
+            display: block;
             margin-bottom: 20px;
             border-collapse: collapse;
+            /*white-space: nowrap;*/
         }
         table, th, td{
             border: 1px solid #cdcdcd;
@@ -75,16 +78,16 @@
             margin: 0 10% 0 10%;
         }
         #dvData {
-            overflow-x: auto;
+            /*overflow-x: auto;*/
             width: 70%;
             margin-left:150px;
         }
-        #dvData::-webkit-scrollbar-thumb {
+        table::-webkit-scrollbar-thumb {
             border-radius: 2px;
             background-color: rgba(0, 0, 0, .5);
             -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
         }
-        #dvData::-webkit-scrollbar {
+        table::-webkit-scrollbar {
             -webkit-appearance: none;
             height: 7px;
         }

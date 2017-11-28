@@ -57,7 +57,9 @@
 			width:450px;
 		}
         table{
+            overflow-x: auto;
             width: 100%;
+            display: block;
             margin-bottom: 20px;
             border-collapse: collapse;
         }
@@ -69,11 +71,20 @@
             padding: 10px;
             text-align: left;
         }
-        #dvData {
-            overflow-x: auto;
-            width: 100%;
-            margin-left:10px;
+        table::-webkit-scrollbar-thumb {
+            border-radius: 2px;
+            background-color: rgba(0, 0, 0, .5);
+            -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
         }
+        table::-webkit-scrollbar {
+            -webkit-appearance: none;
+            height: 7px;
+        }
+        /*#dvData {*/
+            /*overflow-x: auto;*/
+            /*width: 100%;*/
+            /*margin-left:10px;*/
+        /*}*/
 	</style>
 </head>
 <body>
@@ -206,7 +217,7 @@
 	<h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
 
     <div id="dvData">
-        <table id="dataDisplay" style="width:28%;">
+        <table id="dataDisplay" style="width:100%;">
         <thead>
         <tr>
             <th>Transaction ID</th>
