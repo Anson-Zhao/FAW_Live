@@ -25,12 +25,17 @@
         .FAW        { display: none; }
         #stay, #cancel {  position: relative;  width: 20%;  left: 20%;  }
         #leave, #clear {  position: relative;  width: 20%;  left: 60%;  }
+        .banner{
+            position:relative;
+            left:140px;
+            width:75%;
+        }
     </style>
 
 </head>
 <body onload="getLocation()">
 <div class="container">
-
+    <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
     <div id="modal" class="modal">
         <!-- Modal content -->
         <div id="modal-content">
@@ -115,9 +120,17 @@
                     <option>SCOUTING</option>
                     <option>TRAP (TO BE DEVELOP)</option>
                 </select><br><br>
-                <input class="clear" type="button" onclick="clearGeneral()" value="   Clear   ">
-                <input class="cancel" type="button" onclick="goBack()" value=" Cancel  ">
-                <input id="continue" type="submit" value="Continue">
+
+                <div class="form-group col-xs-6">
+                    <input class="clear" type="button" onclick="clearGeneral()" value="   Clear   "/>
+                </div>
+                <div class="form-group col-xs-6">
+                    <input class="cancel" type="button" onclick="goBack()" value=" Cancel  "/>
+                </div>
+                <div class="form-group col-xs-6">
+                    <input class="cancel" type="button" onclick="goBack()" value=" Cancel  "/>
+                </div>
+
             </form>
         </div>
 
@@ -204,10 +217,13 @@
                     <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
                     <input class="clearDet" id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" required multiple/><br>
                     <img id="photoOfDamageImage" src="" alt="Image preview..."><br><br>
+                <div>
                     <input class="clear" type="button" onclick="clearDetailed()" value="    Clear    ">
                     <input class="cancel" type="button" onclick="goBack()" value="  Cancel   ">
                     <input id="previous" type="button" onclick="previousForm()" value=" Previous ">
                     <input id="submit" type="submit" value="Complete">
+                </div>
+
                 </div>
             </form>
         </div>
