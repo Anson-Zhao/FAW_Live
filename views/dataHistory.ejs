@@ -2,10 +2,10 @@
 <!doctype html>
 <html>
 <head>
-	<title>FAW/Locust Project - User Home</title>
+    <title>FAW/Locust Project - Data History</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
@@ -16,46 +16,46 @@
     <script src="//unpkg.com/flatpickr"></script>
 
     <style>
-		#Username{
-			position:relative;
-			left:990px;
-			top:35px;
+        #Username{
+            position:relative;
+            left:990px;
+            top:35px;
             width:14%;
-		}
-		.banner{
-			position:relative;
-			left:25px;
-			top:30px;
-			width:65%;
-		}
-		#class1{
-			position:relative;
-			left:300px;
-			top:60px;
-			width:16%;
-		}
-		#class2{
-			position:relative;
-			left:500px;
-			top:60px;
-			width:16%;
-		}
-		#button{
-			 width:8%;
-		 }
-		.center {
-			margin:auto;
-		}
-		.floating-Box{
-			display: inline;
-		}
-		.floatingBox1{
-			display: inline-block;
-		}
-		.floatingBox3{
-			display: inline-table;
-			width:450px;
-		}
+        }
+        .banner{
+            position:relative;
+            left:25px;
+            top:30px;
+            width:65%;
+        }
+        #class1{
+            position:relative;
+            left:300px;
+            top:60px;
+            width:16%;
+        }
+        #class2{
+            position:relative;
+            left:500px;
+            top:60px;
+            width:16%;
+        }
+        #button{
+            width:8%;
+        }
+        .center {
+            margin:auto;
+        }
+        .floating-Box{
+            display: inline;
+        }
+        .floatingBox1{
+            display: inline-block;
+        }
+        .floatingBox3{
+            display: inline-table;
+            width:450px;
+        }
         table{
             width: 100%;
             margin-bottom: 20px;
@@ -74,211 +74,211 @@
             width: 100%;
             margin-left:10px;
         }
-	</style>
+    </style>
 </head>
 <body>
 <div class="container">
-	<div class="dropdown">
-		<button class="btn btn-primary btn-lg" type="button" data-toggle="dropdown" id="Username"><%= user.firstName%>
-			<span class="caret"></span></button>
-		<a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
-		<ul id="userMenu" class="dropdown-menu dropdown-menu-right">
+    <div class="dropdown">
+        <button class="btn btn-primary btn-lg" type="button" data-toggle="dropdown" id="Username"><%= user.firstName%>
+            <span class="caret"></span></button>
+        <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
+        <ul id="userMenu" class="dropdown-menu dropdown-menu-right">
 
-		</ul>
-	</div>
-	<a href="/newEntry" class="btn btn-default btn-lg" id="class1">New Entry</a>
-	<a href="/dataHistory" class="btn btn-default btn-lg" id="class2">Data History</a>
+        </ul>
+    </div>
+    <a href="/userHome" class="btn btn-default btn-lg" id="class1">User Home</a>
+    <a href="/newEntry" class="btn btn-default btn-lg" id="class2">New Entry</a>
 </div>
 <br><br><br><br>
 <div class="container">
-	<div class="center">
-		<!--<h4 class="floatingBox"><strong> Num of Records Displayed</strong></h4>-->
-		<h4 class="floating-Box"><strong>Date Range</strong></h4>
-		<h5 class="floating-Box">From:</h5>
-        <input class="date" style="width: 10%;" type="text" placeholder="Select Date">
-		<h5 class="floating-Box">To:</h5>
-        <input class="date" style="width: 10%;" type="text" placeholder="Select Date">
-	</div>
-	<div class="center">
-		<!--<h6 class="floating-Box">Display per Page:</h6>-->
-        <!--<input type="text" name="dislay per page" value="25" style="background:WhiteSmoke; width: 4%;" readonly>-->
-		<h4 class="floatingBox1"><strong>User Name</strong></h4>
-		<h5 class="floating-Box">First Name:</h5><input type="text" name="first name" style="background:WhiteSmoke; width: 10%;" value="<%= user.firstName %>" readonly>
-		<h5 class="floating-Box">Last Name:</h5><input type="text" name="first name" style="background:WhiteSmoke; width: 10%;"  value="<%= user.lastName %>" readonly>
-	</div>
-	<div class="center">
-		<h4><strong>Other Customized Filters</strong></h4>
-		<h5 class="floatingBox3">Category1:
-            <select class="filter">
-                <option value="">Select A Field</option>
-                <option value="trapOwner">1B.Trap Owner</option>
-                <option value="locationName">1C.Location Name</option>
-                <option value="locationType">1D.Location Type</option>
-                <option value="country">1F.Country</option>
-                <option value="province">1G.Province</option>
-                <option value="district">1H.District</option>
-                <option value="croppingSystem">1I.Cropping System</option>
-                <option value="rota_inter_crop">1I-I.Rotation/Intercropping Crop</option>
-                <option value="maizeVariety">1J.Maize Variety</option>
-                <option value="plantingDate">1K.Maize Planting Date</option>
-                <option value="fieldSize">1L.Field Size</option>
-                <option value="healthOfMaize">1M.General Healoption of Maize</option>
-                <option value="lastRainDate">1N.Date of Last Rain</option>
-                <option value="entryType">1O.Entry Type</option>
-                <option value="pestsPresent">2A.Pests Present</option>
-                <option value="fawStage">2B.FAW Stage</option>
-                <option value="earlyDamageLevel">2C.Early Damage Level</option>
-                <option value="lateDamageLevel">2D.Late Damage Level</option>
-                <option value="naturalEnemies">2E.Natural Enemies Present</option>
-                <option value="deadLarvae">2F.Dead larvae killed by natural enemies </option>
-                <option value="control">2G.% Plants Infested</option>
-                <option value="control">2H.Control Undertaken</option>
-                <option value="pesticide">2I.Pesticide Litres Sprayed</option>
-            </select>
-        </h5>
-		<h5 class="floatingBox3" >Content:<input type="text" class="content"></h5><br>
-		<h5 class="floatingBox3">Category2:
-            <select class="filter">
-                <option value="">Select A Field</option>
-                <option value="trapOwner">1B.Trap Owner</option>
-                <option value="locationName">1C.Location Name</option>
-                <option value="locationType">1D.Location Type</option>
-                <option value="country">1F.Country</option>
-                <option value="province">1G.Province</option>
-                <option value="district">1H.District</option>
-                <option value="croppingSystem">1I.Cropping System</option>
-                <option value="rota_inter_crop">1I-I.Rotation/Intercropping Crop</option>
-                <option value="maizeVariety">1J.Maize Variety</option>
-                <option value="plantingDate">1K.Maize Planting Date</option>
-                <option value="fieldSize">1L.Field Size</option>
-                <option value="healthOfMaize">1M.General Healoption of Maize</option>
-                <option value="lastRainDate">1N.Date of Last Rain</option>
-                <option value="entryType">1O.Entry Type</option>
-                <option value="pestsPresent">2A.Pests Present</option>
-                <option value="fawStage">2B.FAW Stage</option>
-                <option value="earlyDamageLevel">2C.Early Damage Level</option>
-                <option value="lateDamageLevel">2D.Late Damage Level</option>
-                <option value="naturalEnemies">2E.Natural Enemies Present</option>
-                <option value="deadLarvae">2F.Dead larvae killed by natural enemies </option>
-                <option value="control">2G.% Plants Infested</option>
-                <option value="control">2H.Control Undertaken</option>
-                <option value="pesticide">2I.Pesticide Litres Sprayed</option>
-            </select>
-        </h5>
-		<h5 class="floatingBox3">Content:<input type="text" class="content"></h5><br>
-		<h5 class="floatingBox3">Category3:
-            <select class="filter">
-                <option value="">Select A Field</option>
-                <option value="trapOwner">1B.Trap Owner</option>
-                <option value="locationName">1C.Location Name</option>
-                <option value="locationType">1D.Location Type</option>
-                <option value="country">1F.Country</option>
-                <option value="province">1G.Province</option>
-                <option value="district">1H.District</option>
-                <option value="croppingSystem">1I.Cropping System</option>
-                <option value="rota_inter_crop">1I-I.Rotation/Intercropping Crop</option>
-                <option value="maizeVariety">1J.Maize Variety</option>
-                <option value="plantingDate">1K.Maize Planting Date</option>
-                <option value="fieldSize">1L.Field Size</option>
-                <option value="healthOfMaize">1M.General Healoption of Maize</option>
-                <option value="lastRainDate">1N.Date of Last Rain</option>
-                <option value="entryType">1O.Entry Type</option>
-                <option value="pestsPresent">2A.Pests Present</option>
-                <option value="fawStage">2B.FAW Stage</option>
-                <option value="earlyDamageLevel">2C.Early Damage Level</option>
-                <option value="lateDamageLevel">2D.Late Damage Level</option>
-                <option value="naturalEnemies">2E.Natural Enemies Present</option>
-                <option value="deadLarvae">2F.Dead larvae killed by natural enemies </option>
-                <option value="control">2G.% Plants Infested</option>
-                <option value="control">2H.Control Undertaken</option>
-                <option value="pesticide">2I.Pesticide Litres Sprayed</option>
-            </select>
-        </h5>
-		<h5 class="floatingBox3">Content:<input type="text" class="content"></h5>
-	</div><br>
-	<div class="center">
-		<button id="button" class="btn btn-primary btn-sm" type="button" onclick="query()">Filter</button>
-		<button id="button" class="btn btn-primary btn-sm" type="button">Edit</button>
-		<button id="button" class="btn btn-primary btn-sm" type="button">Delete</button>
-	</div>
-	<br>
     <div class="center">
-	<h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
-
-    <div id="dvData">
-        <table id="dataDisplay" style="width:28%;">
-        <thead>
-        <tr>
-            <th>Transaction ID</th>
-            <th>Date</th>
-            <th>Trap Owner</th>
-            <th>Location Name</th>
-            <th>Location Type</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
-            <th>Country</th>
-            <th>Province</th>
-            <th>District</th>
-            <th>Cropping System</th>
-            <th>Rotation/Intercropping Crop</th>
-            <th>Maize Variety</th>
-            <th>Maize Planting Date</th>
-            <th>Field Size</th>
-            <th>General Health of Maize</th>
-            <th>Date of Last Rain</th>
-            <th>Entry Type</th>
-            <th>Pests Present</th>
-            <th>FAW Stage</th>
-            <th>Early Damage Level</th>
-            <th>Late Damage Level</th>
-            <th>Natural Enemies Present</th>
-            <th>Dead larvae killed by natural enemies </th>
-            <th>% Plants Infested</th>
-            <th>Control Undertaken</th>
-            <th>Pesticide Litres Sprayed</th>
-            <th>Photo of Pest</th>
-            <th>Photo of Damage</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-        <tfoot>
-        <tr>
-            <th>Transaction ID</th>
-            <th>Date</th>
-            <th>Trap Owner</th>
-            <th>Location Name</th>
-            <th>Location Type</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
-            <th>Country</th>
-            <th>Province</th>
-            <th>District</th>
-            <th>Cropping System</th>
-            <th>Rotation/Intercropping Crop</th>
-            <th>Maize Variety</th>
-            <th>Maize Planting Date</th>
-            <th>Field Size</th>
-            <th>General Health of Maize</th>
-            <th>Date of Last Rain</th>
-            <th>Entry Type</th>
-            <th>Pests Present</th>
-            <th>FAW Stage</th>
-            <th>Early Damage Level</th>
-            <th>Late Damage Level</th>
-            <th>Natural Enemies Present</th>
-            <th>Dead larvae killed by natural enemies </th>
-            <th>% Plants Infested</th>
-            <th>Control Undertaken</th>
-            <th>Pesticide Litres Sprayed</th>
-            <th>Photo of Pest</th>
-            <th>Photo of Damage</th>
-        </tr>
-        </tfoot>
-        </table>
+        <!--<h4 class="floatingBox"><strong> Num of Records Displayed</strong></h4>-->
+        <h4 class="floating-Box"><strong>Date Range</strong></h4>
+        <h5 class="floating-Box">From:</h5>
+        <input class="date" style="width: 10%;" type="text" placeholder="Select Date">
+        <h5 class="floating-Box">To:</h5>
+        <input class="date" style="width: 10%;" type="text" placeholder="Select Date">
     </div>
-</div>
+    <div class="center">
+        <!--<h6 class="floating-Box">Display per Page:</h6>-->
+        <!--<input type="text" name="dislay per page" value="25" style="background:WhiteSmoke; width: 4%;" readonly>-->
+        <h4 class="floatingBox1"><strong>User Name</strong></h4>
+        <h5 class="floating-Box">First Name:</h5><input id="firstName" type="text" name="first name" style="background:WhiteSmoke; width: 10%;" value="" >
+        <h5 class="floating-Box">Last Name:</h5><input id="lastName" type="text" name="first name" style="background:WhiteSmoke; width: 10%;"  value="" >
+    </div>
+    <div class="center">
+        <h4><strong>Other Customized Filters</strong></h4>
+        <h5 class="floatingBox3">Category1:
+            <select class="filter">
+                <option value="">Select A Field</option>
+                <option value="trapOwner">1B.Trap Owner</option>
+                <option value="locationName">1C.Location Name</option>
+                <option value="locationType">1D.Location Type</option>
+                <option value="country">1F.Country</option>
+                <option value="province">1G.Province</option>
+                <option value="district">1H.District</option>
+                <option value="croppingSystem">1I.Cropping System</option>
+                <option value="rota_inter_crop">1I-I.Rotation/Intercropping Crop</option>
+                <option value="maizeVariety">1J.Maize Variety</option>
+                <option value="plantingDate">1K.Maize Planting Date</option>
+                <option value="fieldSize">1L.Field Size</option>
+                <option value="healthOfMaize">1M.General Healoption of Maize</option>
+                <option value="lastRainDate">1N.Date of Last Rain</option>
+                <option value="entryType">1O.Entry Type</option>
+                <option value="pestsPresent">2A.Pests Present</option>
+                <option value="fawStage">2B.FAW Stage</option>
+                <option value="earlyDamageLevel">2C.Early Damage Level</option>
+                <option value="lateDamageLevel">2D.Late Damage Level</option>
+                <option value="naturalEnemies">2E.Natural Enemies Present</option>
+                <option value="deadLarvae">2F.Dead larvae killed by natural enemies </option>
+                <option value="control">2G.% Plants Infested</option>
+                <option value="control">2H.Control Undertaken</option>
+                <option value="pesticide">2I.Pesticide Litres Sprayed</option>
+            </select>
+        </h5>
+        <h5 class="floatingBox3" >Content:<input type="text" class="content"></h5><br>
+        <h5 class="floatingBox3">Category2:
+            <select class="filter">
+                <option value="">Select A Field</option>
+                <option value="trapOwner">1B.Trap Owner</option>
+                <option value="locationName">1C.Location Name</option>
+                <option value="locationType">1D.Location Type</option>
+                <option value="country">1F.Country</option>
+                <option value="province">1G.Province</option>
+                <option value="district">1H.District</option>
+                <option value="croppingSystem">1I.Cropping System</option>
+                <option value="rota_inter_crop">1I-I.Rotation/Intercropping Crop</option>
+                <option value="maizeVariety">1J.Maize Variety</option>
+                <option value="plantingDate">1K.Maize Planting Date</option>
+                <option value="fieldSize">1L.Field Size</option>
+                <option value="healthOfMaize">1M.General Healoption of Maize</option>
+                <option value="lastRainDate">1N.Date of Last Rain</option>
+                <option value="entryType">1O.Entry Type</option>
+                <option value="pestsPresent">2A.Pests Present</option>
+                <option value="fawStage">2B.FAW Stage</option>
+                <option value="earlyDamageLevel">2C.Early Damage Level</option>
+                <option value="lateDamageLevel">2D.Late Damage Level</option>
+                <option value="naturalEnemies">2E.Natural Enemies Present</option>
+                <option value="deadLarvae">2F.Dead larvae killed by natural enemies </option>
+                <option value="control">2G.% Plants Infested</option>
+                <option value="control">2H.Control Undertaken</option>
+                <option value="pesticide">2I.Pesticide Litres Sprayed</option>
+            </select>
+        </h5>
+        <h5 class="floatingBox3">Content:<input type="text" class="content"></h5><br>
+        <h5 class="floatingBox3">Category3:
+            <select class="filter">
+                <option value="">Select A Field</option>
+                <option value="trapOwner">1B.Trap Owner</option>
+                <option value="locationName">1C.Location Name</option>
+                <option value="locationType">1D.Location Type</option>
+                <option value="country">1F.Country</option>
+                <option value="province">1G.Province</option>
+                <option value="district">1H.District</option>
+                <option value="croppingSystem">1I.Cropping System</option>
+                <option value="rota_inter_crop">1I-I.Rotation/Intercropping Crop</option>
+                <option value="maizeVariety">1J.Maize Variety</option>
+                <option value="plantingDate">1K.Maize Planting Date</option>
+                <option value="fieldSize">1L.Field Size</option>
+                <option value="healthOfMaize">1M.General Healoption of Maize</option>
+                <option value="lastRainDate">1N.Date of Last Rain</option>
+                <option value="entryType">1O.Entry Type</option>
+                <option value="pestsPresent">2A.Pests Present</option>
+                <option value="fawStage">2B.FAW Stage</option>
+                <option value="earlyDamageLevel">2C.Early Damage Level</option>
+                <option value="lateDamageLevel">2D.Late Damage Level</option>
+                <option value="naturalEnemies">2E.Natural Enemies Present</option>
+                <option value="deadLarvae">2F.Dead larvae killed by natural enemies </option>
+                <option value="control">2G.% Plants Infested</option>
+                <option value="control">2H.Control Undertaken</option>
+                <option value="pesticide">2I.Pesticide Litres Sprayed</option>
+            </select>
+        </h5>
+        <h5 class="floatingBox3">Content:<input type="text" class="content"></h5>
+    </div><br>
+    <div class="center">
+        <button id="button" class="btn btn-primary btn-sm" type="button" onclick="query()">Filter</button>
+        <button id="button" class="btn btn-primary btn-sm" type="button">Edit</button>
+        <button id="button" class="btn btn-primary btn-sm" type="button">Delete</button>
+    </div>
+    <br>
+    <div class="center">
+        <h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
+
+        <div id="dvData">
+            <table id="dataDisplay" style="width:28%;">
+                <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>Date</th>
+                    <th>Trap Owner</th>
+                    <th>Location Name</th>
+                    <th>Location Type</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Country</th>
+                    <th>Province</th>
+                    <th>District</th>
+                    <th>Cropping System</th>
+                    <th>Rotation/Intercropping Crop</th>
+                    <th>Maize Variety</th>
+                    <th>Maize Planting Date</th>
+                    <th>Field Size</th>
+                    <th>General Health of Maize</th>
+                    <th>Date of Last Rain</th>
+                    <th>Entry Type</th>
+                    <th>Pests Present</th>
+                    <th>FAW Stage</th>
+                    <th>Early Damage Level</th>
+                    <th>Late Damage Level</th>
+                    <th>Natural Enemies Present</th>
+                    <th>Dead larvae killed by natural enemies </th>
+                    <th>% Plants Infested</th>
+                    <th>Control Undertaken</th>
+                    <th>Pesticide Litres Sprayed</th>
+                    <th>Photo of Pest</th>
+                    <th>Photo of Damage</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>Date</th>
+                    <th>Trap Owner</th>
+                    <th>Location Name</th>
+                    <th>Location Type</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Country</th>
+                    <th>Province</th>
+                    <th>District</th>
+                    <th>Cropping System</th>
+                    <th>Rotation/Intercropping Crop</th>
+                    <th>Maize Variety</th>
+                    <th>Maize Planting Date</th>
+                    <th>Field Size</th>
+                    <th>General Health of Maize</th>
+                    <th>Date of Last Rain</th>
+                    <th>Entry Type</th>
+                    <th>Pests Present</th>
+                    <th>FAW Stage</th>
+                    <th>Early Damage Level</th>
+                    <th>Late Damage Level</th>
+                    <th>Natural Enemies Present</th>
+                    <th>Dead larvae killed by natural enemies </th>
+                    <th>% Plants Infested</th>
+                    <th>Control Undertaken</th>
+                    <th>Pesticide Litres Sprayed</th>
+                    <th>Photo of Pest</th>
+                    <th>Photo of Damage</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
 </div>
 <script type='text/javascript'>
     var table = $("#dataDisplay").DataTable();
@@ -309,7 +309,7 @@
                 dateFormat: "Y-m-d",
                 time_24hr: true
             });
-            
+
             if (UserRole === "Admin") {
                 DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
                     "\t\t\t<li><a href=\"/userManagement\">User Management</a></li>\n" +
@@ -325,6 +325,8 @@
         });});
 
     function query() {
+        var firstName = document.getElementById("firstName").value;
+        var lastName = document.getElementById("lastName").value;
         var startDate = document.getElementsByClassName("date")[0].value;
         var endDate = document.getElementsByClassName("date")[1].value;
         var filter1 = document.getElementsByClassName("filter")[0].value;
@@ -334,9 +336,9 @@
         var content2 = document.getElementsByClassName("content")[1].value;
         var content3 = document.getElementsByClassName("content")[2].value;
 
-        var queryStr = "startDate=" + startDate + "&endDate=" + endDate + "&filter1=" + filter1 + "&filter2=" + filter2 + "&filter3=" + filter3 + "&content1=" + content1 + "&content2=" + content2 + "&content3=" + content3;
+        var queryStr = "firstName=" + firstName + "&lastName=" + lastName + "&startDate=" + startDate + "&endDate=" + endDate + "&filter1=" + filter1 + "&filter2=" + filter2 + "&filter3=" + filter3 + "&content1=" + content1 + "&content2=" + content2 + "&content3=" + content3;
         //alert(queryStr);
-        if (startDate || endDate || filter1 || filter2 || filter3) {
+        if (firstName || lastName || startDate || endDate || filter1 || filter2 || filter3) {
             table.clear();
             queryAndDisplay(queryStr);
         } else {
@@ -347,7 +349,7 @@
     var queryAndDisplay = function (querystr) {
 
         $.ajax({
-            url: '/filterQuery',
+            url: '/dataHistory',
             type: 'GET',
             dataType: 'json',
             async: false,
@@ -356,6 +358,9 @@
                 //alert(resp[0].transactionID);
                 for (var i = 0; i < resp.length; i++) {
                     table.row.add( [
+                        resp[i].username,
+                        resp[i].firstName,
+                        resp[i].lastName,
                         resp[i].transactionID,
                         resp[i].date,
                         resp[i].trapOwner,

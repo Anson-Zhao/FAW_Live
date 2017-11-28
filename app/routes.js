@@ -442,6 +442,13 @@ module.exports = function (app, passport) {
         });
     });
 
+    // show the data history ejs
+    app.get('/dataHistory', isLoggedIn, function (req, res) {
+        res.render('dataHistory.ejs', {
+            user: req.user // get the user out of session and pass to template
+        });
+    });
+
     // Filter by search criteria
     app.get('/filterQuery', isLoggedIn, function (req, res) {
 
@@ -692,58 +699,6 @@ module.exports = function (app, passport) {
                 res.json({"error": true, "message": "Insert Error! Check your entry."});
             } else {
                 res.json({"error": false, "message": "/detailedForm"});
-            }
-        });
-    });
-
-    // show the data query form
-    app.get('/query', isLoggedIn, function (req, res) {
-        var DataQuery = "SELECT userrole FROM Users WHERE username = '" + req.user.username + "';";
-
-        connection.query(DataQuery, function (err, results, fields) {
-
-            if (!results[0].userrole) {
-                console.log("Error");
-            } else if (results[0].userrole === "Admin") {
-                // process the signup form
-                res.render('query_Admin.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Entry Message')
-                });
-            } else if (results[0].userrole === "Regular") {
-                res.render('query_Regular.ejs', {
-                    user: req.user, // get the user out of session and pass to template
-                    message: req.flash('Data Query Message')
-                });
-            }
-        });
-    });
-
-    app.get('/DataQuery', isLoggedIn, function (req, res) {
-
-        var startDate = req.query.startDate;
-        var endDate = req.query.endDate;
-        var queryStatement = "SELECT * FROM FAW_Data_Entry WHERE Date >= '" + startDate + "' AND Date <= '" + endDate + "' ORDER BY Date;";
-
-        res.setHeader("Access-Control-Allow-Origin", "*");
-
-        connection.query(queryStatement, function (err, results, fields) {
-
-            var status = [{errStatus: ""}];
-
-            if (err) {
-                console.log(err);
-                status[0].errStatus = "fail";
-                res.send(status);
-                res.end();
-            } else if (results.length === 0) {
-                status[0].errStatus = "no data entry";
-                res.send(status);
-                res.end();
-            } else {
-                var JSONresult = JSON.stringify(results, null, "\t");
-                res.send(JSONresult);
-                res.end();
             }
         });
     });
