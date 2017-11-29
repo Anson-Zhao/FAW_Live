@@ -30,6 +30,12 @@
             left:140px;
             width:75%;
         }
+        .column {
+            float:right;
+           position:relative;
+            right:80px;
+            width:11%;
+        }
     </style>
 
 </head>
@@ -120,17 +126,17 @@
                     <option>SCOUTING</option>
                     <option>TRAP (TO BE DEVELOP)</option>
                 </select><br><br>
-
-                <div class="form-group col-xs-6">
-                    <input class="clear" type="button" onclick="clearGeneral()" value="   Clear   "/>
+                <div class="row">
+                    <div class="column">
+                        <input id="continue" type="submit" value="Continue"/>
+                    </div>
+                    <div class="column">
+                        <input class="cancel" type="button" onclick="goBack()" value=" Cancel  "/>
+                    </div>
+                    <div class="column">
+                        <input class="clear" type="button" onclick="clearGeneral()" value="   Clear   "/>
+                    </div>
                 </div>
-                <div class="form-group col-xs-6">
-                    <input class="cancel" type="button" onclick="goBack()" value=" Cancel  "/>
-                </div>
-                <div class="form-group col-xs-6">
-                    <input class="cancel" type="button" onclick="goBack()" value=" Cancel  "/>
-                </div>
-
             </form>
         </div>
 
@@ -217,13 +223,21 @@
                     <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
                     <input class="clearDet" id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" required multiple/><br>
                     <img id="photoOfDamageImage" src="" alt="Image preview..."><br><br>
-                <div>
-                    <input class="clear" type="button" onclick="clearDetailed()" value="    Clear    ">
-                    <input class="cancel" type="button" onclick="goBack()" value="  Cancel   ">
-                    <input id="previous" type="button" onclick="previousForm()" value=" Previous ">
-                    <input id="submit" type="submit" value="Complete">
-                </div>
 
+                    <div class="row">
+                        <div class="column">
+                            <input id="submit" type="submit" value="Complete">
+                        </div>
+                        <div class="column">
+                            <input id="previous" type="button" onclick="previousForm()" value=" Previous ">
+                        </div>
+                        <div class="column">
+                            <input class="cancel" type="button" onclick="goBack()" value="  Cancel   ">
+                        </div>
+                        <div class="column">
+                            <input class="clear" type="button" onclick="clearDetailed()" value="    Clear    ">
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
