@@ -113,59 +113,30 @@ module.exports = function (app, passport) {
         };
         // var changeusername = "'UPDATE Users Set password = '" + newPassword.usernameF + "' WHERE username        "
 
-        var changepassword = "UPDATE Users SET password = '" + newPassword.Newpassword + "' WHERE username = '" + user.username + "'; ";
-
+        var changepassword = "UPDATE Users SET password = '" + newPassword.Newpassword + "' WHERE username = '" + user.username + "'";
+        console.log(newPassword.Newpassword, user.username);
         connection.query("SELECT * FROM Users WHERE username = ?", [user.username], function (err, rows) {
             // console.log(rows);
             var result = bcrypt.compareSync(newPassword.currentpassword, user.password);
             console.log(result);
             if (result) {
-                var today = new Date();
-                var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                var dateTime = date + ' ' + time2;
+                console.log("Password correct");
+                connection.query(changepassword, function (err, rows) {
 
-                var statusUpdate = "UPDATE Users SET dateModified  = ? WHERE username = ? ";
-
-                connection.query(changepassword + statusUpdate, [dateTime, req.user.username], function (err, rows) {
-                    console.log(dateTime, req.user.username);
-                    if(err){
-
-                    }
-                else
-                    {
+                    if (err) {
+                        console.log(err);
+                        res.send("New Password Change Fail!");
+                        res.end();
+                    } else {
                         res.render('userHome.ejs', {
                             user: req.user // get the user out of session and pass to template
                         });
                     }
-
-                });
-
-                //     connection.query(changepassword, function (err, rows) {
-                //
-                //         if (err) {
-                //             console.log(err);
-                //             res.send("New Password Change Fail!");
-                //             res.end();
-                //         } else {
-                //             res.render('userHome.ejs', {
-                //                 user: req.user // get the user out of session and pass to template
-                //             });
-                //         }
-                //     })
-                // } else {
-                //     console.log("Password wrong");
-                //     res.send("Password Wrong");
-                //     res.redirect('/userProfile.ejs');
-
-
+                })
+            } else {
+                console.log("Password wrong");
             }
-            else{
-                console.log("Password Wrong");
-                res.render('userProfile.ejs', {
-                    user: req.user // get the user out of session and pass to template
-                });
-            }
+
         });
     });
 

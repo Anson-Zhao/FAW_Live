@@ -18,9 +18,9 @@
 	<style>
 		.banner{
 			position:relative;
-			left:67px;
-			top:30px;
-			width:65%;
+			left:20px;
+			bottom:30px;
+			width:68%;
 		}
 		table, th{
 			border: 1px solid black;
@@ -33,8 +33,7 @@
 </head>
 <body>
 <div class="container">
-
-	<div class="page-header text-center">
+	<div class="text-center">
 		<a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px" /></a>
 		<h1><span class="fa fa-anchor"></span> FAW/Locust - Edit User(s) </h1>
         <h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
@@ -44,6 +43,7 @@
 		<!--<a href="/logout" class="btn btn-default btn-sm">Logout</a>-->
 		<!--<a href="/signup" class="btn btn-default btn-sm">Sign Up</a>-->
 	</div>
+
 	<div class="col-sm-6 col-sm-offset-3">
 
 		<!-- show any messages that come back with authentication -->
@@ -88,7 +88,7 @@
 				<option class="active"  value="Active">Active</option>
                 <option class="suspended" value="Suspended">Suspended</option>
 			</select>
-		</div>
+		</div><br>
 
 		<button type="submit" class="btn btn-warning btn-lg"> Update </button>
 		<a href="/userManagement" class="btn floating-Box">Cancel</a>
