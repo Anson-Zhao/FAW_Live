@@ -198,8 +198,8 @@
     </div><br>
     <div class="center">
         <button id="button" class="btn btn-primary btn-sm" type="button" onclick="query()">Filter</button>
-        <button id="button" class="btn btn-primary btn-sm" type="button">Edit</button>
-        <button id="button" class="btn btn-primary btn-sm" type="button">Delete</button>
+        <!--<button id="button" class="btn btn-primary btn-sm" type="button">Edit</button>-->
+        <!--<button id="button" class="btn btn-primary btn-sm" type="button">Delete</button>-->
     </div>
     <br>
     <div class="center">
@@ -208,75 +208,78 @@
         <div id="dvData">
             <table id="dataDisplay" style="width:28%;">
                 <thead>
-                <tr>
-                    <th>Transaction ID</th>
-                    <th>Date</th>
-                    <th>Trap Owner</th>
-                    <th>Location Name</th>
-                    <th>Location Type</th>
-                    <th>Latitude</th>
-                    <th>Longitude</th>
-                    <th>Country</th>
-                    <th>Province</th>
-                    <th>District</th>
-                    <th>Cropping System</th>
-                    <th>Rotation/Intercropping Crop</th>
-                    <th>Maize Variety</th>
-                    <th>Maize Planting Date</th>
-                    <th>Field Size</th>
-                    <th>General Health of Maize</th>
-                    <th>Date of Last Rain</th>
-                    <th>Entry Type</th>
-                    <th>Pests Present</th>
-                    <th>FAW Stage</th>
-                    <th>Early Damage Level</th>
-                    <th>Late Damage Level</th>
-                    <th>Natural Enemies Present</th>
-                    <th>Dead larvae killed by natural enemies </th>
-                    <th>% Plants Infested</th>
-                    <th>Control Undertaken</th>
-                    <th>Pesticide Litres Sprayed</th>
-                    <th>Photo of Pest</th>
-                    <th>Photo of Damage</th>
-                </tr>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Date</th>
+                        <th>Trap Owner</th>
+                        <th>Location Name</th>
+                        <th>Location Type</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                        <th>Country</th>
+                        <th>Province</th>
+                        <th>District</th>
+                        <th>Cropping System</th>
+                        <th>Rotation/Intercropping Crop</th>
+                        <th>Maize Variety</th>
+                        <th>Maize Planting Date</th>
+                        <th>Field Size</th>
+                        <th>General Health of Maize</th>
+                        <th>Date of Last Rain</th>
+                        <th>Entry Type</th>
+                        <th>Pests Present</th>
+                        <th>FAW Stage</th>
+                        <th>Early Damage Level</th>
+                        <th>Late Damage Level</th>
+                        <th>Natural Enemies Present</th>
+                        <th>Dead larvae killed by natural enemies </th>
+                        <th>% Plants Infested</th>
+                        <th>Control Undertaken</th>
+                        <th>Pesticide Litres Sprayed</th>
+                        <th>Photo of Pest</th>
+                        <th>Photo of Damage</th>
+                    </tr>
                 </thead>
                 <tbody>
 
                 </tbody>
                 <tfoot>
-                <tr>
-                    <th>Transaction ID</th>
-                    <th>Date</th>
-                    <th>Trap Owner</th>
-                    <th>Location Name</th>
-                    <th>Location Type</th>
-                    <th>Latitude</th>
-                    <th>Longitude</th>
-                    <th>Country</th>
-                    <th>Province</th>
-                    <th>District</th>
-                    <th>Cropping System</th>
-                    <th>Rotation/Intercropping Crop</th>
-                    <th>Maize Variety</th>
-                    <th>Maize Planting Date</th>
-                    <th>Field Size</th>
-                    <th>General Health of Maize</th>
-                    <th>Date of Last Rain</th>
-                    <th>Entry Type</th>
-                    <th>Pests Present</th>
-                    <th>FAW Stage</th>
-                    <th>Early Damage Level</th>
-                    <th>Late Damage Level</th>
-                    <th>Natural Enemies Present</th>
-                    <th>Dead larvae killed by natural enemies </th>
-                    <th>% Plants Infested</th>
-                    <th>Control Undertaken</th>
-                    <th>Pesticide Litres Sprayed</th>
-                    <th>Photo of Pest</th>
-                    <th>Photo of Damage</th>
-                </tr>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Date</th>
+                        <th>Trap Owner</th>
+                        <th>Location Name</th>
+                        <th>Location Type</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                        <th>Country</th>
+                        <th>Province</th>
+                        <th>District</th>
+                        <th>Cropping System</th>
+                        <th>Rotation/Intercropping Crop</th>
+                        <th>Maize Variety</th>
+                        <th>Maize Planting Date</th>
+                        <th>Field Size</th>
+                        <th>General Health of Maize</th>
+                        <th>Date of Last Rain</th>
+                        <th>Entry Type</th>
+                        <th>Pests Present</th>
+                        <th>FAW Stage</th>
+                        <th>Early Damage Level</th>
+                        <th>Late Damage Level</th>
+                        <th>Natural Enemies Present</th>
+                        <th>Dead larvae killed by natural enemies </th>
+                        <th>% Plants Infested</th>
+                        <th>Control Undertaken</th>
+                        <th>Pesticide Litres Sprayed</th>
+                        <th>Photo of Pest</th>
+                        <th>Photo of Damage</th>
+                    </tr>
                 </tfoot>
             </table>
+        </div>
+        <div class='button'>
+            <button onclick="exportTableToCSV('<%= user.username %>.csv')">Export .CSV File</button>
         </div>
     </div>
 </div>
@@ -284,6 +287,8 @@
     var table = $("#dataDisplay").DataTable();
     var UserRole = "<%= user.userrole %>";
     var DropMenu;
+    var d;
+    var rowSelected = [];
 
     $(document).ready(function(){
         $(".add-row").click(function(){
@@ -322,7 +327,21 @@
                 $("#userMenu").empty();
                 $("#userMenu").append(DropMenu)
             }
-        });});
+        });
+
+        $('#dataDisplay tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+//                    table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+
+                d = table.row(this).data();
+                d.counter++;
+                table.row(this).data(d).draw();
+            }
+        });
+    });
 
     function query() {
         var firstName = document.getElementById("firstName").value;
@@ -395,6 +414,50 @@
             }
         });
     }
+    function downloadCSV(csv, filename) {
+        var csvFile;
+        var downloadLink;
+
+        // CSV file
+        csvFile = new Blob([csv], {type: "text/csv"});
+
+        // Download link
+        downloadLink = document.createElement("a");
+
+        // File name
+        downloadLink.download = filename;
+
+        // Create a link to the file
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+
+        // Hide download link
+        downloadLink.style.display = "none";
+
+        // Add the link to DOM
+        document.body.appendChild(downloadLink);
+
+        // Click download link
+        downloadLink.click();
+    }
+
+    function exportTableToCSV(filename) {
+        var csv = [];
+        var rows = document.querySelectorAll(".selected, thead");
+
+        for (var i = 0; i < rows.length; i++) {
+            var row = [], cols = rows[i].querySelectorAll("td, th");
+
+            for (var j = 0; j < cols.length; j++)
+                row.push(cols[j].innerText);
+
+            csv.push(row.join(","));
+        }
+
+        // Download CSV file
+        downloadCSV(csv.join("\n"), filename);
+
+    }
+
 </script>
 </body>
 </html>
