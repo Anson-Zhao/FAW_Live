@@ -40,7 +40,7 @@
 			top:60px;
 			width:16%;
 		}
-		#button{
+		.button{
 			 width:8%;
 		 }
 		.center {
@@ -208,9 +208,9 @@
 		<h5 class="floatingBox3">Content:<input type="text" class="content"></h5>
 	</div><br>
 	<div class="center">
-		<button id="button" class="btn btn-primary btn-sm" type="button" onclick="query()">Filter</button>
-		<button id="button" class="btn btn-primary btn-sm" type="button">Edit</button>
-		<button id="button" class="btn btn-primary btn-sm" type="button">Delete</button>
+		<button class="btn btn-primary btn-sm button" type="button" onclick="query()">Filter</button>
+		<button class="btn btn-primary btn-sm button" type="button">Edit</button>
+		<button id="deleteRowButton" class="btn btn-primary btn-sm button" type="button">Delete</button>
 	</div>
 	<br>
     <div class="center">
@@ -333,7 +333,54 @@
                 $("#userMenu").empty();
                 $("#userMenu").append(DropMenu)
             }
-        });});
+        });
+
+        $('#dataDisplay tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+//                    table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+
+                d = table.row(this).data();
+                d.counter++;
+                table.row(this).data(d).draw();
+            }
+        });
+
+        $("#deleteRowButton").on("click", function () {
+            if (confirm("Are you sure you would like to delete this row(s)?")) {
+                // alert(d);
+                // alert("Row: " + rowSelected[1].Name);
+                console.log(rowSelected[2].Name);
+                console.log(rowSelected[2].Value);
+
+                for (var i = 0; i < rowSelected.length; i++) {
+                    if (i === 0) {
+                        tstring += rowSelected[i].Name + "=" + rowSelected[i].Value;
+                    } else {
+                        tstring += "&" + rowSelected[i].Name + "=" + rowSelected[i].Value;
+                    }
+
+                }
+
+                console.log("tstring for loop: " + tstring);
+
+                $.ajax({
+                    url: '/deleteRow',
+                    type: 'POST',
+                    dataType: 'json',
+                    async: false,
+                    data: tstring,
+                    success: function (result) {
+                        window.location.replace('/userHome')
+                    }
+                })
+            } else {
+                return false;
+            }
+        });
+    });
 
     function query() {
         var firstName = document.getElementById("firstName").value;

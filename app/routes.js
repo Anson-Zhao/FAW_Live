@@ -420,6 +420,28 @@ module.exports = function (app, passport) {
         })
     });
 
+    app.post('/deleteRow', isLoggedIn, function(req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+
+        var deleteRow = {
+            transactionID: req.body.transactionID
+        };
+
+        var deleteStatement = "DELETE FROM General_Form WHERE transactionID = ?; ";
+
+        connection.query(deleteStatement,[deleteRow.transactionID],function(err, rows) {
+            // console.log(dateTime, req.user.username);
+
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "Deletion failed!"});
+            } else {
+                res.json({"error": false, "message": "/userHome"});
+                // render the page and pass in any flash data if it exists
+            }
+        })
+    });
+
     // =====================================
     // TRANSACTION SECTION =================
     // =====================================
