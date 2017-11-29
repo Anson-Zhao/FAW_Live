@@ -449,15 +449,126 @@ module.exports = function (app, passport) {
         });
     });
 
-    // Filter by search criteria
-    app.get('/filterQuery', isLoggedIn, function (req, res) {
+    // // user home query
+    // app.get('/filterQuery', isLoggedIn, function (req, res) {
+    //
+    //     //console.log("dQ: " + req.query.dateCreatedFrom);
+    //     // connection.query('USE ' + config.Login_db);
+    //
+    //     var queryStat = "SELECT General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID WHERE Cr_UN = '" + req.user.username + "'";
+    //     // adj: checking
+    //     var myQuery = [
+    //         {
+    //             fieldName: "startDate",
+    //             fieldVal: req.query.startDate,
+    //             dbCol: "date",
+    //             op: " >= '",
+    //             adj: req.query.startDate
+    //         },
+    //         {
+    //             fieldName: "endDate",
+    //             fieldVal: req.query.endDate,
+    //             dbCol: "date",
+    //             op: " <= '",
+    //             adj: req.query.endDate
+    //         },
+    //         {
+    //             fieldName: "field1",
+    //             fieldVal: req.query.content1,
+    //             dbCol: req.query.filter1,
+    //             op: " = '",
+    //             adj: req.query.content1
+    //         },
+    //         {
+    //             fieldName: "field2",
+    //             fieldVal: req.query.content2,
+    //             dbCol: req.query.filter2,
+    //             op: " = '",
+    //             adj: req.query.content2
+    //         },
+    //         {
+    //             fieldName: "field3",
+    //             fieldVal: req.query.content3,
+    //             dbCol: req.query.filter3,
+    //             op: " = '",
+    //             adj: req.query.content3
+    //         }
+    //     ];
+    //
+    //     function filterQuery() {
+    //         res.setHeader("Access-Control-Allow-Origin", "*");
+    //         console.log("Query Statement: " + queryStat);
+    //
+    //         connection.query(queryStat, function (err, results, fields) {
+    //
+    //             var status = [{errStatus: ""}];
+    //
+    //             if (err) {
+    //                 console.log(err);
+    //                 status[0].errStatus = "fail";
+    //                 res.send(status);
+    //                 res.end();
+    //             } else if (results.length === 0) {
+    //                 status[0].errStatus = "no data entry";
+    //                 res.send(status);
+    //                 res.end();
+    //             } else {
+    //                 var JSONresult = JSON.stringify(results, null, "\t");
+    //                 //console.log(JSONresult);
+    //                 res.send(JSONresult);
+    //                 res.end();
+    //             }
+    //         });
+    //     }
+    //
+    //     for (var i = 0; i < myQuery.length; i++) {
+    //         //console.log("i = " + i);
+    //         //console.log("field Value: " + !!myQuery[i].fieldVal);
+    //         if (!!myQuery[i].adj) {
+    //             if (i === myQuery.length - 1) {
+    //                 if (!!myQuery[i].fieldVal) {
+    //                     queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+    //                     filterQuery()
+    //                 } else {
+    //                     queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
+    //                     filterQuery()
+    //                 }
+    //             } else {
+    //                 if (!!myQuery[i].fieldVal) {
+    //                     queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+    //                 } else {
+    //                     queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
+    //                 }
+    //             }
+    //         } else {
+    //             if (i === myQuery.length - 1) {
+    //                 filterQuery()
+    //             }
+    //         }
+    //     }
+    // });
 
+    app.get('/filterQuery', isLoggedIn, function (req, res) {
         //console.log("dQ: " + req.query.dateCreatedFrom);
         // connection.query('USE ' + config.Login_db);
 
-        var queryStat = "SELECT General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID WHERE Cr_UN = '" + req.user.username + "'";
+        var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID";
         // adj: checking
         var myQuery = [
+            {
+                fieldName: "firstName",
+                fieldVal: req.query.firstName,
+                dbCol: "firstName",
+                op: " = '",
+                adj: req.query.firstName
+            },
+            {
+                fieldName: "lastName",
+                fieldVal: req.query.lastName,
+                dbCol: "lastName",
+                op: " = '",
+                adj: req.query.lastName
+            },
             {
                 fieldName: "startDate",
                 fieldVal: req.query.startDate,
@@ -497,7 +608,7 @@ module.exports = function (app, passport) {
 
         function filterQuery() {
             res.setHeader("Access-Control-Allow-Origin", "*");
-            //console.log("Query Statement: " + queryStat);
+            console.log("Query Statement: " + queryStat);
 
             connection.query(queryStat, function (err, results, fields) {
 
@@ -521,23 +632,44 @@ module.exports = function (app, passport) {
             });
         }
 
+        var j = 0;
+
         for (var i = 0; i < myQuery.length; i++) {
             //console.log("i = " + i);
             //console.log("field Value: " + !!myQuery[i].fieldVal);
             if (!!myQuery[i].adj) {
-                if (i === myQuery.length - 1) {
-                    if (!!myQuery[i].fieldVal) {
-                        queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                        filterQuery()
+                if (j === 0) {
+                    j = 1;
+                    if (i === myQuery.length - 1) {
+                        if (!!myQuery[i].fieldVal) {
+                            queryStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                            filterQuery()
+                        } else {
+                            queryStat += " WHERE " + myQuery[i].dbCol + " IS NULL";
+                            filterQuery()
+                        }
                     } else {
-                        queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
-                        filterQuery()
+                        if (!!myQuery[i].fieldVal) {
+                            queryStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        } else {
+                            queryStat += " WHERE " + myQuery[i].dbCol + " IS NULL";
+                        }
                     }
                 } else {
-                    if (!!myQuery[i].fieldVal) {
-                        queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                    if (i === myQuery.length - 1) {
+                        if (!!myQuery[i].fieldVal) {
+                            queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                            filterQuery()
+                        } else {
+                            queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
+                            filterQuery()
+                        }
                     } else {
-                        queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
+                        if (!!myQuery[i].fieldVal) {
+                            queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        } else {
+                            queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
+                        }
                     }
                 }
             } else {
