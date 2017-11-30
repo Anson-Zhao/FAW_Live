@@ -365,12 +365,9 @@
             var querystr = queryString1 + queryString2;
             // alert(querystr);
 
-            if (dateCreatedFrom || dateCreatedTo || dateModifiedFrom || dateModifiedTo || firstName || lastName || userrole) {
-                table.clear();
-                queryAndDisplay(querystr);
-            } else {
-                queryAndDisplay(querystr);
-            }
+            table.clear();
+            table.draw();
+            queryAndDisplay(querystr);
         }
 
         var queryAndDisplay = function (querystr) {
@@ -384,20 +381,22 @@
                 async: false,
                 data: querystr,
                 success: function (resp) {
-                    for (var i = 0; i < resp.length; i++) {
-                        table.row.add( [
-                            resp[i].firstName,
-                            resp[i].lastName,
-                            resp[i].username,
-                            resp[i].password,
-                            resp[i].userrole,
-                            resp[i].dateCreated,
-                            resp[i].createdUser,
-                            resp[i].dateModified,
-                            resp[i].modifiedUser,
-                            resp[i].status,
-                            resp[i].lastLoginTime
-                        ] ).draw( false );
+                    if (!resp[0].errStatus) {
+                        for (var i = 0; i < resp.length; i++) {
+                            table.row.add([
+                                resp[i].firstName,
+                                resp[i].lastName,
+                                resp[i].username,
+                                resp[i].password,
+                                resp[i].userrole,
+                                resp[i].dateCreated,
+                                resp[i].createdUser,
+                                resp[i].dateModified,
+                                resp[i].modifiedUser,
+                                resp[i].status,
+                                resp[i].lastLoginTime
+                            ]).draw(false);
+                        }
                     }
                 }
 

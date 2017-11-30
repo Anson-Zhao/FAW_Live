@@ -66,14 +66,12 @@
                 <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= transactionID %>" readonly><br><br>
                 <h4>Your Name: &nbsp;&nbsp;&nbsp;</h4><input id="firstName" type="text" value="<%= firstname %>" readonly><input id="lastName" type="text" value="<%= lastname %>" readonly><br><br>
                 <h4>1A. Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE1" name="date" class="date" value="" required><br><br>
-                <h4>1B. Trap Owner (Optional): &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="trapOwner" name="trapOwner" type="text" placeholder="Enter The Trap Owner's Name"><br><br>
+                <h4>1B. Trap Owner: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="trapOwner" name="trapOwner" type="text" placeholder="Enter The Trap Owner's Name"><br><br>
                 <h4>1C. Location Name: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="locationName" name="locationName" type="text" placeholder="Enter Location Here" required><br><br>
                 <h4>1D. Location Type: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='locationType' name='locationType' required>
-                    <option>SELECT THE LOCATION TYPE</option>
-                    <option>LOCATIONA</option>
-                    <option>LOCATIONB</option>
-                    <option>LOCATIONC</option>
+                    <option value=''>SELECT THE LOCATION TYPE</option>
+                    <option value="Location Type"></option>
                 </select><br><br>
                 <h4 id="GPSLocationTitle">E. GPS Location: &nbsp;&nbsp;&nbsp;</h4>
                 <h4 style="color:red" id="errorMessage"></h4>
@@ -82,24 +80,18 @@
                 <div id="map"></div><br>
                 <h4>1F. Country: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='country' name='country' required>
-                    <option>SELECT THE COUNTRY</option>
-                    <option>COUNTRYA</option>
-                    <option>COUNTRYB</option>
-                    <option>COUNTRYC</option>
+                    <option value=''>SELECT THE COUNTRY</option>
+                    <option value="Country"></option>
                 </select><br><br>
                 <h4>1G. Province: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='province' name='province' required>
                     <option value=''>SELECT THE PROVINCE</option>
-                    <option>PROVINCEA</option>
-                    <option>PROVINCEB</option>
-                    <option>PROVINCEC</option>
+                    <option value="Province"></option>
                 </select><br><br>
                 <h4>1H. District: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='district' name='district' required>
                     <option value=''>SELECT THE DISTRICT</option>
-                    <option>DISTRICT1</option>
-                    <option>DISTRICT2</option>
-                    <option>DISTRICT3</option>
+                    <option value="District"></option>
                 </select><br><br>
                 <h4>1I. Cropping System: &nbsp;&nbsp;&nbsp;</h4>
                 <!--<input type="radio" name="croppingSystem" value="Seasonal" required> SEASONAL-->
