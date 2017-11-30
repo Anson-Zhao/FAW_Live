@@ -860,8 +860,15 @@ module.exports = function (app, passport) {
         res.redirect('/login');
     });
 
-};
 
+app.get('Cancel', function (req, res) {
+    res.redirect('/userHome');
+    res.render('userHome', {
+        user: req.user // get the user out of session and pass to template
+    });
+});
+
+};
 // route middleware to make sure
 function isLoggedIn(req, res, next) {
 
