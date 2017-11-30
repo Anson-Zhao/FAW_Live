@@ -338,12 +338,9 @@
 
         var queryStr = "firstName=" + firstName + "&lastName=" + lastName + "&startDate=" + startDate + "&endDate=" + endDate + "&filter1=" + filter1 + "&filter2=" + filter2 + "&filter3=" + filter3 + "&content1=" + content1 + "&content2=" + content2 + "&content3=" + content3;
         //alert(queryStr);
-        if (firstName || lastName || startDate || endDate || filter1 || filter2 || filter3) {
-            table.clear();
-            queryAndDisplay(queryStr);
-        } else {
-            queryAndDisplay(queryStr);
-        }
+        table.clear();
+        table.draw();
+        queryAndDisplay(queryStr);
     }
 
     var queryAndDisplay = function (querystr) {
@@ -355,42 +352,45 @@
             async: false,
             data: querystr,
             success: function (resp) {
-                //alert(resp[0].transactionID);
-                for (var i = 0; i < resp.length; i++) {
-                    table.row.add( [
-                        resp[i].username,
-                        resp[i].firstName,
-                        resp[i].lastName,
-                        resp[i].transactionID,
-                        resp[i].date,
-                        resp[i].trapOwner,
-                        resp[i].locationName,
-                        resp[i].locationType,
-                        resp[i].latitude,
-                        resp[i].longitude,
-                        resp[i].country,
-                        resp[i].province,
-                        resp[i].district,
-                        resp[i].croppingSystem,
-                        resp[i].rota_inter_crop,
-                        resp[i].maizeVariety,
-                        resp[i].plantingDate,
-                        resp[i].fieldSize,
-                        resp[i].healthOfMaize,
-                        resp[i].lastRainDate,
-                        resp[i].entryType,
-                        resp[i].pestsPresent,
-                        resp[i].fawStage,
-                        resp[i].earlyDamageLevel,
-                        resp[i].lateDamageLevel,
-                        resp[i].naturalEnemies,
-                        resp[i].deadLarvae,
-                        resp[i].percentInfested,
-                        resp[i].control,
-                        resp[i].pesticide,
-                        resp[i].pestPhoto,
-                        resp[i].damagePhoto
-                    ] ).draw( false );
+                if (!resp[0].errStatus) {
+                    for (var i = 0; i < resp.length; i++) {
+                        table.row.add([
+                            resp[i].username,
+                            resp[i].firstName,
+                            resp[i].lastName,
+                            resp[i].transactionID,
+                            resp[i].date,
+                            resp[i].trapOwner,
+                            resp[i].locationName,
+                            resp[i].locationType,
+                            resp[i].latitude,
+                            resp[i].longitude,
+                            resp[i].country,
+                            resp[i].province,
+                            resp[i].district,
+                            resp[i].croppingSystem,
+                            resp[i].rota_inter_crop,
+                            resp[i].maizeVariety,
+                            resp[i].plantingDate,
+                            resp[i].fieldSize,
+                            resp[i].healthOfMaize,
+                            resp[i].lastRainDate,
+                            resp[i].entryType,
+                            resp[i].pestsPresent,
+                            resp[i].fawStage,
+                            resp[i].earlyDamageLevel,
+                            resp[i].lateDamageLevel,
+                            resp[i].naturalEnemies,
+                            resp[i].deadLarvae,
+                            resp[i].percentInfested,
+                            resp[i].control,
+                            resp[i].pesticide,
+                            resp[i].pestPhoto,
+                            resp[i].damagePhoto
+                        ]).draw(false);
+                    }
+                } else {
+                    alert(resp[0].errStatus);
                 }
             }
         });

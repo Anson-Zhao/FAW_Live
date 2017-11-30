@@ -420,6 +420,14 @@ module.exports = function (app, passport) {
         })
     });
 
+    // edit on homepage
+    var editData;
+    app.get('/sendEditData', isLoggedIn, function(req, res) {
+        editData = req.query;
+        //res.json({"error": false, "message": "/editUser"});
+    });
+
+
     // =====================================
     // TRANSACTION SECTION =================
     // =====================================
@@ -588,21 +596,21 @@ module.exports = function (app, passport) {
                 fieldVal: req.query.content1,
                 dbCol: req.query.filter1,
                 op: " = '",
-                adj: req.query.content1
+                adj: req.query.filter1
             },
             {
                 fieldName: "field2",
                 fieldVal: req.query.content2,
                 dbCol: req.query.filter2,
                 op: " = '",
-                adj: req.query.content2
+                adj: req.query.filter2
             },
             {
                 fieldName: "field3",
                 fieldVal: req.query.content3,
                 dbCol: req.query.filter3,
                 op: " = '",
-                adj: req.query.content3
+                adj: req.query.filter3
             }
         ];
 
