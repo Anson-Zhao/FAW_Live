@@ -18,13 +18,13 @@
         #Username{
             position:relative;
             left:980px;
-            top:2px;
+            top:1px;
             width:14%;
         }
         .banner{
-            position:fixed;
-            left:240px;
-            top:34px;
+            position:absolute;
+            left:220px;
+            top:-35px;
             width:60%;
         }
         table, th{
@@ -34,8 +34,12 @@
         }
         body { padding-top:80px; word-wrap:break-word; }
 
-        .container{
-            margin-left:90px;
+        .container1{
+            padding-top:80px;
+            margin-left:100px;
+        }
+        .floating-Box{
+            display: inline;
         }
     </style>
 
@@ -44,40 +48,56 @@
 
 <div class="container">
     <div class="dropdown">
-        <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="Username"><%= user.firstName%>
-            <span class="caret"></span></button>
+        <!--<button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="Username"><%= user.firstName%>-->
+            <!--<span class="caret"></span></button>-->
         <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
-        <ul id="userMenu" class="dropdown-menu dropdown-menu-right">
+        <!--<ul id="userMenu" class="dropdown-menu dropdown-menu-right">-->
 
-        </ul>
+        <!--</ul>-->
     </div>
-    <div class="container">
+    <div class="container1">
         <br><br><br>
-        <form onsubmit="return checkForm()" action="/userProfile" method="post">
-        <h4><strong>User Name</strong>:
-            <label for="usernameF">First Name:</label>
+        <form id="submit" onsubmit="return checkForm()" action="/userProfile" method="post">
+            <h4 class="floating-Box"><strong>User Name:</strong></h4>
+            <h5 class="floating-Box">First Name:
             <input type="text" id="usernameF" name="usernameF"  value="<%= user.firstName %>">
-            <label for="usernameL">Last Name:</label>
+            Last Name:
             <input type="text" id="usernameL" name="usernameL" value="<%= user.lastName %>">
-            <div><strong>User Role</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.userrole%></div>
-            <div><strong>Date created</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.dateCreated %></div>
-            <strong>Last Modification</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.dateModified %>
-            <div><strong>LoginName/Email</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= user.username%></div>
+            </h5>
+            <br><br>
+        <div>
+            <h4 class="floating-Box"><strong>User Role:</strong></h4><input type="text" style="background:WhiteSmoke; width: 10%;" value="<%= user.userrole%>" readonly>
+        </div><br>
+        <div>
+            <h4 class="floating-Box"><strong>Date created:</strong></h4><input type="text" style="background:WhiteSmoke; width: 10%;" value="<%= user.dateCreated %>" readonly>
+        </div><br>
+        <div>
+            <h4 class="floating-Box"><strong>Last Modification:</strong></h4><input type="text" style="background:WhiteSmoke; width: 10%;" value="<%= user.dateModified %>" readonly>
+        </div><br>
+        <div>
+            <h4 class="floating-Box"><strong>LoginName/Email:</strong></h4><input type="text" style="background:WhiteSmoke; width: 10%;" value="<%= user.username%>" readonly>
+        </div><br>
+        <div>
+            <h4 class="floating-Box"><strong>Last Modificated by:</strong></h4><input type="text" style="background:WhiteSmoke; width: 10%;" value="<%= user.username%>" readonly>
+        </div>
 
             <br>
-            <div><strong>Password Change</strong>:    </div>
-        </h4>
+           <h4><strong>Password Change</strong> (optional):   </h4>
+
         <div >
-            <label for="currentpassword">Current Password:</label>
+           <h5>Current Password:
             <input type="password" id="currentpassword" name="currentpassword" maxlength="2000px">
+           </h5>
         </div>
         <div>
-            <label for="newpassword">New Password:</label>
+            <h5>New Password:
             <input type="password" id="newpassword" name="newpassword" maxlength="2000px">
+            </h5>
         </div>
         <div>
-            <label for="Confirmpassword">Confirm New Password:</label>
+            <h5>Confirm New Password:
             <input type="password" id="Confirmpassword" name="Confirmpassword" maxlength="2000px">
+            </h5>
         </div>
 
         <button id="SS"  type="submit" class="btn btn-warning btn-sm"> Submit </button>
@@ -111,26 +131,71 @@
         var newP=document.getElementById("newpassword").value;
         var confirmP =document.getElementById("Confirmpassword").value;
 
-        if(oldP!=""&&newP!=""&&confirmP!="")
-        {
-            if(oldP!=newP)
-            {
-                if(newP==confirmP)
-                {
-                    return true;
+        if (newP != "") {
+            if(oldP != "" && confirmP != "") {
+                if(oldP != newP) {
+                    if(newP == confirmP) {
+//                        alert ("V");
+                        return true;
+                    } else {
+                        alert("New password are not matched!");
+                        return false;
+                    }
                 } else {
-                    alert("New password are not matched!");
+                    alert("Please try your new password different from old one!");
                     return false;
                 }
             } else {
-                alert("Please try your new password different from old one!");
+                alert("All password fields are required");
                 return false;
             }
-        } else {
-            alert("All password fields are required");
-            return false;
-        }
+        } else {return true}
     }
+
+    function submit(e) {
+        e.preventDefault();
+        $.ajax({
+            type: "post",
+            url: "/detailedForm",
+            dataType: 'json',
+            data: $("#detailed").serialize(),
+            success: function (result) {
+                if (!result.error) {
+                    document.getElementById("modal-footer").style.display = "none";
+
+                    document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
+                    document.getElementById("close").innerHTML = "<a href='/userhome'>&times</a>";
+
+                    document.getElementById("header").innerHTML = "Congratulations, Your Data Entry is Successfully Complete !";
+                    document.getElementById("body").innerHTML = "<br>Click X to return to the Home Page.<br>";
+
+                    document.getElementById("modal").style.display = "block";
+                } else {
+                    alert(result.message);
+                }
+            }
+        })
+    }
+
+    $('#submit').submit(function(e) {
+        // Prevent form submission
+        e.preventDefault();
+
+        $.ajax({
+            type: "post",
+            url: "/userProfile",
+            dataType: 'json',
+            data: $(this).serialize(),
+            success: function (result) {
+                if (!result.error) {
+//                    alert("SUCCESS");
+                    window.location.replace('/userHome')
+                } else {
+                    alert(result.message);
+                }
+            }
+        })
+    });
 </script>
 
 </body>
