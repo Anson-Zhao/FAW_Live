@@ -420,16 +420,17 @@ module.exports = function (app, passport) {
         })
     });
 
-    app.post('/deleteRow', isLoggedIn, function(req, res) {
+    app.get('/deleteRow', isLoggedIn, function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+        console.log("transactionID: " + req.query.Transaction_ID);
 
         var deleteRow = {
-            transactionID: req.body.transactionID
+            transactionID: req.query.Transaction_ID
         };
 
-        var deleteStatement = "DELETE FROM General_Form WHERE transactionID = ?; ";
+        var deleteStatement = "UPDATE General_Form, Detailed_Form SET General_Form.status = 'Deleted', Detailed_Form.status = 'Deleted' WHERE General_Form.transactionID = ? AND Detailed_Form.transactionID = ?";
 
-        connection.query(deleteStatement,[deleteRow.transactionID],function(err, rows) {
+        connection.query(deleteStatement,[deleteRow.transactionID, deleteRow.transactionID],function(err, rows) {
             // console.log(dateTime, req.user.username);
 
             if (err) {
@@ -440,6 +441,43 @@ module.exports = function (app, passport) {
                 // render the page and pass in any flash data if it exists
             }
         })
+    });
+
+    app.get('/recoverRow', isLoggedIn, function(req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+        console.log("transactionID: " + req.query.Transaction_ID);
+
+        var recoverRow = {
+            transactionID: req.query.Transaction_ID
+        };
+
+        var deleteStatement = "UPDATE General_Form, Detailed_Form SET General_Form.status = 'Active', Detailed_Form.status = 'Active' WHERE General_Form.transactionID = ? AND Detailed_Form.transactionID = ?";
+
+        connection.query(deleteStatement,[recoverRow.transactionID, recoverRow.transactionID],function(err, rows) {
+            // console.log(dateTime, req.user.username);
+
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "Recovery failed!"});
+            } else {
+                res.json({"error": false, "message": "/userHome"});
+                // render the page and pass in any flash data if it exists
+            }
+        })
+    });
+
+    // edit on homepage
+    var editData;
+    app.get('/sendEditData', isLoggedIn, function(req, res) {
+        editData = req.query;
+        //res.json({"error": false, "message": "/editUser"});
+    });
+
+    app.get('/editData', isLoggedIn, function(req, res) {
+        res.render('dataEdit.ejs', {
+            data: editData, // get the user out of session and pass to template
+            message: req.flash('Data Entry Message')
+        });
     });
 
     // =====================================
@@ -461,6 +499,14 @@ module.exports = function (app, passport) {
                     user: req.user // get the user out of session and pass to template
                 });
             }
+        });
+    });
+
+    app.get('/recovery', isLoggedIn, function (req, res) {
+        // render the page and pass in any flash data if it exists
+        res.render('recovery.ejs', {
+            user: req.user,
+            message: req.flash('restoreMessage')
         });
     });
 
@@ -574,7 +620,7 @@ module.exports = function (app, passport) {
         //console.log("dQ: " + req.query.dateCreatedFrom);
         // connection.query('USE ' + config.Login_db);
 
-        var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID";
+        var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Active' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Active'";
         // adj: checking
         var myQuery = [
             {
@@ -610,21 +656,21 @@ module.exports = function (app, passport) {
                 fieldVal: req.query.content1,
                 dbCol: req.query.filter1,
                 op: " = '",
-                adj: req.query.content1
+                adj: req.query.filter1
             },
             {
                 fieldName: "field2",
                 fieldVal: req.query.content2,
                 dbCol: req.query.filter2,
                 op: " = '",
-                adj: req.query.content2
+                adj: req.query.filter2
             },
             {
                 fieldName: "field3",
                 fieldVal: req.query.content3,
                 dbCol: req.query.filter3,
                 op: " = '",
-                adj: req.query.content3
+                adj: req.query.filter3
             }
         ];
 
@@ -731,6 +777,169 @@ module.exports = function (app, passport) {
             }
         });
     });
+
+    app.get('/filterQueryDeleted', isLoggedIn, function (req, res) {
+        //console.log("dQ: " + req.query.dateCreatedFrom);
+        // connection.query('USE ' + config.Login_db);
+
+        var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Deleted' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Deleted'";
+        // adj: checking
+        var myQuery = [
+            {
+                fieldName: "firstName",
+                fieldVal: req.query.firstName,
+                dbCol: "firstName",
+                op: " = '",
+                adj: req.query.firstName
+            },
+            {
+                fieldName: "lastName",
+                fieldVal: req.query.lastName,
+                dbCol: "lastName",
+                op: " = '",
+                adj: req.query.lastName
+            },
+            {
+                fieldName: "startDate",
+                fieldVal: req.query.startDate,
+                dbCol: "date",
+                op: " >= '",
+                adj: req.query.startDate
+            },
+            {
+                fieldName: "endDate",
+                fieldVal: req.query.endDate,
+                dbCol: "date",
+                op: " <= '",
+                adj: req.query.endDate
+            },
+            {
+                fieldName: "field1",
+                fieldVal: req.query.content1,
+                dbCol: req.query.filter1,
+                op: " = '",
+                adj: req.query.filter1
+            },
+            {
+                fieldName: "field2",
+                fieldVal: req.query.content2,
+                dbCol: req.query.filter2,
+                op: " = '",
+                adj: req.query.filter2
+            },
+            {
+                fieldName: "field3",
+                fieldVal: req.query.content3,
+                dbCol: req.query.filter3,
+                op: " = '",
+                adj: req.query.filter3
+            }
+        ];
+
+        function filterQuery() {
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            console.log("Query Statement: " + queryStat);
+
+            connection.query(queryStat, function (err, results, fields) {
+
+                var status = [{errStatus: ""}];
+
+                if (err) {
+                    console.log(err);
+                    status[0].errStatus = "fail";
+                    res.send(status);
+                    res.end();
+                } else if (results.length === 0) {
+                    status[0].errStatus = "no data entry";
+                    res.send(status);
+                    res.end();
+                } else {
+                    var JSONresult = JSON.stringify(results, null, "\t");
+                    //console.log(JSONresult);
+                    res.send(JSONresult);
+                    res.end();
+                }
+            });
+        }
+
+        var j = 0;
+
+        for (var i = 0; i < myQuery.length; i++) {
+            //console.log("i = " + i);
+            //console.log("field Value: " + !!myQuery[i].fieldVal);
+            if (!!myQuery[i].adj) {
+                if (j === 0) {
+                    j = 1;
+                    if (i === myQuery.length - 1) {
+                        if (!!myQuery[i].fieldVal) {
+                            queryStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                            filterQuery()
+                        } else {
+                            queryStat += " WHERE " + myQuery[i].dbCol + " IS NULL";
+                            filterQuery()
+                        }
+                    } else {
+                        if (!!myQuery[i].fieldVal) {
+                            queryStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        } else {
+                            queryStat += " WHERE " + myQuery[i].dbCol + " IS NULL";
+                        }
+                    }
+                } else {
+                    if (i === myQuery.length - 1) {
+                        if (!!myQuery[i].fieldVal) {
+                            queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                            filterQuery()
+                        } else {
+                            queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
+                            filterQuery()
+                        }
+                    } else {
+                        if (!!myQuery[i].fieldVal) {
+                            queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        } else {
+                            queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
+                        }
+                    }
+                }
+            } else {
+                if (i === myQuery.length - 1) {
+                    filterQuery()
+                }
+            }
+        }
+    });
+
+    // Prepare and assign new transaction ID
+    app.get('/newEntry', isLoggedIn, function (req, res) {
+        var d = new Date();
+        var utcDateTime = d.getUTCFullYear() + "-" + ('0' + (d.getUTCMonth() + 1)).slice(-2) + "-" + ('0' + d.getUTCDate()).slice(-2);
+        var queryTransID = "SELECT COUNT(transactionID) AS number FROM FAW.Transaction WHERE transactionID LIKE '" + utcDateTime + "%';";
+
+        connection.query(queryTransID, function (err, results, fields) {
+            transactionID = utcDateTime + "_" + ('0000' + (results[0].number + 1)).slice(-5);
+            if (err) {
+                console.log(err);
+            } else {
+                var insertTransID = "INSERT INTO FAW.Transaction (transactionID, Cr_UN) VALUE (" + "'" + transactionID + "', '" + req.user.username + "');";
+                connection.query(insertTransID, function (err, results, fields) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        // Show general form
+                        res.render('form.ejs', {
+                            user: req.user, // get the user out of session and pass to template
+                            message: req.flash('Data Entry Message'),
+                            firstname: req.user.firstName,
+                            lastname: req.user.lastName,
+                            transactionID: transactionID
+                        });
+                    }
+                });
+            }
+        });
+    });
+
 
     // Submit general form
     app.post('/generalForm', isLoggedIn, function (req, res) {

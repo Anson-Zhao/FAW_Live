@@ -16,30 +16,12 @@
     <script src="//unpkg.com/flatpickr"></script>
 
     <style>
-		#Username{
-			position:relative;
-			left:990px;
-			top:35px;
-            width:14%;
-		}
+        body 		{ padding-top:80px; word-wrap:break-word; }
+
 		.banner{
 			position:relative;
-			left:25px;
-			top:30px;
-			width:65%;
-		}
-		#class1{
-			position:relative;
-			left:300px;
-			top:60px;
-			width:16%;
-		}
-		#class2{
-			position:relative;
-			left:500px;
-			top:60px;
-			width:16%;
-		}
+            width: 100%;
+        }
 		.button{
 			 width:8%;
 		 }
@@ -88,19 +70,24 @@
 	</style>
 </head>
 <body>
-<div class="container">
-	<div class="dropdown">
-		<button class="btn btn-primary btn-lg" type="button" data-toggle="dropdown" id="Username"><%= user.firstName%>
-			<span class="caret"></span></button>
-		<a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
-		<ul id="userMenu" class="dropdown-menu dropdown-menu-right">
+<div class="container center">
+    <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px"/></a>
 
-		</ul>
-	</div>
-	<a href="/newEntry" class="btn btn-default btn-lg" id="class1">New Entry</a>
-	<a href="/dataHistory" class="btn btn-default btn-lg" id="class2">Data History</a>
+</div><br><br>
+<div class="page-header text-center header">
+    <h1><span class="fa fa-anchor"></span> FAW Project -  User Home </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
+    <a href="/newEntry" class="btn btn-default btn-lg">New Entry</a>
+    <a href="/dataHistory" class="btn btn-default btn-lg">Data History</a>
+    <a href="/recovery" id="restoreButton" class="btn btn-default btn-lg" type="button">Recovery</a>
+    <div class="dropdown floating-Box">
+        <button class="btn btn-primary btn-lg" type="button" data-toggle="dropdown" id="Username"><%= user.firstName%>
+            <span class="caret"></span></button>
+        <ul id="userMenu" class="dropdown-menu">
+
+        </ul>
+    </div>
 </div>
-<br><br><br><br>
+<br>
 <div class="container">
 	<div class="center">
 		<!--<h4 class="floatingBox"><strong> Num of Records Displayed</strong></h4>-->
@@ -209,9 +196,9 @@
 	</div><br>
 	<div class="center">
 		<button class="btn btn-primary btn-sm button" type="button" onclick="query()">Filter</button>
-		<button class="btn btn-primary btn-sm button" type="button">Edit</button>
-		<button id="deleteRowButton" class="btn btn-primary btn-sm button" type="button">Delete</button>
-	</div>
+		<button id="editButton" class="btn btn-primary btn-sm button" type="button">Edit</button>
+		<button id="deleteButton" class="btn btn-primary btn-sm button" type="button">Delete</button>
+    </div>
 	<br>
     <div class="center">
 	<h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
@@ -220,35 +207,35 @@
         <table id="dataDisplay" style="width:100%;">
         <thead>
         <tr>
-            <th>Transaction ID</th>
+            <th>Transaction_ID</th>
             <th>Date</th>
-            <th>Trap Owner</th>
-            <th>Location Name</th>
-            <th>Location Type</th>
+            <th>Trap_Owner</th>
+            <th>Location_Name</th>
+            <th>Location_Type</th>
             <th>Latitude</th>
             <th>Longitude</th>
             <th>Country</th>
             <th>Province</th>
             <th>District</th>
-            <th>Cropping System</th>
-            <th>Rotation/Intercropping Crop</th>
-            <th>Maize Variety</th>
-            <th>Maize Planting Date</th>
-            <th>Field Size</th>
-            <th>General Health of Maize</th>
-            <th>Date of Last Rain</th>
-            <th>Entry Type</th>
-            <th>Pests Present</th>
-            <th>FAW Stage</th>
-            <th>Early Damage Level</th>
-            <th>Late Damage Level</th>
-            <th>Natural Enemies Present</th>
-            <th>Dead larvae killed by natural enemies </th>
-            <th>% Plants Infested</th>
-            <th>Control Undertaken</th>
-            <th>Pesticide Litres Sprayed</th>
-            <th>Photo of Pest</th>
-            <th>Photo of Damage</th>
+            <th>Cropping_System</th>
+            <th>Rotation/Intercropping_Crop</th>
+            <th>Maize_Variety</th>
+            <th>Maize_Planting_Date</th>
+            <th>Field_Size</th>
+            <th>General_Health_of_Maize</th>
+            <th>Date_of_Last_Rain</th>
+            <th>Entry_Type</th>
+            <th>Pests_Present</th>
+            <th>FAW_Stage</th>
+            <th>Early_Damage_Level</th>
+            <th>Late_Damage_Level</th>
+            <th>Natural_Enemies_Present</th>
+            <th>Dead_larvae_killed_by_natural_enemies_</th>
+            <th>%_Plants_Infested</th>
+            <th>Control_Undertaken</th>
+            <th>Pesticide_Litres_Sprayed</th>
+            <th>Photo_of_Pest</th>
+            <th>Photo_of_Damage</th>
         </tr>
         </thead>
         <tbody>
@@ -256,35 +243,35 @@
         </tbody>
         <tfoot>
         <tr>
-            <th>Transaction ID</th>
+            <th>Transaction_ID</th>
             <th>Date</th>
-            <th>Trap Owner</th>
-            <th>Location Name</th>
-            <th>Location Type</th>
+            <th>Trap_Owner</th>
+            <th>Location_Name</th>
+            <th>Location_Type</th>
             <th>Latitude</th>
             <th>Longitude</th>
             <th>Country</th>
             <th>Province</th>
             <th>District</th>
-            <th>Cropping System</th>
-            <th>Rotation/Intercropping Crop</th>
-            <th>Maize Variety</th>
-            <th>Maize Planting Date</th>
-            <th>Field Size</th>
-            <th>General Health of Maize</th>
-            <th>Date of Last Rain</th>
-            <th>Entry Type</th>
-            <th>Pests Present</th>
-            <th>FAW Stage</th>
-            <th>Early Damage Level</th>
-            <th>Late Damage Level</th>
-            <th>Natural Enemies Present</th>
-            <th>Dead larvae killed by natural enemies </th>
-            <th>% Plants Infested</th>
-            <th>Control Undertaken</th>
-            <th>Pesticide Litres Sprayed</th>
-            <th>Photo of Pest</th>
-            <th>Photo of Damage</th>
+            <th>Cropping_System</th>
+            <th>Rotation/Intercropping_Crop</th>
+            <th>Maize_Variety</th>
+            <th>Maize_Planting_Date</th>
+            <th>Field_Size</th>
+            <th>General_Health_of_Maize</th>
+            <th>Date_of_Last_Rain</th>
+            <th>Entry_Type</th>
+            <th>Pests_Present</th>
+            <th>FAW_Stage</th>
+            <th>Early_Damage_Level</th>
+            <th>Late_Damage_Level</th>
+            <th>Natural_Enemies_Present</th>
+            <th>Dead_larvae_killed_by_natural_enemies_</th>
+            <th>%_Plants_Infested</th>
+            <th>Control_Undertaken</th>
+            <th>Pesticide_Litres_Sprayed</th>
+            <th>Photo_of_Pest</th>
+            <th>Photo_of_Damage</th>
         </tr>
         </tfoot>
         </table>
@@ -292,9 +279,12 @@
 </div>
 </div>
 <script type='text/javascript'>
+    var dtstring = "";
+    var rowSelected = [];
     var table = $("#dataDisplay").DataTable();
     var UserRole = "<%= user.userrole %>";
     var DropMenu;
+    var d;
 
     $(document).ready(function(){
         $(".add-row").click(function(){
@@ -339,39 +329,101 @@
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
             } else {
-//                    table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
 
                 d = table.row(this).data();
                 d.counter++;
                 table.row(this).data(d).draw();
+
+                var thArray = [];
+
+                $('#dataDisplay > thead > tr > th').each(function(){
+                    thArray.push($(this).text())
+                })
+
+                for (var i = 0; i < thArray.length; i++) {
+                    rowSelected[i] = {};
+                    rowSelected[i].Name = thArray[i];
+                    rowSelected[i].Value = d[i];
+                }
+
+//            rowSelected = [
+//                {
+//                    Name: "First_Name",
+//                    Value: d[0]
+//                },
+//                {
+//                    Name: "Last_Name",
+//                    Value: d[1]
+//                },
+//                {
+//                    Name: "Username",
+//                    Value: d[2]
+//                },
+//                {
+//                    Name: "Password",
+//                    Value: d[3]
+//                },
+//                {
+//                    Name: "User_Role",
+//                    Value: d[4]
+//                },
+//                {
+//                    Name: "Date_Created",
+//                    Value: d[5]
+//                },
+//                {
+//                    Name: "Created_By",
+//                    Value: d[6]
+//                },
+//                {
+//                    Name: "Date_Last_Modified",
+//                    Value: d[7]
+//                },
+//                {
+//                    Name: "Last_Modified_By",
+//                    Value: d[8]
+//                },
+//                {
+//                    Name: "Status",
+//                    Value: d[9]
+//                },
+//                {
+//                    Name: "Last_Login_Time",
+//                    Value: d[10]
+//                }
+//            ]
+
             }
+
+
+
         });
 
-        $("#deleteRowButton").on("click", function () {
-            if (confirm("Are you sure you would like to delete this row(s)?")) {
-                // alert(d);
-                // alert("Row: " + rowSelected[1].Name);
-                console.log(rowSelected[2].Name);
-                console.log(rowSelected[2].Value);
+        $("#deleteButton").on("click", function () {
+            if (confirm("Are you sure you would like to delete this row(s)?") === true) {
+//                 alert(d);
+//                 alert("Row: " + rowSelected[1].Name);
+//                alert(rowSelected[2].Name);
+//                alert(rowSelected[2].Value);
 
                 for (var i = 0; i < rowSelected.length; i++) {
                     if (i === 0) {
-                        tstring += rowSelected[i].Name + "=" + rowSelected[i].Value;
+                        dtstring += rowSelected[i].Name + "=" + rowSelected[i].Value;
                     } else {
-                        tstring += "&" + rowSelected[i].Name + "=" + rowSelected[i].Value;
+                        dtstring += "&" + rowSelected[i].Name + "=" + rowSelected[i].Value;
                     }
 
                 }
 
-                console.log("tstring for loop: " + tstring);
+                console.log("dtstring for loop: " + dtstring);
 
                 $.ajax({
                     url: '/deleteRow',
-                    type: 'POST',
+                    type: 'GET',
                     dataType: 'json',
                     async: false,
-                    data: tstring,
+                    data: dtstring,
                     success: function (result) {
                         window.location.replace('/userHome')
                     }
@@ -396,12 +448,9 @@
 
         var queryStr = "firstName=" + firstName + "&lastName=" + lastName + "&startDate=" + startDate + "&endDate=" + endDate + "&filter1=" + filter1 + "&filter2=" + filter2 + "&filter3=" + filter3 + "&content1=" + content1 + "&content2=" + content2 + "&content3=" + content3;
         //alert(queryStr);
-        if (firstName || lastName || startDate || endDate || filter1 || filter2 || filter3) {
-            table.clear();
-            queryAndDisplay(queryStr);
-        } else {
-            queryAndDisplay(queryStr);
-        }
+        table.clear();
+        table.draw();
+        queryAndDisplay(queryStr);
     }
 
     var queryAndDisplay = function (querystr) {
@@ -413,43 +462,81 @@
             async: false,
             data: querystr,
             success: function (resp) {
-                //alert(resp[0].transactionID);
-                for (var i = 0; i < resp.length; i++) {
-                    table.row.add( [
-                        resp[i].transactionID,
-                        resp[i].date,
-                        resp[i].trapOwner,
-                        resp[i].locationName,
-                        resp[i].locationType,
-                        resp[i].latitude,
-                        resp[i].longitude,
-                        resp[i].country,
-                        resp[i].province,
-                        resp[i].district,
-                        resp[i].croppingSystem,
-                        resp[i].rota_inter_crop,
-                        resp[i].maizeVariety,
-                        resp[i].plantingDate,
-                        resp[i].fieldSize,
-                        resp[i].healthOfMaize,
-                        resp[i].lastRainDate,
-                        resp[i].entryType,
-                        resp[i].pestsPresent,
-                        resp[i].fawStage,
-                        resp[i].earlyDamageLevel,
-                        resp[i].lateDamageLevel,
-                        resp[i].naturalEnemies,
-                        resp[i].deadLarvae,
-                        resp[i].percentInfested,
-                        resp[i].control,
-                        resp[i].pesticide,
-                        resp[i].pestPhoto,
-                        resp[i].damagePhoto
-                    ] ).draw( false );
+
+                if (!resp[0].errStatus) {
+                    for (var i = 0; i < resp.length; i++) {
+                        table.row.add([
+                            resp[i].transactionID,
+                            resp[i].date,
+                            resp[i].trapOwner,
+                            resp[i].locationName,
+                            resp[i].locationType,
+                            resp[i].latitude,
+                            resp[i].longitude,
+                            resp[i].country,
+                            resp[i].province,
+                            resp[i].district,
+                            resp[i].croppingSystem,
+                            resp[i].rota_inter_crop,
+                            resp[i].maizeVariety,
+                            resp[i].plantingDate,
+                            resp[i].fieldSize,
+                            resp[i].healthOfMaize,
+                            resp[i].lastRainDate,
+                            resp[i].entryType,
+                            resp[i].pestsPresent,
+                            resp[i].fawStage,
+                            resp[i].earlyDamageLevel,
+                            resp[i].lateDamageLevel,
+                            resp[i].naturalEnemies,
+                            resp[i].deadLarvae,
+                            resp[i].percentInfested,
+                            resp[i].control,
+                            resp[i].pesticide,
+                            resp[i].pestPhoto,
+                            resp[i].damagePhoto
+                        ]).draw(false);
+                    }
                 }
             }
         });
     }
+
+
+
+    $("#editButton").on("click", function () {
+        if (confirm("Please make sure to only select ONE of the users to edit.") === true) {
+            // alert(d);
+            // alert("Row: " + rowSelected[1].Name);
+            //alert(rowSelected[2].Name);
+            //alert(rowSelected[2].Value);
+            var tstring = "";
+
+            for (var i = 0; i < rowSelected.length; i++) {
+                if (i === 0) {
+                    tstring += rowSelected[i].Name + "=" + rowSelected[i].Value;
+                } else {
+                    tstring += "&" + rowSelected[i].Name + "=" + rowSelected[i].Value;
+                }
+
+            }
+
+            alert("tstring for loop: " + tstring);
+
+            $.ajax({
+                url: '/sendEditData',
+                type: 'GET',
+                dataType: 'json',
+                async: false,
+                data: tstring,
+                success: function (result) {
+                    window.location.replace('/editData')
+                }
+            })
+        } else {
+            return false;
+        }
+    });
 </script>
 </body>
 </html>

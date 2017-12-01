@@ -16,6 +16,8 @@
     <script src="//unpkg.com/flatpickr"></script>
 
     <style>
+        body 		{ padding-top:80px; word-wrap:break-word; }
+
         #Username{
             position:relative;
             left:990px;
@@ -86,8 +88,12 @@
 
         </ul>
     </div>
-    <a href="/userHome" class="btn btn-default btn-lg" id="class1">User Home</a>
-    <a href="/newEntry" class="btn btn-default btn-lg" id="class2">New Entry</a>
+    <br><br>
+    <div class="page-header text-center">
+        <h1><span class="fa fa-anchor"></span> FAW Project -  Data History </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
+        <a href="/userHome" class="btn btn-default btn-lg">User Home</a>
+        <a href="/newEntry" class="btn btn-default btn-lg">New Entry</a>
+    </div>
 </div>
 <br><br><br><br>
 <div class="container">
@@ -199,7 +205,7 @@
     <div class="center">
         <button id="button" class="btn btn-primary btn-sm" type="button" onclick="query()">Filter</button>
         <!--<button id="button" class="btn btn-primary btn-sm" type="button">Edit</button>-->
-        <!--<button id="button" class="btn btn-primary btn-sm" type="button">Delete</button>-->
+        <button id="deleteButton" class="btn btn-primary btn-sm" type="button">Delete</button>
     </div>
     <br>
     <div class="center">
@@ -287,7 +293,6 @@
     var table = $("#dataDisplay").DataTable();
     var UserRole = "<%= user.userrole %>";
     var DropMenu;
-    var d;
     var rowSelected = [];
 
     $(document).ready(function(){
@@ -333,13 +338,27 @@
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
             } else {
-//                    table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
 
-                d = table.row(this).data();
+                var d = table.row(this).data();
                 d.counter++;
                 table.row(this).data(d).draw();
+
+                var thArray = [];
+
+                $('#dataDisplay > thead > tr > th').each(function(){
+                    thArray.push($(this).text())
+                })
+
+
+
+                for (var i = 0; i < thArray.length; i++) {
+                    rowSelected[i] = {};
+                    rowSelected[i].Name = thArray[i];
+                    rowSelected[i].Value = d[i];
+                }
             }
+//            console.log("the array thing: " + thArray);
         });
     });
 
