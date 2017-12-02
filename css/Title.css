@@ -1,0 +1,38 @@
+.banner{
+    position:relative;
+    width: 100%;
+}
+.floating-Box{
+    display: inline;
+}
+.floatingBox {
+    display: inline-block;
+    /*width:350px;*/
+}
+.button{
+    width:8%;
+}
+table{
+    overflow-x: auto;
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+table, th, td{
+    border: 1px solid #cdcdcd;
+    text-align:center;
+}
+table th, table td{
+    padding: 10px;
+    text-align: left;
+}
+table::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, .5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+table::-webkit-scrollbar {
+    -webkit-appearance: none;
+    height: 7px;
+}
