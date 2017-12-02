@@ -285,6 +285,7 @@
     var UserRole = "<%= user.userrole %>";
     var DropMenu;
     var d;
+    var transactionID = [];
 
     $(document).ready(function(){
         $(".add-row").click(function(){
@@ -328,12 +329,17 @@
         $('#dataDisplay tbody').on('click', 'tr', function () {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
+                d = table.row(this).data();
+                var index = transactionID.indexOf(d[0]);
+                transactionID.splice(index, 1);
             } else {
                 $(this).addClass('selected');
 
                 d = table.row(this).data();
                 d.counter++;
                 table.row(this).data(d).draw();
+
+                transactionID.push(d[0]);
 
                 var thArray = [];
 
@@ -346,58 +352,7 @@
                     rowSelected[i].Name = thArray[i];
                     rowSelected[i].Value = d[i];
                 }
-
-//            rowSelected = [
-//                {
-//                    Name: "First_Name",
-//                    Value: d[0]
-//                },
-//                {
-//                    Name: "Last_Name",
-//                    Value: d[1]
-//                },
-//                {
-//                    Name: "Username",
-//                    Value: d[2]
-//                },
-//                {
-//                    Name: "Password",
-//                    Value: d[3]
-//                },
-//                {
-//                    Name: "User_Role",
-//                    Value: d[4]
-//                },
-//                {
-//                    Name: "Date_Created",
-//                    Value: d[5]
-//                },
-//                {
-//                    Name: "Created_By",
-//                    Value: d[6]
-//                },
-//                {
-//                    Name: "Date_Last_Modified",
-//                    Value: d[7]
-//                },
-//                {
-//                    Name: "Last_Modified_By",
-//                    Value: d[8]
-//                },
-//                {
-//                    Name: "Status",
-//                    Value: d[9]
-//                },
-//                {
-//                    Name: "Last_Login_Time",
-//                    Value: d[10]
-//                }
-//            ]
-
             }
-
-
-
         });
 
         $("#deleteButton").on("click", function () {
@@ -407,27 +362,29 @@
 //                alert(rowSelected[2].Name);
 //                alert(rowSelected[2].Value);
 
-                for (var i = 0; i < rowSelected.length; i++) {
-                    if (i === 0) {
-                        dtstring += rowSelected[i].Name + "=" + rowSelected[i].Value;
-                    } else {
-                        dtstring += "&" + rowSelected[i].Name + "=" + rowSelected[i].Value;
+                var transactionIDStr = "transactionIDStr=";
+                for (var i = 0; i < transactionID.length; i++) {
+                    transactionIDStr += transactionID[i] + ",";
+                    if (i === transactionID.length - 1) {
+                        transactionIDStr = transactionIDStr.substring(0, transactionIDStr.length - 1);
+//                            alert(usernameStr);
+                        update();
                     }
-
                 }
 
-                console.log("dtstring for loop: " + dtstring);
+                function update() {
 
-                $.ajax({
-                    url: '/deleteRow',
-                    type: 'GET',
-                    dataType: 'json',
-                    async: false,
-                    data: dtstring,
-                    success: function (result) {
-                        window.location.replace('/userHome')
-                    }
-                })
+                    $.ajax({
+                        url: '/deleteRow',
+                        type: 'GET',
+                        dataType: 'json',
+                        async: false,
+                        data: transactionIDStr,
+                        success: function (result) {
+                            window.location.replace('/userHome')
+                        }
+                    })
+                }
             } else {
                 return false;
             }
