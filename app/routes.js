@@ -6,6 +6,7 @@ var connection = mysql.createConnection(config.commondb_connection);
 var uploadPath = config.Upload_Path;
 var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt-nodejs');
+var fs = require('fs');
 
 var filePathName = "";
 var filePath;
@@ -469,12 +470,16 @@ module.exports = function (app, passport) {
     // edit on homepage
     var editData;
     app.get('/sendEditData', isLoggedIn, function(req, res) {
+        console.log(req.query);
         editData = req.query;
-        //res.json({"error": false, "message": "/editUser"});
+        console.log("ABC");
+        res.json({"error": false, "message": "/editData"});
     });
 
     app.get('/editData', isLoggedIn, function(req, res) {
+        console.log("render");
         res.render('dataEdit.ejs', {
+            user: req.user,
             data: editData, // get the user out of session and pass to template
             message: req.flash('Data Entry Message')
         });
@@ -1010,9 +1015,32 @@ module.exports = function (app, passport) {
                 //res.send("Error uploading file.");
             } else {
                 console.log("Success:" + filePathName);
-                res.json({"error": false, "message": filePathName});
                 filePath = filePathName;
-                filePathName = "";
+                if (!filePathName){
+                    filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
+                    res.json({"error": false, "message": filePathName});
+                    filePathName = "";
+                } else {
+                    var error = false;
+                    filePath = filePathName;
+                    var files = (editData.Photo_of_Pest + ";" + editData.Photo_of_Damage).split(";");
+                    for (var i = 0; i < files.length; i++) {
+                        fs.unlink(files[i],function(err){
+                            if(err) {
+                                error = true;
+                                res.json({"error": true, "message": "Upload Fail !"});
+                                filePathName = "";
+                            }
+                        });
+
+                        if (i === files.length - 1 && error === false) {
+                            res.json({"error": false, "message": filePathName});
+                            filePathName = "";
+                        }
+                    }
+                }
+                // res.json({"error": false, "message": filePathName});
+                // filePathName = "";
                 //res.send("File is uploaded");
             }
         });

@@ -474,7 +474,7 @@
         $("#mainCrop").remove();
         $("#otherMainCrop").remove();
         if (document.getElementById("cropSystem").value !== "SEASONAL" || document.getElementById("cropSystem").value === "") {
-            var mainCropList = ["MAIZE", "RICE", "SORGHUM", "VEGETABLES", "OTHER"];
+            var mainCropList = ["RICE", "SORGHUM", "VEGETABLES", "OTHER"];
             var mainCropTitle = $("#mainCropTitle");
             var mainCropSelect = $("<select class='clearGen' id='mainCrop' name='rota_inter_crop' onchange='otherMainCrop()' required>");
             mainCropTitle.append(mainCropSelect);
