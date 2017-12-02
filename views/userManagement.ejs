@@ -133,37 +133,37 @@
 
         <table id="dataDisplay" cellspacing="0" width="100%">
             <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Username</th>
-                <th>Password</th>
-                <th>User Role</th>
-                <th>Date Created</th>
-                <th>Created By</th>
-                <th>Date Last Modified</th>
-                <th>Last Modified By</th>
-                <th>Status</th>
-                <th>Last Login Time</th>
-            </tr>
+                <tr>
+                    <th>First_Name</th>
+                    <th>Last_Name</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>User_Role</th>
+                    <th>Date_Created</th>
+                    <th>Created_By</th>
+                    <th>Date_Last_Modified</th>
+                    <th>Last_Modified_By</th>
+                    <th>Status</th>
+                    <th>Last_Login_Time</th>
+                </tr>
             </thead>
             <tbody>
 
             </tbody>
             <tfoot>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Username</th>
-                <th>Password</th>
-                <th>User Role</th>
-                <th>Date Created</th>
-                <th>Created By</th>
-                <th>Date Last Modified</th>
-                <th>Last Modified By</th>
-                <th>Status</th>
-                <th>Last Login Time</th>
-            </tr>
+                <tr>
+                    <th>First_Name</th>
+                    <th>Last_Name</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>User_Role</th>
+                    <th>Date_Created</th>
+                    <th>Created_By</th>
+                    <th>Date_Last_Modified</th>
+                    <th>Last_Modified_By</th>
+                    <th>Status</th>
+                    <th>Last_Login_Time</th>
+                </tr>
             </tfoot>
         </table>
     </div>
@@ -171,13 +171,16 @@
     <script type="text/javascript">
 
         var d;
+        var rowData = {};
         var rowSelected = [];
+        var querystr = "";
         var queryString1;
         var queryString2;
         var table = $('#dataDisplay').DataTable();
         var tstring = "";
         var UserRole = "<%= user.userrole %>";
         var DropMenu;
+        var username = [];
 
         $(document).ready(function() {
             $(function () {
@@ -205,6 +208,9 @@
             $('#dataDisplay tbody').on('click', 'tr', function () {
                 if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
+                    d = table.row(this).data();
+                    var index = username.indexOf(d[2]);
+                    username.splice(index, 1);
                 } else {
 //                    table.$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
@@ -213,66 +219,28 @@
                     d.counter++;
                     table.row(this).data(d).draw();
 
-                    rowSelected = [
-                        {
-                            Name: "First_Name",
-                            Value: d[0]
-                        },
-                        {
-                            Name: "Last_Name",
-                            Value: d[1]
-                        },
-                        {
-                            Name: "Username",
-                            Value: d[2]
-                        },
-                        {
-                            Name: "Password",
-                            Value: d[3]
-                        },
-                        {
-                            Name: "User_Role",
-                            Value: d[4]
-                        },
-                        {
-                            Name: "Date_Created",
-                            Value: d[5]
-                        },
-                        {
-                            Name: "Created_By",
-                            Value: d[6]
-                        },
-                        {
-                            Name: "Date_Last_Modified",
-                            Value: d[7]
-                        },
-                        {
-                            Name: "Last_Modified_By",
-                            Value: d[8]
-                        },
-                        {
-                            Name: "Status",
-                            Value: d[9]
-                        },
-                        {
-                            Name: "Last_Login_Time",
-                            Value: d[10]
-                        }
-                    ]
+                    username.push(d[2]);
 
+                    var thArray = [];
+
+                    $('#dataDisplay > thead > tr > th').each(function () {
+                        thArray.push($(this).text())
+                    })
+
+                    console.log("thArray length: " + thArray.length);
+
+                    for (var i = 0; i < thArray.length; i++) {
+                        rowSelected[i] = {};
+                        rowSelected[i].Name = thArray[i];
+                        rowSelected[i].Value = d[i];
+                    }
                 }
-
-
 
             });
 
 
             $("#editUserButton").on("click", function () {
                 if (confirm("Please make sure to only select ONE of the users to edit.") === true) {
-                    // alert(d);
-                    // alert("Row: " + rowSelected[1].Name);
-                    console.log(rowSelected[2].Name);
-                    console.log(rowSelected[2].Value);
 
                     for (var i = 0; i < rowSelected.length; i++) {
                         if (i === 0) {
@@ -282,8 +250,7 @@
                         }
 
                     }
-
-                    console.log("tstring for loop: " + tstring);
+//                    console.log("tstring for loop: " + tstring);
 
                         $.ajax({
                             url: '/editUserQuery',
@@ -302,33 +269,34 @@
 
 
             $("#suspendUserButton").on("click", function () {
+//                alert(username);
                 if (confirm("Are you sure you would like to suspend this user(s)?")) {
-                    // alert(d);
-                    // alert("Row: " + rowSelected[1].Name);
-                    console.log(rowSelected[2].Name);
-                    console.log(rowSelected[2].Value);
-
-                    for (var i = 0; i < rowSelected.length; i++) {
-                        if (i === 0) {
-                            tstring += rowSelected[i].Name + "=" + rowSelected[i].Value;
-                        } else {
-                            tstring += "&" + rowSelected[i].Name + "=" + rowSelected[i].Value;
+                    var usernameStr = "usernameStr=";
+                    for (var i = 0; i < username.length; i++) {
+                        usernameStr += username[i] + ",";
+                        if (i === username.length - 1) {
+                            usernameStr = usernameStr.substring(0, usernameStr.length - 1);
+//                            alert(usernameStr);
+                            update();
                         }
-
                     }
 
-                    console.log("tstring for loop: " + tstring);
-
-                    $.ajax({
-                        url: '/suspendUser',
-                        type: 'GET',
-                        dataType: 'json',
-                        async: false,
-                        data: tstring,
-                        success: function (result) {
-                            window.location.replace('/userManagement')
-                        }
-                    })
+                    function update() {
+                        $.ajax({
+                            url: '/suspendUser',
+                            type: 'GET',
+                            dataType: 'json',
+                            async: false,
+                            data: usernameStr,
+                            success: function (result) {
+                                if (!result.error) {
+                                    window.location.replace('/userManagement')
+                                } else {
+                                    alert(result.message);
+                                }
+                            }
+                        })
+                    }
                 } else {
                     return false;
                 }
