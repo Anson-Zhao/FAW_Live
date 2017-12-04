@@ -6,6 +6,7 @@ var connection = mysql.createConnection(config.commondb_connection);
 var uploadPath = config.Upload_Path;
 var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt-nodejs');
+var fs = require('fs');
 
 var filePathName = "";
 var filePath;
@@ -396,85 +397,144 @@ module.exports = function (app, passport) {
     app.get('/suspendUser', isLoggedIn, function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
         var today = new Date();
-        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-        var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        //d.getUTCFullYear() + "-" + ('0' + (d.getUTCMonth() + 1)).slice(-2) + "-" + ('0' + d.getUTCDate()).slice(-2);
+        var date = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+        var time2 = ('0' + (today.getHours())).slice(-2) + ":" + ('0' + (today.getMinutes())).slice(-2) + ":" + ('0' + (today.getSeconds())).slice(-2);
         var dateTime = date + ' ' + time2;
+        console.log("taergerhertwer: " + req.query.Username);
+        // var suspendedUser = {
+        //     username: req.query.Username,
+        //     modifiedUser: req.user.username
+        // };
 
-        var suspendedUser = {
-            username: req.query.Username,
-            modifiedUser: req.user.username
-        };
+        var username = req.query.usernameStr.split(",");
+        var statusUpdate = "UPDATE Users SET modifiedUser = '" + req.user.username + "', dateModified = '" + dateTime + "', status = 'Suspended'";
 
-        var statusUpdate2 = "UPDATE Users SET modifiedUser = ?, dateModified = ?, status = 'Suspended' WHERE username = ?";
-
-        connection.query(statusUpdate2,[suspendedUser.modifiedUser, dateTime, suspendedUser.username],function(err, rows) {
-            // console.log(dateTime, req.user.username);
-
-            if (err) {
-                console.log(err);
-                res.json({"error": true, "message": "Suspension failed!"});
+        for (var i = 0; i < username.length; i++) {
+            if (i === 0) {
+                statusUpdate += " WHERE username = '" + username[i] + "'";
             } else {
-                res.json({"error": false, "message": "/userManagement"});
-                // render the page and pass in any flash data if it exists
+                statusUpdate += " OR username = '" + username[i] + "'";
+                if (i === username.length - 1) {
+                    update();
+                }
             }
-        })
+        }
+
+        //var statusUpdate2 = "UPDATE Users SET modifiedUser = ?, dateModified = ?, status = 'Suspended' WHERE username = '" + suspendedUser.username +"' ";
+        function update() {
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            console.log("Query Statement: " + statusUpdate);
+
+            connection.query(statusUpdate, function (err, rows) {
+                // console.log(dateTime, req.user.username);
+
+                if (err) {
+                    console.log(err);
+                    res.json({"error": true, "message": "Suspension failed!"});
+                } else {
+                    res.json({"error": false, "message": "/userManagement"});
+                    // render the page and pass in any flash data if it exists
+                }
+            })
+        }
     });
 
     app.get('/deleteRow', isLoggedIn, function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
         console.log("transactionID: " + req.query.Transaction_ID);
 
-        var deleteRow = {
-            transactionID: req.query.Transaction_ID
-        };
+        var transactionID = req.query.transactionIDStr.split(",");
+        var deleteStatementGeneral = "UPDATE General_Form SET status = 'Deleted'";
+        var deleteStatementDetailed = "UPDATE Detailed_Form SET status = 'Deleted'";
 
-        var deleteStatement = "UPDATE General_Form, Detailed_Form SET General_Form.status = 'Deleted', Detailed_Form.status = 'Deleted' WHERE General_Form.transactionID = ? AND Detailed_Form.transactionID = ?";
-
-        connection.query(deleteStatement,[deleteRow.transactionID, deleteRow.transactionID],function(err, rows) {
-            // console.log(dateTime, req.user.username);
-
-            if (err) {
-                console.log(err);
-                res.json({"error": true, "message": "Deletion failed!"});
+        for (var i = 0; i < transactionID.length; i++) {
+            if (i === 0) {
+                deleteStatementGeneral += " WHERE transactionID = '" + transactionID[i] + "'";
+                deleteStatementDetailed += " WHERE transactionID = '" + transactionID[i] + "'";
             } else {
-                res.json({"error": false, "message": "/userHome"});
-                // render the page and pass in any flash data if it exists
+                deleteStatementGeneral += " OR transactionID = '" + transactionID[i] + "'";
+                deleteStatementDetailed += " OR transactionID = '" + transactionID[i] + "'";
+
+                if (i === transactionID.length - 1) {
+                    deleteStatementGeneral += ";";
+                    deleteStatementDetailed += ";";
+                    update2();
+                }
             }
-        })
+        }
+        function update2() {
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            console.log("Query Statement1: " + deleteStatementGeneral + "Query Statement2: " + deleteStatementDetailed);
+
+            connection.query(deleteStatementGeneral + deleteStatementDetailed, function (err, rows) {
+                // console.log(dateTime, req.user.username);
+
+                if (err) {
+                    console.log(err);
+                    res.json({"error": true, "message": "Deletion failed!"});
+                } else {
+                    res.json({"error": false, "message": "/userHome"});
+                    // render the page and pass in any flash data if it exists
+                }
+            })
+        }
     });
 
     app.get('/recoverRow', isLoggedIn, function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
         console.log("transactionID: " + req.query.Transaction_ID);
 
-        var recoverRow = {
-            transactionID: req.query.Transaction_ID
-        };
+        var transactionID = req.query.transactionIDStr.split(",");
+        var recoverStatementGeneral = "UPDATE General_Form SET status = 'Active'";
+        var recoverStatementDetailed = "UPDATE Detailed_Form SET status = 'Active'";
 
-        var deleteStatement = "UPDATE General_Form, Detailed_Form SET General_Form.status = 'Active', Detailed_Form.status = 'Active' WHERE General_Form.transactionID = ? AND Detailed_Form.transactionID = ?";
-
-        connection.query(deleteStatement,[recoverRow.transactionID, recoverRow.transactionID],function(err, rows) {
-            // console.log(dateTime, req.user.username);
-
-            if (err) {
-                console.log(err);
-                res.json({"error": true, "message": "Recovery failed!"});
+        for (var i = 0; i < transactionID.length; i++) {
+            if (i === 0) {
+                recoverStatementGeneral += " WHERE transactionID = '" + transactionID[i] + "'";
+                recoverStatementDetailed += " WHERE transactionID = '" + transactionID[i] + "'";
             } else {
-                res.json({"error": false, "message": "/userHome"});
-                // render the page and pass in any flash data if it exists
+                recoverStatementGeneral += " OR transactionID = '" + transactionID[i] + "'";
+                recoverStatementDetailed += " OR transactionID = '" + transactionID[i] + "'";
+
+                if (i === transactionID.length - 1) {
+                    recoverStatementGeneral += ";";
+                    recoverStatementDetailed += ";";
+                    update3();
+                }
             }
-        })
+        }
+        function update3() {
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            console.log("Query Statement1: " + recoverStatementGeneral + "Query Statement2: " + recoverStatementDetailed);
+
+            connection.query(recoverStatementGeneral + recoverStatementDetailed, function (err, rows) {
+                // console.log(dateTime, req.user.username);
+
+                if (err) {
+                    console.log(err);
+                    res.json({"error": true, "message": "Recovery failed!"});
+                } else {
+                    res.json({"error": false, "message": "/userHome"});
+                    // render the page and pass in any flash data if it exists
+                }
+            })
+        }
     });
 
     // edit on homepage
     var editData;
     app.get('/sendEditData', isLoggedIn, function(req, res) {
+        console.log(req.query);
         editData = req.query;
-        //res.json({"error": false, "message": "/editUser"});
+        console.log("ABC");
+        res.json({"error": false, "message": "/editData"});
     });
 
     app.get('/editData', isLoggedIn, function(req, res) {
+        console.log("render");
         res.render('dataEdit.ejs', {
+            user: req.user,
             data: editData, // get the user out of session and pass to template
             message: req.flash('Data Entry Message')
         });
@@ -1010,9 +1070,32 @@ module.exports = function (app, passport) {
                 //res.send("Error uploading file.");
             } else {
                 console.log("Success:" + filePathName);
-                res.json({"error": false, "message": filePathName});
                 filePath = filePathName;
-                filePathName = "";
+                if (!filePathName){
+                    filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
+                    res.json({"error": false, "message": filePathName});
+                    filePathName = "";
+                } else {
+                    var error = false;
+                    filePath = filePathName;
+                    var files = (editData.Photo_of_Pest + ";" + editData.Photo_of_Damage).split(";");
+                    for (var i = 0; i < files.length; i++) {
+                        fs.unlink(files[i],function(err){
+                            if(err) {
+                                error = true;
+                                res.json({"error": true, "message": "Upload Fail !"});
+                                filePathName = "";
+                            }
+                        });
+
+                        if (i === files.length - 1 && error === false) {
+                            res.json({"error": false, "message": filePathName});
+                            filePathName = "";
+                        }
+                    }
+                }
+                // res.json({"error": false, "message": filePathName});
+                // filePathName = "";
                 //res.send("File is uploaded");
             }
         });
