@@ -578,10 +578,19 @@ module.exports = function (app, passport) {
     });
 
     app.get('/filterQuery', isLoggedIn, function (req, res) {
+        console.log("filterQ: " + req.query);
 
-        var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Active' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Active'";
+        // var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Active' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Active'";
+        var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID";
         // adj: checking
         var myQuery = [
+            {
+                fieldName: "statusDel",
+                fieldVal: req.query.status,
+                dbCol: "statusDel",
+                op: " = '",
+                adj: req.query.status
+            },
             {
                 fieldName: "firstName",
                 fieldVal: req.query.firstName,
@@ -937,13 +946,13 @@ module.exports = function (app, passport) {
             } else {
                 console.log("Success:" + filePathName);
                 filePath = filePathName;
-                if (!filePathName){
-                    filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
+                if (!!filePathName){
+                    // filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
                     res.json({"error": false, "message": filePathName});
                     filePathName = "";
                 } else {
                     var error = false;
-                    filePath = filePathName;
+                    filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
                     var files = (editData.Photo_of_Pest + ";" + editData.Photo_of_Damage).split(";");
                     for (var i = 0; i < files.length; i++) {
                         fs.unlink(files[i],function(err){
