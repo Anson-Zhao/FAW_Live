@@ -10,6 +10,9 @@
     <script src="//unpkg.com/flatpickr"></script>
     <style>
         body 		{ padding-top:80px; word-wrap:break-word; }
+        .floating-Box{
+            display: inline;
+        }
     </style>
 
 </head>
@@ -28,15 +31,15 @@
             <form action="/login" method="post">
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" class="form-control" name="username">
+                    <input type="email" class="form-control" name="username">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <input type="password" class="form-control" name="password">
                 </div>
                 <div class="form-group">
-                    <label>Remember Me</label>
-                    <input type="checkbox" class="form-control" name="remember" value="yes">
+                    <label class="floating-Box">Remember Me</label>
+                    <input type="checkbox" class="form-control floating-Box" name="remember" value="yes">
                 </div>
                 <div class="form-group" hidden>
                     <label>Login Time</label>
@@ -50,9 +53,11 @@
                 <button type="submit" class="btn btn-warning btn-lg"> Login </button>
 
             </form>
+            <br>
 
             <!--<p>Need an account? <a href="/signup"> Signup </a></p>-->
             <!--<p>Or go <a href="/">home</a>.</p>-->
+            <p><a href="/forgotPass"> Forgot password? </a></p>
         </div>
     </div>
     <script>

@@ -93,6 +93,7 @@ module.exports = function (app, passport) {
     // we will want this protected so you have to be logged in to visit
     // we will use route middleware to verify this (the isLoggedIn function)
 
+
     // Show user profile page
     app.get('/userProfile', isLoggedIn, function (req, res) {
         res.render('userProfile.ejs', {user: req.user});
@@ -207,6 +208,11 @@ module.exports = function (app, passport) {
                 });
             }
         });
+    });
+
+    app.get('/forgotPass', function (req, res) {
+        res.render('forgotPassword.ejs', {message: req.flash('forgotPassMessage')});
+
     });
 
     // Filter by search criteria

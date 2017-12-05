@@ -33,7 +33,7 @@
 	<form onsubmit="return checkForm()" action="/signup" method="post">
 		<div class="form-group">
 			<label>Username</label>
-			<input type="text" class="form-control" name="username">
+			<input type="email"class="form-control" name="username">
 		</div>
 		<div class="form-group">
 			<label>First Name</label>
@@ -65,7 +65,7 @@
 			<input type="text" id="status" class="form-control" name="status" value="Never Logged In" readonly >
 		</div>
 
-		<button type="submit" class="btn btn-warning btn-mg"> Add User </button>
+		<button type="submit" onclick="checkEmail()" class="btn btn-warning btn-mg"> Add User </button>
 		<a href="/userManagement" class="btn btn-warning btn-mg">Cancel</a>
 	</form>
 
@@ -76,7 +76,7 @@
 </div>
 <script>
     $(document).ready(function() {
-        $(function() {
+        $(function () {
             /*flatpickr(".date", {
                 enableTime: true,
                 dateFormat: "Y-m-d H:i:S",
@@ -89,6 +89,40 @@
         var dateTime = date + ' ' + time2;
         document.getElementById("DATE").value = dateTime;
     });
+//
+//        function checkEmail() {
+//
+//            var email = document.getElementById('username');
+//            var filter = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+[^<>()\.,;:\s@\"]{2,})$/;
+//
+//            if (!filter.test(email.value)) {
+//                alert('Please provide a valid email address');
+//                email.focus;
+//                return false;
+//            }
+//        }
+//    });
+
+
+//    function validateEmail(email) {
+//        var re =/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+[^<>()\.,;:\s@\"]{2,})$/;
+//        return re.test(email);
+//    }
+//
+//    function validate() {
+//        $("#result").text("");
+//        var email = $("#email").val();
+//        if (validateEmail(email)) {
+//            $("#result").text(email + " is valid :)");
+//            $("#result").css("color", "green");
+//        } else {
+//            $("#result").text(email + " is not valid :(");
+//            $("#result").css("color", "red");
+//        }
+//        return false;
+//    }
+//
+//    $("#validate").bind("click", validate);
 </script>
 </body>
 </html>
