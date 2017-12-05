@@ -6,6 +6,7 @@ var connection = mysql.createConnection(config.commondb_connection);
 var uploadPath = config.Upload_Path;
 var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt-nodejs');
+var fs = require('fs');
 
 var filePathName = "";
 var filePath;
@@ -530,12 +531,16 @@ module.exports = function (app, passport) {
     // edit on homepage
     var editData;
     app.get('/sendEditData', isLoggedIn, function(req, res) {
+        console.log(req.query);
         editData = req.query;
-        //res.json({"error": false, "message": "/editUser"});
+        console.log("ABC");
+        res.json({"error": false, "message": "/editData"});
     });
 
     app.get('/editData', isLoggedIn, function(req, res) {
+        console.log("render");
         res.render('dataEdit.ejs', {
+            user: req.user,
             data: editData, // get the user out of session and pass to template
             message: req.flash('Data Entry Message')
         });
@@ -578,112 +583,20 @@ module.exports = function (app, passport) {
         });
     });
 
-    // // user home query
-    // app.get('/filterQuery', isLoggedIn, function (req, res) {
-    //
-    //     //console.log("dQ: " + req.query.dateCreatedFrom);
-    //     // connection.query('USE ' + config.Login_db);
-    //
-    //     var queryStat = "SELECT General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID WHERE Cr_UN = '" + req.user.username + "'";
-    //     // adj: checking
-    //     var myQuery = [
-    //         {
-    //             fieldName: "startDate",
-    //             fieldVal: req.query.startDate,
-    //             dbCol: "date",
-    //             op: " >= '",
-    //             adj: req.query.startDate
-    //         },
-    //         {
-    //             fieldName: "endDate",
-    //             fieldVal: req.query.endDate,
-    //             dbCol: "date",
-    //             op: " <= '",
-    //             adj: req.query.endDate
-    //         },
-    //         {
-    //             fieldName: "field1",
-    //             fieldVal: req.query.content1,
-    //             dbCol: req.query.filter1,
-    //             op: " = '",
-    //             adj: req.query.content1
-    //         },
-    //         {
-    //             fieldName: "field2",
-    //             fieldVal: req.query.content2,
-    //             dbCol: req.query.filter2,
-    //             op: " = '",
-    //             adj: req.query.content2
-    //         },
-    //         {
-    //             fieldName: "field3",
-    //             fieldVal: req.query.content3,
-    //             dbCol: req.query.filter3,
-    //             op: " = '",
-    //             adj: req.query.content3
-    //         }
-    //     ];
-    //
-    //     function filterQuery() {
-    //         res.setHeader("Access-Control-Allow-Origin", "*");
-    //         console.log("Query Statement: " + queryStat);
-    //
-    //         connection.query(queryStat, function (err, results, fields) {
-    //
-    //             var status = [{errStatus: ""}];
-    //
-    //             if (err) {
-    //                 console.log(err);
-    //                 status[0].errStatus = "fail";
-    //                 res.send(status);
-    //                 res.end();
-    //             } else if (results.length === 0) {
-    //                 status[0].errStatus = "no data entry";
-    //                 res.send(status);
-    //                 res.end();
-    //             } else {
-    //                 var JSONresult = JSON.stringify(results, null, "\t");
-    //                 //console.log(JSONresult);
-    //                 res.send(JSONresult);
-    //                 res.end();
-    //             }
-    //         });
-    //     }
-    //
-    //     for (var i = 0; i < myQuery.length; i++) {
-    //         //console.log("i = " + i);
-    //         //console.log("field Value: " + !!myQuery[i].fieldVal);
-    //         if (!!myQuery[i].adj) {
-    //             if (i === myQuery.length - 1) {
-    //                 if (!!myQuery[i].fieldVal) {
-    //                     queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-    //                     filterQuery()
-    //                 } else {
-    //                     queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
-    //                     filterQuery()
-    //                 }
-    //             } else {
-    //                 if (!!myQuery[i].fieldVal) {
-    //                     queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-    //                 } else {
-    //                     queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
-    //                 }
-    //             }
-    //         } else {
-    //             if (i === myQuery.length - 1) {
-    //                 filterQuery()
-    //             }
-    //         }
-    //     }
-    // });
-
     app.get('/filterQuery', isLoggedIn, function (req, res) {
-        //console.log("dQ: " + req.query.dateCreatedFrom);
-        // connection.query('USE ' + config.Login_db);
+        console.log("filterQ: " + req.query);
 
-        var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Active' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Active'";
+        // var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Active' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Active'";
+        var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID";
         // adj: checking
         var myQuery = [
+            {
+                fieldName: "statusDel",
+                fieldVal: req.query.status,
+                dbCol: "statusDel",
+                op: " = '",
+                adj: req.query.status
+            },
             {
                 fieldName: "firstName",
                 fieldVal: req.query.firstName,
@@ -840,8 +753,6 @@ module.exports = function (app, passport) {
     });
 
     app.get('/filterQueryDeleted', isLoggedIn, function (req, res) {
-        //console.log("dQ: " + req.query.dateCreatedFrom);
-        // connection.query('USE ' + config.Login_db);
 
         var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Deleted' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Deleted'";
         // adj: checking
@@ -971,37 +882,6 @@ module.exports = function (app, passport) {
         }
     });
 
-    // Prepare and assign new transaction ID
-    app.get('/newEntry', isLoggedIn, function (req, res) {
-        var d = new Date();
-        var utcDateTime = d.getUTCFullYear() + "-" + ('0' + (d.getUTCMonth() + 1)).slice(-2) + "-" + ('0' + d.getUTCDate()).slice(-2);
-        var queryTransID = "SELECT COUNT(transactionID) AS number FROM FAW.Transaction WHERE transactionID LIKE '" + utcDateTime + "%';";
-
-        connection.query(queryTransID, function (err, results, fields) {
-            transactionID = utcDateTime + "_" + ('0000' + (results[0].number + 1)).slice(-5);
-            if (err) {
-                console.log(err);
-            } else {
-                var insertTransID = "INSERT INTO FAW.Transaction (transactionID, Cr_UN) VALUE (" + "'" + transactionID + "', '" + req.user.username + "');";
-                connection.query(insertTransID, function (err, results, fields) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        // Show general form
-                        res.render('form.ejs', {
-                            user: req.user, // get the user out of session and pass to template
-                            message: req.flash('Data Entry Message'),
-                            firstname: req.user.firstName,
-                            lastname: req.user.lastName,
-                            transactionID: transactionID
-                        });
-                    }
-                });
-            }
-        });
-    });
-
-
     // Submit general form
     app.post('/generalForm', isLoggedIn, function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*");
@@ -1059,7 +939,7 @@ module.exports = function (app, passport) {
     });
 
     // Upload photos
-    app.post('/uploadfiles', fileUpload, function (req,res) {
+    app.post('/upload', fileUpload, function (req,res) {
         //console.log(req.headers.origin);
         res.setHeader("Access-Control-Allow-Origin", "*");
 
@@ -1071,9 +951,32 @@ module.exports = function (app, passport) {
                 //res.send("Error uploading file.");
             } else {
                 console.log("Success:" + filePathName);
-                res.json({"error": false, "message": filePathName});
                 filePath = filePathName;
-                filePathName = "";
+                if (!!filePathName){
+                    // filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
+                    res.json({"error": false, "message": filePathName});
+                    filePathName = "";
+                } else {
+                    var error = false;
+                    filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
+                    var files = (editData.Photo_of_Pest + ";" + editData.Photo_of_Damage).split(";");
+                    for (var i = 0; i < files.length; i++) {
+                        fs.unlink(files[i],function(err){
+                            if(err) {
+                                error = true;
+                                res.json({"error": true, "message": "Upload Fail !"});
+                                filePathName = "";
+                            }
+                        });
+
+                        if (i === files.length - 1 && error === false) {
+                            res.json({"error": false, "message": filePathName});
+                            filePathName = "";
+                        }
+                    }
+                }
+                // res.json({"error": false, "message": filePathName});
+                // filePathName = "";
                 //res.send("File is uploaded");
             }
         });
