@@ -3,21 +3,11 @@
 <html>
 <head>
     <title>FAW/Locust Project -  Data Entry</title>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/style_final.css" type="text/css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
-    <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.min.css">
-    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBX94wEDdQ52lCDhKAhcfR-flIw1NyLTMA"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="/scripts/jquery.form.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.js"></script>
     <style>
         body 		{ padding-top:80px; word-wrap:break-word; }
         #detailedForm { display: none; }
@@ -25,23 +15,16 @@
         .FAW        { display: none; }
         #stay, #cancel {  position: relative;  width: 20%;  left: 20%;  }
         #leave, #clear {  position: relative;  width: 20%;  left: 60%;  }
-        .banner{
-            position:relative;
-            left:140px;
-            width:75%;
-        }
-        .column {
-            float:right;
-           position:relative;
-            right:80px;
-            width:11%;
-        }
     </style>
-
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.js"></script>
+    <script src="/scripts/jquery.form.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBX94wEDdQ52lCDhKAhcfR-flIw1NyLTMA"></script>
 </head>
 <body onload="getLocation()">
 <div class="container">
-    <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
+
     <div id="modal" class="modal">
         <!-- Modal content -->
         <div id="modal-content">
@@ -65,10 +48,10 @@
 
                 <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= transactionID %>" readonly><br><br>
                 <h4>Your Name: &nbsp;&nbsp;&nbsp;</h4><input id="firstName" type="text" value="<%= firstname %>" readonly><input id="lastName" type="text" value="<%= lastname %>" readonly><br><br>
-                <h4>1A. Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE1" name="date" class="date" value="" required><br><br>
-                <h4>1B. Trap Owner: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="trapOwner" name="trapOwner" type="text" placeholder="Enter The Trap Owner's Name"><br><br>
-                <h4>1C. Location Name: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="locationName" name="locationName" type="text" placeholder="Enter Location Here" required><br><br>
-                <h4>1D. Location Type: &nbsp;&nbsp;&nbsp;</h4>
+                <h4>A. Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE1" name="date" class="date" value="" required><br><br>
+                <h4>B. Trap Owner: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="trapOwner" name="trapOwner" type="text" placeholder="Enter The Trap Owner's Name"><br><br>
+                <h4>C. Location Name: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="locationName" name="locationName" type="text" placeholder="Enter Location Here" required><br><br>
+                <h4>D. Location Type: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='locationType' name='locationType' required>
                     <option value=''>SELECT THE LOCATION TYPE</option>
                     <option value="Location Type"></option>
@@ -78,65 +61,56 @@
                 <h5 style="color:#9d9d9d;" id="locationNote"></h5>
                 <div id="locationDiv"></div>
                 <div id="map"></div><br>
-                <h4>1F. Country: &nbsp;&nbsp;&nbsp;</h4>
+                <h4>F. Country: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='country' name='country' required>
                     <option value=''>SELECT THE COUNTRY</option>
                     <option value="Country"></option>
                 </select><br><br>
-                <h4>1G. Province: &nbsp;&nbsp;&nbsp;</h4>
+                <h4>G. Province: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='province' name='province' required>
                     <option value=''>SELECT THE PROVINCE</option>
                     <option value="Province"></option>
                 </select><br><br>
-                <h4>1H. District: &nbsp;&nbsp;&nbsp;</h4>
+                <h4>H. District: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='district' name='district' required>
                     <option value=''>SELECT THE DISTRICT</option>
                     <option value="District"></option>
                 </select><br><br>
-                <h4>1I. Cropping System: &nbsp;&nbsp;&nbsp;</h4>
-                <!--<input type="radio" name="croppingSystem" value="Seasonal" required> SEASONAL-->
-                <!--<input type="radio" name="croppingSystem" value="Rotation/Intercropping" required> ROTATION/INTERCROPPING <br><br>-->
-                <h4 id="cropSystemTitle">
-                    <select class="clearGen" id='cropSystem' name='croppingSystem' onchange='rotationInterCropSystem();' required>
-                        <option value=''>SELECT THE CROP SYSTEM</option>
-
-                        <option>SEASONAL</option>
-                        <option>ROTATION</option>
-                        <option>INTERCROPPING</option>
-                    </select>
-                    <h4 id="mainCropTitle"></h4>
-                </h4><br>
-                <h4>1J. Maize Variety: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="maizeVariety" name="maizeVariety" type="text" placeholder="Enter Crop Variety Here" required><br><br>
-                <h4>1K. Maize Planting Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE2" name="plantingDate" class="date" value="" required><br><br>
-                <h4>1L. Field Size - ha (numerical XXXX.X): &nbsp;&nbsp;&nbsp;</h4>
+                <h4>I. Cropping System: &nbsp;&nbsp;&nbsp;</h4>
+                <input type="radio" name="croppingSystem" value="Seasonal" required> SEASONAL
+                <input type="radio" name="croppingSystem" value="Rotation/Intercropping" required> ROTATION/INTERCROPPING <br><br>
+                <!--<h4 id="cropSystemTitle">-->
+                    <!--<select class="clearGen" id='cropSystem' name='croppingSystem' onchange='rotationInterCropSystem();' required>-->
+                        <!--<option value=''>SELECT THE CROP SYSTEM</option>-->
+                        <!--<option>SEASONAL</option>-->
+                        <!--<option>ROTATION</option>-->
+                        <!--<option>INTERCROPPING</option>-->
+                    <!--</select>-->
+                    <!--<h4 id="mainCropTitle"></h4>-->
+                <!--</h4><br>-->
+                <h4>J. Maize Variety: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="maizeVariety" name="maizeVariety" type="text" placeholder="Enter Crop Variety Here" required><br><br>
+                <h4>K. Maize Planting Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE2" name="plantingDate" class="date" value="" required><br><br>
+                <h4>L. Field Size - ha (numerical XXXX.X): &nbsp;&nbsp;&nbsp;</h4>
                 <h5 style="color:#9d9d9d;">Note: There is no need to enter the decimals, etc. Please enter the number ONLY.</h5>
                 <input class="clearGen" id="fieldSizeInteger" name="fieldSizeInteger" type="number" min="0" max="999999" placeholder="0000" onkeyup="limit()" required>.
                 <input class="clearGen" id="fieldSizeDecimal" name="fieldSizeDecimal" type="number" min="0" max="9" placeholder="0" onkeyup="limit()" required><br><br>
-                <h4>1M. General Health of Maize: &nbsp;&nbsp;&nbsp;</h4>
+                <h4>M. General Health of Maize: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='healthOfMaize' name='healthOfMaize' required>
                     <option value=''>SELECT THE GENERAL HEALTH LEVEL</option>
                     <option>POOR</option>
                     <option>MEDIUM</option>
                     <option>GOOD</option>
                 </select><br><br>
-                <h4>1N. Date of Last RainFall: &nbsp;&nbsp;&nbsp;</h4><input id="DATE3" name="lastRainDate" class="date" value="" required><br><br>
-                <h4>1O. Entry Type: &nbsp;&nbsp;&nbsp;</h4>
+                <h4>N. Date of Last RainFall: &nbsp;&nbsp;&nbsp;</h4><input id="DATE3" name="lastRainDate" class="date" value="" required><br><br>
+                <h4>O. Entry Type: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='type' name="entryType" required>
                     <option value=''>SELECT THE TYPE</option>
                     <option>SCOUTING</option>
                     <option>TRAP (TO BE DEVELOP)</option>
                 </select><br><br>
-                <div class="row">
-                    <div class="column">
-                        <input id="continue" type="submit" value="Continue"/>
-                    </div>
-                    <div class="column">
-                        <input class="cancel" type="button" onclick="goBack()" value=" Cancel  "/>
-                    </div>
-                    <div class="column">
-                        <input class="clear" type="button" onclick="clearGeneral()" value="   Clear   "/>
-                    </div>
-                </div>
+                <input class="clear" type="button" onclick="clearGeneral()" value="   Clear   ">
+                <input class="cancel" type="button" onclick="goBack()" value=" Cancel  ">
+                <input id="continue" type="submit" value="Continue">
             </form>
         </div>
 
@@ -145,7 +119,7 @@
 
                 <div>
                     <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= transactionID %>" readonly><br><br>
-                    <h4>2A. Pests Present: &nbsp;&nbsp;&nbsp;</h4>
+                    <h4>A. Pests Present: &nbsp;&nbsp;&nbsp;</h4>
                     <select class="clearDet" id='pestsPresent' name='pestsPresent' onchange="pestSelect()" required>
                         <option value=''>SELECT THE TYPE OF THE PEST</option>
                         <option>FAW</option>
@@ -155,7 +129,7 @@
                 </div>
                 <div class="FAW">
                     <h2>FAW</h2>
-                    <h4>2B. FAW Stage: &nbsp;&nbsp;&nbsp;</h4>
+                    <h4>B. FAW Stage: &nbsp;&nbsp;&nbsp;</h4>
                     <select class="clearDet" id='fawStage' name='fawStage' required>
                         <option value=''>SELECT THE STAGE</option>
                         <option>EGGS</option>
@@ -163,7 +137,7 @@
                         <option>PUPAE</option>
                         <option>ADULTS</option>
                     </select><br><br>
-                    <h4>2C. Early Damage Level: &nbsp;&nbsp;&nbsp;</h4>
+                    <h4>C. Early Damage Level: &nbsp;&nbsp;&nbsp;</h4>
                     <select class="clearDet" id='earlyDamageLevel' name='earlyDamageLevel' required>
                         <option value=''>SELECT THE DAMAGE LEVEL</option>
                         <option>NONE</option>
@@ -171,7 +145,7 @@
                         <option>MEDIUM</option>
                         <option>HIGH</option>
                     </select><br><br>
-                    <h4>2D. Late Damage Level: &nbsp;&nbsp;&nbsp;</h4>
+                    <h4>D. Late Damage Level: &nbsp;&nbsp;&nbsp;</h4>
                     <select class="clearDet" id='lastDamageLevel' name='lateDamageLevel' required>
                         <option value=''>SELECT THE DAMAGE LEVEL</option>
                         <option>NONE</option>
@@ -179,16 +153,16 @@
                         <option>MEDIUM</option>
                         <option>HIGH</option>
                     </select><br><br>
-                    <h4>2E. Natural Enemies Present ?&nbsp;&nbsp;&nbsp;</h4>
-                    <input type="radio" name="naturalEnemies" value="YES" required> YES
-                    <input type="radio" name="naturalEnemies" value="NO" required> NO <br><br>
-                    <h4>2F. Dead Larvae Killed By Natural Enemies ?&nbsp;&nbsp;&nbsp;</h4>
-                    <input type="radio" name="deadLarvae" value="YES" required> YES
-                    <input type="radio" name="deadLarvae" value="NO" required> NO <br><br>
-                    <h4>2G. % Plants Infested (From 50 Plant Examples): &nbsp;&nbsp;&nbsp;</h4><input class="clearDet" id="percentInfested" name="percentInfested" type="text" placeholder="Enter Number (Numerical) Here" required><br><br>
+                    <h4>E. Natural Enemies Present ?&nbsp;&nbsp;&nbsp;</h4>
+                    <input type="radio" name="naturalEnemies" value="yes" required> YES
+                    <input type="radio" name="naturalEnemies" value="no" required> NO <br><br>
+                    <h4>F. Dead Larvae Killed By Natural Enemies ?&nbsp;&nbsp;&nbsp;</h4>
+                    <input type="radio" name="deadLarvae" value="yes" required> YES
+                    <input type="radio" name="deadLarvae" value="no" required> NO <br><br>
+                    <h4>G. % Plants Infested (From 50 Plant Examples): &nbsp;&nbsp;&nbsp;</h4><input class="clearDet" id="percentInfested" name="percentInfested" type="text" placeholder="Enter Number (Numerical) Here" required><br><br>
 
                     <h2>FAW Control</h2>
-                    <h4>2H. Control Undertaken: &nbsp;&nbsp;&nbsp;</h4>
+                    <h4>H. Control Undertaken: &nbsp;&nbsp;&nbsp;</h4>
                     <select class="clearDet" id='control' name='control' required>
                         <option value=''>SELECT THE CONTROL TYPE</option>
                         <option>NONE</option>
@@ -199,9 +173,9 @@
                         <option>BIOCONTROL</option>
                         <option>PESTICIDE</option>
                     </select><br><br>
-                    <h4>2I. Pesticide Litres Sprayed ?&nbsp;&nbsp;&nbsp;</h4>
-                    <input type="radio" name="pesticide" value="YES" required> YES
-                    <input type="radio" name="pesticide" value="NO" required> NO <br><br>
+                    <h4>I. Pesticide Litres Sprayed ?&nbsp;&nbsp;&nbsp;</h4>
+                    <input type="radio" name="pesticide" value="yes" required> YES
+                    <input type="radio" name="pesticide" value="no" required> NO <br><br>
 
                     <!--<h2>Photos</h2>-->
                     <!--<h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>-->
@@ -223,21 +197,10 @@
                     <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
                     <input class="clearDet" id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" required multiple/><br>
                     <img id="photoOfDamageImage" src="" alt="Image preview..."><br><br>
-
-                    <div class="row">
-                        <div class="column">
-                            <input id="submit" type="submit" value="Complete">
-                        </div>
-                        <div class="column">
-                            <input id="previous" type="button" onclick="previousForm()" value=" Previous ">
-                        </div>
-                        <div class="column">
-                            <input class="cancel" type="button" onclick="goBack()" value="  Cancel   ">
-                        </div>
-                        <div class="column">
-                            <input class="clear" type="button" onclick="clearDetailed()" value="    Clear    ">
-                        </div>
-                    </div>
+                    <input class="clear" type="button" onclick="clearDetailed()" value="    Clear    ">
+                    <input class="cancel" type="button" onclick="goBack()" value="  Cancel   ">
+                    <input id="previous" type="button" onclick="previousForm()" value=" Previous ">
+                    <input id="submit" type="submit" value="Complete">
                 </div>
             </form>
         </div>
@@ -261,7 +224,7 @@
         }
 
         var options = {
-            url: '/uploadfiles',    // override for form's 'action' attribute
+            url: '/upload',    // override for form's 'action' attribute
             type: 'post',        // 'get' or 'post', override for form's 'method' attribute
             dataType: 'json',        // 'xml', 'script', or 'json' (expected server response type)
             clearForm: true,        // clear all form fields after successful submit
@@ -275,8 +238,8 @@
             //timeout:   3000
         };
 
-        $('#uploadfiles').submit(function(e) {
-            // $("#uploadfiles").ajaxSubmit(options);
+        $('#upload').submit(function(e) {
+            // $("#upload").ajaxSubmit(options);
             // Prevent form submission
             e.preventDefault();
             $("#hide").click();
@@ -286,7 +249,7 @@
             // Prevent form submission
             e.preventDefault();
             alert("Y");
-            $("#uploadfiles").ajaxSubmit(options);
+            $("#upload").ajaxSubmit(options);
             // Prevent form submission
             e.preventDefault();
         });
@@ -640,6 +603,7 @@
     }
 
     function goBack() {
+        alert("A");
         document.getElementById("modal-footer").innerHTML = "";
 
         document.getElementById("modal-header").style.backgroundColor = "#f44242";
@@ -676,6 +640,7 @@
     }
 
     function clearGeneral() {
+        alert("A");
         document.getElementById("modal-footer").innerHTML = "";
 
         document.getElementById("modal-header").style.backgroundColor = "#f44242";
@@ -725,6 +690,7 @@
     }
 
     function clearDetailed() {
+        alert("A");
         document.getElementById("modal-footer").innerHTML = "";
 
         document.getElementById("modal-header").style.backgroundColor = "#f44242";
