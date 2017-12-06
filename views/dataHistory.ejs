@@ -163,35 +163,38 @@
             <table id="dataDisplay">
                 <thead>
                     <tr>
-                        <th>Transaction ID</th>
+                        <th>UserName</th>
+                        <th>First_Name</th>
+                        <th>Last_Name</th>
+                        <th>Transaction_ID</th>
                         <th>Date</th>
-                        <th>Trap Owner</th>
-                        <th>Location Name</th>
-                        <th>Location Type</th>
+                        <th>Trap_Owner</th>
+                        <th>Location_Name</th>
+                        <th>Location_Type</th>
                         <th>Latitude</th>
                         <th>Longitude</th>
-                        <th>Country</th>
-                        <th>Province</th>
-                        <th>District</th>
-                        <th>Cropping System</th>
-                        <th>Rotation/Intercropping Crop</th>
-                        <th>Maize Variety</th>
-                        <th>Maize Planting Date</th>
-                        <th>Field Size</th>
-                        <th>General Health of Maize</th>
-                        <th>Date of Last Rain</th>
-                        <th>Entry Type</th>
-                        <th>Pests Present</th>
-                        <th>FAW Stage</th>
-                        <th>Early Damage Level</th>
-                        <th>Late Damage Level</th>
-                        <th>Natural Enemies Present</th>
-                        <th>Dead larvae killed by natural enemies </th>
-                        <th>% Plants Infested</th>
-                        <th>Control Undertaken</th>
-                        <th>Pesticide Litres Sprayed</th>
-                        <th>Photo of Pest</th>
-                        <th>Photo of Damage</th>
+                        <th>Country_Level</th>
+                        <th>1st_Level</th>
+                        <th>2nd_Level</th>
+                        <th>Cropping_System</th>
+                        <th>Rotation/Intercropping_Crop</th>
+                        <th>Maize_Variety</th>
+                        <th>Maize_Planting_Date</th>
+                        <th>Field_Size</th>
+                        <th>GeneralHealth_of_Maize</th>
+                        <th>Date_of_Last_Rain</th>
+                        <th>Entry_Type</th>
+                        <th>Pests_Present</th>
+                        <th>FAW_Stage</th>
+                        <th>EarlyDamageLevel</th>
+                        <th>LateDamageLevel</th>
+                        <th>NaturalEnemiesPresent</th>
+                        <th>Dead_Larvae_Killed_by_Natural_Enemies </th>
+                        <th>%_Plants_Infested</th>
+                        <th>Control_Undertaken</th>
+                        <th>Pesticide_Litres_Sprayed</th>
+                        <th>Photo_of_Pest</th>
+                        <th>Photo_of_Damage</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -199,35 +202,38 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th>Transaction ID</th>
+                        <th>UserName</th>
+                        <th>First_Name</th>
+                        <th>Last_Name</th>
+                        <th>Transaction_ID</th>
                         <th>Date</th>
-                        <th>Trap Owner</th>
-                        <th>Location Name</th>
-                        <th>Location Type</th>
+                        <th>Trap_Owner</th>
+                        <th>Location_Name</th>
+                        <th>Location_Type</th>
                         <th>Latitude</th>
                         <th>Longitude</th>
-                        <th>Country</th>
-                        <th>Province</th>
-                        <th>District</th>
-                        <th>Cropping System</th>
-                        <th>Rotation/Intercropping Crop</th>
-                        <th>Maize Variety</th>
-                        <th>Maize Planting Date</th>
-                        <th>Field Size</th>
-                        <th>General Health of Maize</th>
-                        <th>Date of Last Rain</th>
-                        <th>Entry Type</th>
-                        <th>Pests Present</th>
-                        <th>FAW Stage</th>
-                        <th>Early Damage Level</th>
-                        <th>Late Damage Level</th>
-                        <th>Natural Enemies Present</th>
-                        <th>Dead larvae killed by natural enemies </th>
-                        <th>% Plants Infested</th>
-                        <th>Control Undertaken</th>
-                        <th>Pesticide Litres Sprayed</th>
-                        <th>Photo of Pest</th>
-                        <th>Photo of Damage</th>
+                        <th>Country_Level</th>
+                        <th>1st_Level</th>
+                        <th>2nd_Level</th>
+                        <th>Cropping_System</th>
+                        <th>Rotation/Intercropping_Crop</th>
+                        <th>Maize_Variety</th>
+                        <th>Maize_Planting_Date</th>
+                        <th>Field_Size</th>
+                        <th>GeneralHealth_of_Maize</th>
+                        <th>Date_of_Last_Rain</th>
+                        <th>Entry_Type</th>
+                        <th>Pests_Present</th>
+                        <th>FAW_Stage</th>
+                        <th>EarlyDamageLevel</th>
+                        <th>LateDamageLevel</th>
+                        <th>NaturalEnemiesPresent</th>
+                        <th>Dead_Larvae_Killed_by_Natural_Enemies </th>
+                        <th>%_Plants_Infested</th>
+                        <th>Control_Undertaken</th>
+                        <th>Pesticide_Litres_Sprayed</th>
+                        <th>Photo_of_Pest</th>
+                        <th>Photo_of_Damage</th>
                     </tr>
                 </tfoot>
             </table>
@@ -261,7 +267,7 @@
         });
 
         $(function() {
-            queryAndDisplay();
+            queryAndDisplay("statusDel=" + "Active");
 
             flatpickr(".date", {
                 dateFormat: "Y-m-d",
@@ -322,7 +328,7 @@
         var content2 = document.getElementsByClassName("content")[1].value;
         var content3 = document.getElementsByClassName("content")[2].value;
 
-        var queryStr = "firstName=" + firstName + "&lastName=" + lastName + "&startDate=" + startDate + "&endDate=" + endDate + "&filter1=" + filter1 + "&filter2=" + filter2 + "&filter3=" + filter3 + "&content1=" + content1 + "&content2=" + content2 + "&content3=" + content3;
+        var queryStr = "statusDel=" + "Active" + "firstName=" + firstName + "&lastName=" + lastName + "&startDate=" + startDate + "&endDate=" + endDate + "&filter1=" + filter1 + "&filter2=" + filter2 + "&filter3=" + filter3 + "&content1=" + content1 + "&content2=" + content2 + "&content3=" + content3;
         //alert(queryStr);
         if (firstName || lastName || startDate || endDate || filter1 || filter2 || filter3) {
             table.clear();
