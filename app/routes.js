@@ -451,8 +451,8 @@ module.exports = function (app, passport) {
         console.log("transactionID: " + req.query.Transaction_ID);
 
         var transactionID = req.query.transactionIDStr.split(",");
-        var deleteStatementGeneral = "UPDATE General_Form SET status = 'Deleted'";
-        var deleteStatementDetailed = "UPDATE Detailed_Form SET status = 'Deleted'";
+        var deleteStatementGeneral = "UPDATE General_Form SET statusDel = 'Deleted'";
+        var deleteStatementDetailed = "UPDATE Detailed_Form SET statusDel = 'Deleted'";
 
         for (var i = 0; i < transactionID.length; i++) {
             if (i === 0) {
@@ -492,8 +492,8 @@ module.exports = function (app, passport) {
         console.log("transactionID: " + req.query.Transaction_ID);
 
         var transactionID = req.query.transactionIDStr.split(",");
-        var recoverStatementGeneral = "UPDATE General_Form SET status = 'Active'";
-        var recoverStatementDetailed = "UPDATE Detailed_Form SET status = 'Active'";
+        var recoverStatementGeneral = "UPDATE General_Form SET statusDel = 'Active'";
+        var recoverStatementDetailed = "UPDATE Detailed_Form SET statusDel = 'Active'";
 
         for (var i = 0; i < transactionID.length; i++) {
             if (i === 0) {
@@ -592,10 +592,17 @@ module.exports = function (app, passport) {
         var myQuery = [
             {
                 fieldName: "statusDel",
-                fieldVal: req.query.status,
-                dbCol: "statusDel",
+                fieldVal: req.query.statusDel,
+                dbCol: "General_Form.statusDel",
                 op: " = '",
-                adj: req.query.status
+                adj: req.query.statusDel
+            },
+            {
+                fieldName: "statusDel",
+                fieldVal: req.query.statusDel,
+                dbCol: "Detailed_Form.statusDel",
+                op: " = '",
+                adj: req.query.statusDel
             },
             {
                 fieldName: "firstName",
