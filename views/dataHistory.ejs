@@ -250,22 +250,6 @@
     var rowSelected = [];
 
     $(document).ready(function(){
-        $(".add-row").click(function(){
-            var name = $("#name").val();
-            var email = $("#email").val();
-            var markup = "<tr><td><input type='checkbox' name='record'></td><td>" + name + "</td><td>" + email + "</td></tr>";
-            $("table tbody").append(markup);
-        });
-
-        // Find and remove selected table rows
-        $(".delete-row").click(function(){
-            $("table tbody").find('input[name="record"]').each(function(){
-                if($(this).is(":checked")){
-                    $(this).parents("tr").remove();
-                }
-            });
-        });
-
         $(function() {
             queryAndDisplay("statusDel=" + "Active");
 
@@ -304,15 +288,12 @@
                     thArray.push($(this).text())
                 })
 
-
-
                 for (var i = 0; i < thArray.length; i++) {
                     rowSelected[i] = {};
                     rowSelected[i].Name = thArray[i];
                     rowSelected[i].Value = d[i];
                 }
             }
-//            console.log("the array thing: " + thArray);
         });
     });
 
@@ -329,7 +310,7 @@
         var content3 = document.getElementsByClassName("content")[2].value;
 
         var queryStr = "statusDel=" + "Active" + "&firstName=" + firstName + "&lastName=" + lastName + "&startDate=" + startDate + "&endDate=" + endDate + "&filter1=" + filter1 + "&filter2=" + filter2 + "&filter3=" + filter3 + "&content1=" + content1 + "&content2=" + content2 + "&content3=" + content3;
-        alert(queryStr);
+
         table.clear();
         table.draw();
         queryAndDisplay(queryStr);
@@ -344,7 +325,6 @@
             async: false,
             data: querystr,
             success: function (resp) {
-                //alert(resp[0].transactionID);
                 for (var i = 0; i < resp.length; i++) {
                     table.row.add( [
                         resp[i].username,
@@ -384,6 +364,7 @@
             }
         });
     }
+
     function downloadCSV(csv, filename) {
         var csvFile;
         var downloadLink;
