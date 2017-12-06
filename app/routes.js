@@ -355,7 +355,7 @@ module.exports = function (app, passport) {
                 newPassword: bcrypt.hashSync(req.body.newPassword, null, null)
             };
 
-            myStat = "UPDATE Users SET firstName = ?, lastName = ?, password = ?, userrole = ?, status = ?  WHERE username = ?";
+            myStat = "UPDATE Users SET firstName = ?, lastName = ?, password = ?, userrole = ?, status = ?, modifiedUser = '" + req.user.username + "', dateModified = '" + dateTime + "' WHERE username = ?";
             myVal = [updatedUserPass.firstName, updatedUserPass.lastName, updatedUserPass.newPassword, updatedUserPass.userrole, updatedUserPass.status, edit_User];
             updateDBNres(myStat, myVal, "Update failed!", "/userManagement", res);
 
@@ -367,7 +367,7 @@ module.exports = function (app, passport) {
                 status: req.body.Status
             };
 
-            myStat = "UPDATE Users SET firstName = ?, lastName = ?, userrole = ?, status = ?  WHERE username = ?";
+            myStat = "UPDATE Users SET firstName = ?, lastName = ?, userrole = ?, status = ?, modifiedUser = '" + req.user.username + "', dateModified = '" + dateTime + "'  WHERE username = ?";
             myVal = [updatedUser.firstName, updatedUser.lastName, updatedUser.userrole, updatedUser.status, edit_User];
             updateDBNres(myStat, myVal, "Update failed!", "/userManagement", res);
         }
@@ -378,18 +378,18 @@ module.exports = function (app, passport) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
 
         var username = req.query.usernameStr.split(",");
-        myStat = "UPDATE Users SET modifiedUser = '" + req.user.username + "', dateModified = '" + dateTime + "', status = 'Suspended'";
+        myStat = "UPDATE Users SET modifiedUser = '" + req.user.username + "', dateModified = '" + dateTime + "',  status = 'Suspended'";
 
         for (var i = 0; i < username.length; i++) {
             if (i === 0) {
                 myStat += " WHERE username = '" + username[i] + "'";
                 if (i === username.length - 1) {
-                    updateDBNres(statusUpdate, "", "Suspension failed!", "/userManagement", res);
+                    updateDBNres(myStat, "", "Suspension failed!", "/userManagement", res);
                 }
             } else {
                 myStat += " OR username = '" + username[i] + "'";
                 if (i === username.length - 1) {
-                    updateDBNres(statusUpdate, "", "Suspension failed!", "/userManagement", res);
+                    updateDBNres(myStat, "", "Suspension failed!", "/userManagement", res);
                 }
             }
         }
