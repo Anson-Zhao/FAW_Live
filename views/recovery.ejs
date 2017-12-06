@@ -83,7 +83,7 @@
 </div><br><br>
 <div id="pageHeader" class="page-header text-center">
     <h1><span class="fa fa-anchor"></span> FAW Project -  Recovery </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
-    <a href="/userHome" class="btn btn-default btn-lg"><span class="randomText">User Home</span></a>&nbsp;&nbsp;&nbsp;
+    <a href="/userhome" class="btn btn-default btn-lg"><span class="randomText">User Home</span></a>&nbsp;&nbsp;&nbsp;
     <a href="/newEntry" class="btn btn-default btn-lg"><span class="randomText">New Entry</span></a>&nbsp;&nbsp;&nbsp;
     <a href="/dataHistory" class="btn btn-default btn-lg"><span class="randomText">Data History</span></a>&nbsp;&nbsp;&nbsp;
     <div class="dropdown floating-Box">
@@ -205,6 +205,8 @@
         });
 
         $(function () {
+            table.clear();
+            table.draw();
             queryAndDisplay("statusDel=" + "Deleted" + "&firstName=" + "<%= user.firstName %>" + "&lastName=" + "<%= user.lastName %>");
 
             flatpickr(".date", {
@@ -257,11 +259,6 @@
 
         $("#recoverButton").on("click", function () {
             if (confirm("Are you sure you would like to recover this row(s)?") === true) {
-//                 alert(d);
-//                 alert("Row: " + rowSelected[1].Name);
-//                alert(rowSelected[2].Name);
-//                alert(rowSelected[2].Value);
-
                 var transactionIDStr = "transactionIDStr=";
                 for (var i = 0; i < transactionID.length; i++) {
                     transactionIDStr += transactionID[i] + ",";

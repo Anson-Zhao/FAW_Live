@@ -792,7 +792,7 @@ function dataList(SQLstatement, res) {
             res.send(errStatus);
             res.end();
         } else if (results.length === 0) {
-            status[0].errMsg = "no data entry";
+            errStatus[0].errMsg = "no data entry";
             res.send(errStatus);
             res.end();
         } else {
