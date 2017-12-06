@@ -9,7 +9,7 @@ var bcrypt = require('bcrypt-nodejs');
 var fs = require('fs');
 
 var filePathName = "";
-var filePath, transactionID, statementGeneral, statementDetailed, myStat, myVal, myErrMsg;
+var filePath, transactionID, statementGeneral, statementDetailed, myStat, myVal, myErrMsg, errStatus;
 var today, date, time2, dateTime;
 
 var storage = multer.diskStorage({
@@ -206,106 +206,52 @@ module.exports = function (app, passport) {
     app.get('/filterUser', isLoggedIn, function (req, res) {
         myStat = "SELECT * FROM Users";
 
-        var myQuery = [
+        var myQueryObj = [
             {
-                fieldName: "dateCreatedFrom",
                 fieldVal: req.query.dateCreatedFrom,
                 dbCol: "dateCreated",
-                op: " >= '"
+                op: " >= '",
+                adj: req.query.dateCreatedFrom
             },
             {
-                fieldName: "dateCreatedTo",
                 fieldVal: req.query.dateCreatedTo,
                 dbCol: "dateCreated",
-                op: " <= '"
+                op: " <= '",
+                adj: req.query.dateCreatedTo
             },
             {
-                fieldName: "dateModifiedFrom",
                 fieldVal: req.query.dateModifiedFrom,
                 dbCol: "dateModified",
-                op: " >= '"
+                op: " >= '",
+                adj: req.query.dateModifiedFrom
             },
             {
-                fieldName: "dateModifiedTo",
                 fieldVal: req.query.dateModifiedTo,
                 dbCol: "dateModified",
-                op: " <= '"
+                op: " <= '",
+                adj: req.query.dateModifiedTo
             },
             {
-                fieldName: "firstName",
                 fieldVal: req.query.firstName,
                 dbCol: "firstName",
-                op: " = '"
+                op: " = '",
+                adj: req.query.firstName
             },
             {
-                fieldName: "lastName",
                 fieldVal: req.query.lastName,
                 dbCol: "lastName",
-                op: " = '"
+                op: " = '",
+                adj: req.query.lastName
             },
             {
-                fieldName: "userrole",
                 fieldVal: req.query.userrole,
                 dbCol: "userrole",
-                op: " = '"
+                op: " = '",
+                adj: req.query.userrole
             }
         ];
 
-        function userQuery() {
-            res.setHeader("Access-Control-Allow-Origin", "*");
-            // console.log("Query Statement: " + queryStat);
-
-            connection.query(myStat, function (err, results, fields) {
-
-                var status = [{errStatus: ""}];
-
-                if (err) {
-                    console.log(err);
-                    status[0].errStatus = "fail";
-                    res.send(status);
-                    res.end();
-                } else if (results.length === 0) {
-                    status[0].errStatus = "no data entry";
-                    res.send(status);
-                    res.end();
-                } else {
-                    var JSONresult = JSON.stringify(results, null, "\t");
-                    console.log(JSONresult);
-                    res.send(JSONresult);
-                    res.end();
-                }
-            });
-        }
-
-        var j = 0;
-
-        for (var i = 0; i < myQuery.length; i++) {
-            // console.log("i = " + i);
-            // console.log("field Value: " + !!myQuery[i].fieldVal);
-            if (i === myQuery.length - 1) {
-                if (!!myQuery[i].fieldVal) {
-                    if (j === 0) {
-                        myStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                        j = 1;
-                        userQuery()
-                    } else {
-                        myStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                        userQuery()
-                    }
-                } else {
-                    userQuery()
-                }
-            } else {
-                if (!!myQuery[i].fieldVal) {
-                    if (j === 0) {
-                        myStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                        j = 1;
-                    } else {
-                        myStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                    }
-                }
-            }
-        }
+        QueryStat(myQueryObj, myStat, res)
     });
 
     // Retrieve user data from user management page
@@ -359,6 +305,7 @@ module.exports = function (app, passport) {
 
             myStat = "UPDATE Users SET firstName = ?, lastName = ?, userrole = ?, status = ?  WHERE username = ?";
             myVal = [updatedUser.firstName, updatedUser.lastName, updatedUser.userrole, updatedUser.status, edit_User];
+
             updateDBNres(myStat, myVal, "Update failed!", "/userManagement", res);
         }
 
@@ -448,69 +395,58 @@ module.exports = function (app, passport) {
     });
 
     app.get('/filterQuery', isLoggedIn, function (req, res) {
-        console.log("AZ");
-        // var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Active' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Active'";
-        var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID";
-        // adj: checking
-        var myQuery = [
+        // var myStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Active' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Active'";
+        var myStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID";
+        var myQueryObj = [
             {
-                fieldName: "statusDel",
                 fieldVal: req.query.statusDel,
                 dbCol: "General_Form.statusDel",
                 op: " = '",
                 adj: req.query.statusDel
             },
             {
-                fieldName: "statusDel",
                 fieldVal: req.query.statusDel,
                 dbCol: "Detailed_Form.statusDel",
                 op: " = '",
                 adj: req.query.statusDel
             },
             {
-                fieldName: "firstName",
                 fieldVal: req.query.firstName,
                 dbCol: "firstName",
                 op: " = '",
                 adj: req.query.firstName
             },
             {
-                fieldName: "lastName",
                 fieldVal: req.query.lastName,
                 dbCol: "lastName",
                 op: " = '",
                 adj: req.query.lastName
             },
             {
-                fieldName: "startDate",
                 fieldVal: req.query.startDate,
                 dbCol: "date",
                 op: " >= '",
                 adj: req.query.startDate
             },
             {
-                fieldName: "endDate",
                 fieldVal: req.query.endDate,
                 dbCol: "date",
                 op: " <= '",
                 adj: req.query.endDate
             },
             {
-                fieldName: "field1",
                 fieldVal: req.query.content1,
                 dbCol: req.query.filter1,
                 op: " = '",
                 adj: req.query.filter1
             },
             {
-                fieldName: "field2",
                 fieldVal: req.query.content2,
                 dbCol: req.query.filter2,
                 op: " = '",
                 adj: req.query.filter2
             },
             {
-                fieldName: "field3",
                 fieldVal: req.query.content3,
                 dbCol: req.query.filter3,
                 op: " = '",
@@ -518,78 +454,8 @@ module.exports = function (app, passport) {
             }
         ];
 
-        function filterQuery() {
-            res.setHeader("Access-Control-Allow-Origin", "*");
-            console.log("Query Statement: " + queryStat);
+        QueryStat(myQueryObj, myStat, res)
 
-            connection.query(queryStat, function (err, results, fields) {
-
-                var status = [{errStatus: ""}];
-
-                if (err) {
-                    console.log(err);
-                    status[0].errStatus = "fail";
-                    res.send(status);
-                    res.end();
-                } else if (results.length === 0) {
-                    status[0].errStatus = "no data entry";
-                    res.send(status);
-                    res.end();
-                } else {
-                    var JSONresult = JSON.stringify(results, null, "\t");
-                    //console.log(JSONresult);
-                    res.send(JSONresult);
-                    res.end();
-                }
-            });
-        }
-
-        var j = 0;
-
-        for (var i = 0; i < myQuery.length; i++) {
-            //console.log("i = " + i);
-            //console.log("field Value: " + !!myQuery[i].fieldVal);
-            if (!!myQuery[i].adj) {
-                if (j === 0) {
-                    j = 1;
-                    if (i === myQuery.length - 1) {
-                        if (!!myQuery[i].fieldVal) {
-                            queryStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                            filterQuery()
-                        } else {
-                            queryStat += " WHERE " + myQuery[i].dbCol + " IS NULL";
-                            filterQuery()
-                        }
-                    } else {
-                        if (!!myQuery[i].fieldVal) {
-                            queryStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                        } else {
-                            queryStat += " WHERE " + myQuery[i].dbCol + " IS NULL";
-                        }
-                    }
-                } else {
-                    if (i === myQuery.length - 1) {
-                        if (!!myQuery[i].fieldVal) {
-                            queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                            filterQuery()
-                        } else {
-                            queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
-                            filterQuery()
-                        }
-                    } else {
-                        if (!!myQuery[i].fieldVal) {
-                            queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                        } else {
-                            queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
-                        }
-                    }
-                }
-            } else {
-                if (i === myQuery.length - 1) {
-                    filterQuery()
-                }
-            }
-        }
     });
 
     // Prepare and assign new transaction ID
@@ -620,136 +486,6 @@ module.exports = function (app, passport) {
                 });
             }
         });
-    });
-
-    app.get('/filterQueryDeleted', isLoggedIn, function (req, res) {
-
-        var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Deleted' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Deleted'";
-        // adj: checking
-        var myQuery = [
-            {
-                fieldName: "firstName",
-                fieldVal: req.query.firstName,
-                dbCol: "firstName",
-                op: " = '",
-                adj: req.query.firstName
-            },
-            {
-                fieldName: "lastName",
-                fieldVal: req.query.lastName,
-                dbCol: "lastName",
-                op: " = '",
-                adj: req.query.lastName
-            },
-            {
-                fieldName: "startDate",
-                fieldVal: req.query.startDate,
-                dbCol: "date",
-                op: " >= '",
-                adj: req.query.startDate
-            },
-            {
-                fieldName: "endDate",
-                fieldVal: req.query.endDate,
-                dbCol: "date",
-                op: " <= '",
-                adj: req.query.endDate
-            },
-            {
-                fieldName: "field1",
-                fieldVal: req.query.content1,
-                dbCol: req.query.filter1,
-                op: " = '",
-                adj: req.query.filter1
-            },
-            {
-                fieldName: "field2",
-                fieldVal: req.query.content2,
-                dbCol: req.query.filter2,
-                op: " = '",
-                adj: req.query.filter2
-            },
-            {
-                fieldName: "field3",
-                fieldVal: req.query.content3,
-                dbCol: req.query.filter3,
-                op: " = '",
-                adj: req.query.filter3
-            }
-        ];
-
-        function filterQuery() {
-            res.setHeader("Access-Control-Allow-Origin", "*");
-            console.log("Query Statement: " + queryStat);
-
-            connection.query(queryStat, function (err, results, fields) {
-
-                var status = [{errStatus: ""}];
-
-                if (err) {
-                    console.log(err);
-                    status[0].errStatus = "fail";
-                    res.send(status);
-                    res.end();
-                } else if (results.length === 0) {
-                    status[0].errStatus = "no data entry";
-                    res.send(status);
-                    res.end();
-                } else {
-                    var JSONresult = JSON.stringify(results, null, "\t");
-                    //console.log(JSONresult);
-                    res.send(JSONresult);
-                    res.end();
-                }
-            });
-        }
-
-        var j = 0;
-
-        for (var i = 0; i < myQuery.length; i++) {
-            //console.log("i = " + i);
-            //console.log("field Value: " + !!myQuery[i].fieldVal);
-            if (!!myQuery[i].adj) {
-                if (j === 0) {
-                    j = 1;
-                    if (i === myQuery.length - 1) {
-                        if (!!myQuery[i].fieldVal) {
-                            queryStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                            filterQuery()
-                        } else {
-                            queryStat += " WHERE " + myQuery[i].dbCol + " IS NULL";
-                            filterQuery()
-                        }
-                    } else {
-                        if (!!myQuery[i].fieldVal) {
-                            queryStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                        } else {
-                            queryStat += " WHERE " + myQuery[i].dbCol + " IS NULL";
-                        }
-                    }
-                } else {
-                    if (i === myQuery.length - 1) {
-                        if (!!myQuery[i].fieldVal) {
-                            queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                            filterQuery()
-                        } else {
-                            queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
-                            filterQuery()
-                        }
-                    } else {
-                        if (!!myQuery[i].fieldVal) {
-                            queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
-                        } else {
-                            queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
-                        }
-                    }
-                }
-            } else {
-                if (i === myQuery.length - 1) {
-                    filterQuery()
-                }
-            }
-        }
     });
 
     // Upload photos
@@ -995,22 +731,69 @@ function updateDBNredir(SQLstatement, Value, ErrMsg, failURL, redirURL, res) {
     })
 }
 
+function QueryStat(myObj, myNewStat, res) {
+    var j = 0;
+    for (var i = 0; i < myObj.length; i++) {
+        //console.log("i = " + i);
+        //console.log("field Value: " + !!myObj[i].fieldVal);
+        if (!!myObj[i].adj) {
+            if (j === 0) {
+                j = 1;
+                if (i === myObj.length - 1) {
+                    if (!!myObj[i].fieldVal) {
+                        myNewStat += " WHERE " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
+                        dataList(myNewStat,res)
+                    } else {
+                        // myNewStat += " WHERE " + myObj[i].dbCol + " IS NULL";
+                        dataList(myNewStat,res)
+                    }
+                } else {
+                    if (!!myObj[i].fieldVal) {
+                        myNewStat += " WHERE " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
+                    } else {
+                        // myNewStat += " WHERE " + myObj[i].dbCol + " IS NULL";
+                    }
+                }
+            } else {
+                if (i === myObj.length - 1) {
+                    if (!!myObj[i].fieldVal) {
+                        myNewStat += " AND " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
+                        dataList(myNewStat,res)
+                    } else {
+                        // myNewStat += " AND " + myObj[i].dbCol + " IS NULL";
+                        dataList(myNewStat,res)
+                    }
+                } else {
+                    if (!!myObj[i].fieldVal) {
+                        myNewStat += " AND " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
+                    } else {
+                        // myNewStat += " AND " + myObj[i].dbCol + " IS NULL";
+                    }
+                }
+            }
+        } else {
+            if (i === myObj.length - 1) {
+                dataList(myNewStat,res)
+            }
+        }
+    }
+}
+
 function dataList(SQLstatement, res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    // console.log("Query Statement: " + queryStat);
 
     connection.query(SQLstatement, function (err, results, fields) {
 
-        var status = [{errStatus: ""}];
+        errStatus = [{errMsg: ""}];
 
         if (err) {
             console.log(err);
-            status[0].errStatus = "fail";
-            res.send(status);
+            errStatus[0].errMsg = "fail";
+            res.send(errStatus);
             res.end();
         } else if (results.length === 0) {
-            status[0].errStatus = "no data entry";
-            res.send(status);
+            status[0].errMsg = "no data entry";
+            res.send(errStatus);
             res.end();
         } else {
             var JSONresult = JSON.stringify(results, null, "\t");
