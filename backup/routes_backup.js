@@ -6,7 +6,6 @@ var connection = mysql.createConnection(config.commondb_connection);
 var uploadPath = config.Upload_Path;
 var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt-nodejs');
-var fs = require('fs');
 
 var filePathName = "";
 var filePath;
@@ -93,7 +92,84 @@ module.exports = function (app, passport) {
     // =====================================
     // we will want this protected so you have to be logged in to visit
     // we will use route middleware to verify this (the isLoggedIn function)
-
+    //
+    // app.route('/reset/:token').get(res.render('reset'));
+    //
+    // app.get('/reset', function (req, res))
+    // {
+    //     exports.resetpassword = function (req, res) {
+    //         var data = req.body;
+    //
+    //         async.waterfall([
+    //             function (done) {
+    //                 User.findOne({
+    //                     resetPasswordToken: req.body.token,
+    //                     resetPasswordExpires: {
+    //                         $gt: Date.now()
+    //                     }
+    //                 }, function (err, user) {
+    //                     if (!user) {
+    //                         res.render('tinypage/regnotify', {
+    //                             title: "Something is wrong",
+    //                             alerttype: "alert-danger",
+    //                             message: "Something wrong with your password change."
+    //                         });
+    //                     } else {
+    //                         user.password = req.body.password;
+    //                         user.resetPasswordToken = '';
+    //                         user.resetPasswordExpires = '';
+    //                         user.save(function (err, user) {
+    //                             done(err, user);
+    //                         });
+    //                     }
+    //                 });
+    //             },
+    //
+    //             function (user, done) {
+    //                 var smtpTransport = nodemailer.createTransport('SMTP', {
+    //                     service: 'Mailgun',
+    //                     auth: {
+    //                         user: 'sdfa',
+    //                         pass: 'afdafsa'
+    //                     }
+    //                 });
+    //
+    //                 var mailOptions = {
+    //                     to: user.email,
+    //                     from: 'agdtrack@s.com',
+    //                     subject: 'Your password has been changed',
+    //                     text: 'Hello,\n\n' +
+    //                     'This is a confirmation that the password for your account ' + req.body.token + ' has just been changed.\n'
+    //                 };
+    //
+    //                 smtpTransport.sendMail(mailOptions, function (err) {
+    //                     if (err) {
+    //                         res.render('tinypage/regnotify', {
+    //                             title: "Wrong",
+    //                             alerttype: "alert-danger",
+    //                             message: "Something wrong"
+    //                         });
+    //                     } else {
+    //                         return res.render('tinypage/regnotify', {
+    //                             title: "Success",
+    //                             alerttype: "alert-success",
+    //                             message: "Success! Your password has been changed."
+    //                         });
+    //                         done(err);
+    //                     }
+    //                 });
+    //             }
+    //         ], function (err) {
+    //             res.redirect('/');
+    //         });
+    //     };
+    // });
+    //
+    // exports.renderresetpage = function(req, res) {
+    //     res.render('reset');
+    // };
+    //
+    // app.route('/reset/:token').post(resetpassword);
 
     // Show user profile page
     app.get('/userProfile', isLoggedIn, function (req, res) {
@@ -451,8 +527,8 @@ module.exports = function (app, passport) {
         console.log("transactionID: " + req.query.Transaction_ID);
 
         var transactionID = req.query.transactionIDStr.split(",");
-        var deleteStatementGeneral = "UPDATE General_Form SET statusDel = 'Deleted'";
-        var deleteStatementDetailed = "UPDATE Detailed_Form SET statusDel = 'Deleted'";
+        var deleteStatementGeneral = "UPDATE General_Form SET status = 'Deleted'";
+        var deleteStatementDetailed = "UPDATE Detailed_Form SET status = 'Deleted'";
 
         for (var i = 0; i < transactionID.length; i++) {
             if (i === 0) {
@@ -492,8 +568,8 @@ module.exports = function (app, passport) {
         console.log("transactionID: " + req.query.Transaction_ID);
 
         var transactionID = req.query.transactionIDStr.split(",");
-        var recoverStatementGeneral = "UPDATE General_Form SET statusDel = 'Active'";
-        var recoverStatementDetailed = "UPDATE Detailed_Form SET statusDel = 'Active'";
+        var recoverStatementGeneral = "UPDATE General_Form SET status = 'Active'";
+        var recoverStatementDetailed = "UPDATE Detailed_Form SET status = 'Active'";
 
         for (var i = 0; i < transactionID.length; i++) {
             if (i === 0) {
@@ -531,16 +607,12 @@ module.exports = function (app, passport) {
     // edit on homepage
     var editData;
     app.get('/sendEditData', isLoggedIn, function(req, res) {
-        console.log(req.query);
         editData = req.query;
-        console.log("ABC");
-        res.json({"error": false, "message": "/editData"});
+        //res.json({"error": false, "message": "/editUser"});
     });
 
     app.get('/editData', isLoggedIn, function(req, res) {
-        console.log("render");
         res.render('dataEdit.ejs', {
-            user: req.user,
             data: editData, // get the user out of session and pass to template
             message: req.flash('Data Entry Message')
         });
@@ -561,7 +633,7 @@ module.exports = function (app, passport) {
             if (!results[0].userrole) {
                 console.log("Error");
             } else {
-                res.render('userHome Copy.ejs', {
+                res.render('userHome.ejs', {
                     user: req.user // get the user out of session and pass to template
                 });
             }
@@ -583,27 +655,112 @@ module.exports = function (app, passport) {
         });
     });
 
-    app.get('/filterQuery', isLoggedIn, function (req, res) {
-        console.log("filterQ: " + req.query);
+    // // user home query
+    // app.get('/filterQuery', isLoggedIn, function (req, res) {
+    //
+    //     //console.log("dQ: " + req.query.dateCreatedFrom);
+    //     // connection.query('USE ' + config.Login_db);
+    //
+    //     var queryStat = "SELECT General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID WHERE Cr_UN = '" + req.user.username + "'";
+    //     // adj: checking
+    //     var myQuery = [
+    //         {
+    //             fieldName: "startDate",
+    //             fieldVal: req.query.startDate,
+    //             dbCol: "date",
+    //             op: " >= '",
+    //             adj: req.query.startDate
+    //         },
+    //         {
+    //             fieldName: "endDate",
+    //             fieldVal: req.query.endDate,
+    //             dbCol: "date",
+    //             op: " <= '",
+    //             adj: req.query.endDate
+    //         },
+    //         {
+    //             fieldName: "field1",
+    //             fieldVal: req.query.content1,
+    //             dbCol: req.query.filter1,
+    //             op: " = '",
+    //             adj: req.query.content1
+    //         },
+    //         {
+    //             fieldName: "field2",
+    //             fieldVal: req.query.content2,
+    //             dbCol: req.query.filter2,
+    //             op: " = '",
+    //             adj: req.query.content2
+    //         },
+    //         {
+    //             fieldName: "field3",
+    //             fieldVal: req.query.content3,
+    //             dbCol: req.query.filter3,
+    //             op: " = '",
+    //             adj: req.query.content3
+    //         }
+    //     ];
+    //
+    //     function filterQuery() {
+    //         res.setHeader("Access-Control-Allow-Origin", "*");
+    //         console.log("Query Statement: " + queryStat);
+    //
+    //         connection.query(queryStat, function (err, results, fields) {
+    //
+    //             var status = [{errStatus: ""}];
+    //
+    //             if (err) {
+    //                 console.log(err);
+    //                 status[0].errStatus = "fail";
+    //                 res.send(status);
+    //                 res.end();
+    //             } else if (results.length === 0) {
+    //                 status[0].errStatus = "no data entry";
+    //                 res.send(status);
+    //                 res.end();
+    //             } else {
+    //                 var JSONresult = JSON.stringify(results, null, "\t");
+    //                 //console.log(JSONresult);
+    //                 res.send(JSONresult);
+    //                 res.end();
+    //             }
+    //         });
+    //     }
+    //
+    //     for (var i = 0; i < myQuery.length; i++) {
+    //         //console.log("i = " + i);
+    //         //console.log("field Value: " + !!myQuery[i].fieldVal);
+    //         if (!!myQuery[i].adj) {
+    //             if (i === myQuery.length - 1) {
+    //                 if (!!myQuery[i].fieldVal) {
+    //                     queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+    //                     filterQuery()
+    //                 } else {
+    //                     queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
+    //                     filterQuery()
+    //                 }
+    //             } else {
+    //                 if (!!myQuery[i].fieldVal) {
+    //                     queryStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+    //                 } else {
+    //                     queryStat += " AND " + myQuery[i].dbCol + " IS NULL";
+    //                 }
+    //             }
+    //         } else {
+    //             if (i === myQuery.length - 1) {
+    //                 filterQuery()
+    //             }
+    //         }
+    //     }
+    // });
 
-        // var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Active' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Active'";
-        var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID";
+    app.get('/filterQuery', isLoggedIn, function (req, res) {
+        //console.log("dQ: " + req.query.dateCreatedFrom);
+        // connection.query('USE ' + config.Login_db);
+
+        var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Active' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Active'";
         // adj: checking
         var myQuery = [
-            {
-                fieldName: "statusDel",
-                fieldVal: req.query.statusDel,
-                dbCol: "General_Form.statusDel",
-                op: " = '",
-                adj: req.query.statusDel
-            },
-            {
-                fieldName: "statusDel",
-                fieldVal: req.query.statusDel,
-                dbCol: "Detailed_Form.statusDel",
-                op: " = '",
-                adj: req.query.statusDel
-            },
             {
                 fieldName: "firstName",
                 fieldVal: req.query.firstName,
@@ -760,6 +917,8 @@ module.exports = function (app, passport) {
     });
 
     app.get('/filterQueryDeleted', isLoggedIn, function (req, res) {
+        //console.log("dQ: " + req.query.dateCreatedFrom);
+        // connection.query('USE ' + config.Login_db);
 
         var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Deleted' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Deleted'";
         // adj: checking
@@ -889,6 +1048,37 @@ module.exports = function (app, passport) {
         }
     });
 
+    // Prepare and assign new transaction ID
+    app.get('/newEntry', isLoggedIn, function (req, res) {
+        var d = new Date();
+        var utcDateTime = d.getUTCFullYear() + "-" + ('0' + (d.getUTCMonth() + 1)).slice(-2) + "-" + ('0' + d.getUTCDate()).slice(-2);
+        var queryTransID = "SELECT COUNT(transactionID) AS number FROM FAW.Transaction WHERE transactionID LIKE '" + utcDateTime + "%';";
+
+        connection.query(queryTransID, function (err, results, fields) {
+            transactionID = utcDateTime + "_" + ('0000' + (results[0].number + 1)).slice(-5);
+            if (err) {
+                console.log(err);
+            } else {
+                var insertTransID = "INSERT INTO FAW.Transaction (transactionID, Cr_UN) VALUE (" + "'" + transactionID + "', '" + req.user.username + "');";
+                connection.query(insertTransID, function (err, results, fields) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        // Show general form
+                        res.render('form.ejs', {
+                            user: req.user, // get the user out of session and pass to template
+                            message: req.flash('Data Entry Message'),
+                            firstname: req.user.firstName,
+                            lastname: req.user.lastName,
+                            transactionID: transactionID
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+
     // Submit general form
     app.post('/generalForm', isLoggedIn, function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*");
@@ -946,7 +1136,7 @@ module.exports = function (app, passport) {
     });
 
     // Upload photos
-    app.post('/upload', fileUpload, function (req,res) {
+    app.post('/uploadfiles', fileUpload, function (req,res) {
         //console.log(req.headers.origin);
         res.setHeader("Access-Control-Allow-Origin", "*");
 
@@ -958,32 +1148,9 @@ module.exports = function (app, passport) {
                 //res.send("Error uploading file.");
             } else {
                 console.log("Success:" + filePathName);
+                res.json({"error": false, "message": filePathName});
                 filePath = filePathName;
-                if (!!filePathName){
-                    // filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
-                    res.json({"error": false, "message": filePathName});
-                    filePathName = "";
-                } else {
-                    var error = false;
-                    filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
-                    var files = (editData.Photo_of_Pest + ";" + editData.Photo_of_Damage).split(";");
-                    for (var i = 0; i < files.length; i++) {
-                        fs.unlink(files[i],function(err){
-                            if(err) {
-                                error = true;
-                                res.json({"error": true, "message": "Upload Fail !"});
-                                filePathName = "";
-                            }
-                        });
-
-                        if (i === files.length - 1 && error === false) {
-                            res.json({"error": false, "message": filePathName});
-                            filePathName = "";
-                        }
-                    }
-                }
-                // res.json({"error": false, "message": filePathName});
-                // filePathName = "";
+                filePathName = "";
                 //res.send("File is uploaded");
             }
         });

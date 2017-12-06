@@ -1,0 +1,82 @@
+<html>
+<body style="margin-left:0px;">
+<div class="custom-header">
+    <div class="custom-header-left">
+
+    </div>
+    <div class="custom-header-button">
+
+    </div>
+    <div class="custom-header-right">
+        <a class="navbar-brand">
+            <img alt="AGD" src="agdlogo.png" style="width:70%; margin-top:-22%;">
+        </a>
+        <a class="navbar-brand" href="/"> XXX &nbsp;</a>
+        <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>
+    </div>
+</div>
+
+<!-- Top Bar-->
+
+<div id="fullpage">
+    <div class="">
+        <div class="col-md-12  custom-margin-top">
+            <div class="panel panel-primary text-left">
+                <div class="panel-heading">Reset your Password</div>
+                <div class="panel-body">
+                    <div class="col-md-10 ">
+                        <form id="resetpass" role="form" class="form">
+                            <div>
+                                <div class="form-group">
+                                    <label for="InputEmail">New Password</label>
+                                    <input type="password" class="form-control" id="password" class="password" name="password" placeholder="Enter Email" required>
+                                    <label for="InputEmail">Confirm Password</label>
+                                    <input type="password" class="form-control" id="repass" class="repass" name="repass" placeholder="Enter Email" required>
+                                    <!--    <input type="hidden" name="token" id="token">-->
+                                    <button type="submit">Submit</button>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+
+<script>
+    var params = location.href;
+    var paramsplit = params.split('/');
+    //console.log(paramsplit);
+    $("#resetpass").submit(function (e) {
+        var resetData = {
+            password: $("#password").val(),
+            repass: $("#repass").val(),
+            token: paramsplit[4]
+        }
+
+        console.log(resetData);
+
+        // console.log(resetData);
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: '/reset/:token',
+            data: JSON.stringify(resetData),
+            success: function (data) {
+                //console.log(data); // show response from the php script.
+            }
+        });
+
+        // e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+</script>
+<style CSS>
+    @import url("https://bootswatch.com/flatly/bootstrap.min.css");
+</style>
+</html>
