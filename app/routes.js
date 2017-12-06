@@ -555,7 +555,7 @@ module.exports = function (app, passport) {
             if (!results[0].userrole) {
                 console.log("Error");
             } else {
-                res.render('userHome.ejs', {
+                res.render('userHome Copy.ejs', {
                     user: req.user // get the user out of session and pass to template
                 });
             }
