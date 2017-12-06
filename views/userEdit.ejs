@@ -87,7 +87,8 @@
 			<select id="StAtUs" name="Status" class="form-control">
 				<option class="active"  value="Active">Active</option>
                 <option class="suspended" value="Suspended">Suspended</option>
-			</select>
+                <option class="never_logged_in" value="Never Logged In">Never Logged In</option>
+            </select>
 		</div><br>
 
 		<button type="submit" class="btn btn-warning btn-lg"> Update </button>
@@ -139,8 +140,7 @@
                 if (!res.error) {
                     window.location.replace(res.message)
                 } else {
-                    alert(res.message);
-                }
+                    window.location.replace('/userManagement')                }
             }
         });
 
