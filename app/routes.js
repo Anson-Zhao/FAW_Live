@@ -9,12 +9,8 @@ var bcrypt = require('bcrypt-nodejs');
 var fs = require('fs');
 
 var filePathName = "";
-var filePath, transactionID, statementGeneral, statementDetailed, myStat, myVal;
-
-var today = new Date();
-var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-var dateTime = date + ' ' + time2;
+var filePath, transactionID, statementGeneral, statementDetailed, myStat, myVal, myErrMsg;
+var today, date, time2, dateTime;
 
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -57,7 +53,7 @@ module.exports = function (app, passport) {
 
     // process the login form
     app.post('/login', passport.authenticate('local-login', {
-            successRedirect: '/statusUpdate', // redirect to the secure profile section
+            successRedirect: '/loginUpdate', // redirect to the secure profile section
             failureRedirect: '/login', // redirect back to the signup page if there is an error
             failureFlash: true // allow flash messages
         }),
@@ -70,22 +66,13 @@ module.exports = function (app, passport) {
         });
 
     // Update user login status
-    app.get('/statusUpdate', isLoggedIn, function (req, res) {
-        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+    app.get('/loginUpdate', isLoggedIn, function (req, res) {
+        dateNtime();
 
         myStat = "UPDATE Users SET status = 'Active', lastLoginTime = ? WHERE username = ?";
-
-        connection.query(myStat,[dateTime, req.user.username],function(err, rows) {
-            // console.log(dateTime, req.user.username);
-
-            if (err) {
-                console.log(err);
-                res.render('login.ejs', {message: req.flash('Please try to login again')});
-            } else {
-                res.redirect('/userhome');
-                // render the page and pass in any flash data if it exists
-            }
-        })
+        myVal = [dateTime, req.user.username];
+        myErrMsg = "Please try to login again";
+        updateDBNredir(myStat, myVal, myErrMsg, "login.ejs", "/userhome", res);
     });
 
     app.get('/forgotPass', function (req, res) {
@@ -116,10 +103,13 @@ module.exports = function (app, passport) {
             Newpassword: bcrypt.hashSync(req.body.newpassword, null, null),
             ConfirmPassword: bcrypt.hashSync(req.body.Confirmpassword, null, null)
         };
-        // var changeusername = "'UPDATE Users Set password = '" + newPassword.usernameF + "' WHERE username        "
+
+        dateNtime();
 
         myStat = "UPDATE Users SET firstName =?, lastName = ?, dateModified  = ? WHERE username = ? ";
-        connection.query(myStat, [newPass.firstname, newPass.lastname, dateTime, user.username], function (err, rows) {
+        myVal = [newPass.firstname, newPass.lastname, dateTime, user.username];
+
+        connection.query(myStat, myVal, function (err, rows) {
             if(err){
                 console.log(err);
                 res.json({"error": true, "message": "Fail !"});
@@ -376,6 +366,7 @@ module.exports = function (app, passport) {
 
     app.get('/suspendUser', isLoggedIn, function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+        dateNtime();
 
         var username = req.query.usernameStr.split(",");
         myStat = "UPDATE Users SET modifiedUser = '" + req.user.username + "', dateModified = '" + dateTime + "', status = 'Suspended'";
@@ -457,7 +448,7 @@ module.exports = function (app, passport) {
     });
 
     app.get('/filterQuery', isLoggedIn, function (req, res) {
-
+        console.log("AZ");
         // var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Active' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Active'";
         var queryStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID";
         // adj: checking
@@ -939,6 +930,13 @@ function isLoggedIn(req, res, next) {
     res.redirect('/');
 }
 
+function dateNtime() {
+    today = new Date();
+    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    dateTime = date + ' ' + time2;
+}
+
 function del_recov(StatusUpd, ErrMsg, targetURL, req, res) {
 
     transactionID = req.query.transactionIDStr.split(",");
@@ -980,4 +978,45 @@ function updateDBNres(SQLstatement, Value, ErrMsg, targetURL, res) {
             res.json({"error": true, "message": ErrMsg});
         } else { res.json({"error": false, "message": targetURL});}
     })
+}
+
+function updateDBNredir(SQLstatement, Value, ErrMsg, failURL, redirURL, res) {
+    res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+    //console.log("Query Statement: " + SQLstatement);
+
+    connection.query(SQLstatement, Value, function (err, rows) {
+        if (err) {
+            console.log(err);
+            res.render(failURL, {message: req.flash(ErrMsg)});
+        } else {
+            res.redirect(redirURL);
+            // render the page and pass in any flash data if it exists
+        }
+    })
+}
+
+function dataList(SQLstatement, res) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    // console.log("Query Statement: " + queryStat);
+
+    connection.query(SQLstatement, function (err, results, fields) {
+
+        var status = [{errStatus: ""}];
+
+        if (err) {
+            console.log(err);
+            status[0].errStatus = "fail";
+            res.send(status);
+            res.end();
+        } else if (results.length === 0) {
+            status[0].errStatus = "no data entry";
+            res.send(status);
+            res.end();
+        } else {
+            var JSONresult = JSON.stringify(results, null, "\t");
+            console.log(JSONresult);
+            res.send(JSONresult);
+            res.end();
+        }
+    });
 }
