@@ -83,7 +83,7 @@
 </div><br><br>
 <div id="pageHeader" class="page-header text-center">
     <h1><span class="fa fa-anchor"></span> FAW Project -  Recovery </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
-    <a href="/userHome" class="btn btn-default btn-lg"><span class="randomText">User Home</span></a>&nbsp;&nbsp;&nbsp;
+    <a href="/userhome" class="btn btn-default btn-lg"><span class="randomText">User Home</span></a>&nbsp;&nbsp;&nbsp;
     <a href="/newEntry" class="btn btn-default btn-lg"><span class="randomText">New Entry</span></a>&nbsp;&nbsp;&nbsp;
     <a href="/dataHistory" class="btn btn-default btn-lg"><span class="randomText">Data History</span></a>&nbsp;&nbsp;&nbsp;
     <div class="dropdown floating-Box">
@@ -117,7 +117,7 @@
                     <th>Province</th>
                     <th>District</th>
                     <th>Cropping_System</th>
-                    <th>Rotation/Intercropping_Crop</th>
+                    <th>Rotation_Intercropping_Crop</th>
                     <th>Maize_Variety</th>
                     <th>Maize_Planting_Date</th>
                     <th>Field_Size</th>
@@ -129,8 +129,8 @@
                     <th>Early_Damage_Level</th>
                     <th>Late_Damage_Level</th>
                     <th>Natural_Enemies_Present</th>
-                    <th>Dead_larvae_killed_by_natural_enemies_</th>
-                    <th>%_Plants_Infested</th>
+                    <th>Dead_Larvae_Killed_by_Natural_Enemies</th>
+                    <th>Percent_Plants_Infested</th>
                     <th>Control_Undertaken</th>
                     <th>Pesticide_Litres_Sprayed</th>
                     <th>Photo_of_Pest</th>
@@ -153,7 +153,7 @@
                     <th>Province</th>
                     <th>District</th>
                     <th>Cropping_System</th>
-                    <th>Rotation/Intercropping_Crop</th>
+                    <th>Rotation_Intercropping_Crop</th>
                     <th>Maize_Variety</th>
                     <th>Maize_Planting_Date</th>
                     <th>Field_Size</th>
@@ -165,8 +165,8 @@
                     <th>Early_Damage_Level</th>
                     <th>Late_Damage_Level</th>
                     <th>Natural_Enemies_Present</th>
-                    <th>Dead_larvae_killed_by_natural_enemies_</th>
-                    <th>%_Plants_Infested</th>
+                    <th>Dead_Larvae_Killed_by_Natural_Enemies</th>
+                    <th>Percent_Plants_Infested</th>
                     <th>Control_Undertaken</th>
                     <th>Pesticide_Litres_Sprayed</th>
                     <th>Photo_of_Pest</th>
@@ -187,26 +187,9 @@
     var d;
     var transactionID = [];
 
-    $(document).ready(function() {
-        $(".add-row").click(function () {
-            var name = $("#name").val();
-            var email = $("#email").val();
-            var markup = "<tr><td><input type='checkbox' name='record'></td><td>" + name + "</td><td>" + email + "</td></tr>";
-            $("table tbody").append(markup);
-        });
-
-        // Find and remove selected table rows
-        $(".delete-row").click(function () {
-            $("table tbody").find('input[name="record"]').each(function () {
-                if ($(this).is(":checked")) {
-                    $(this).parents("tr").remove();
-                }
-            });
-        });
+    $(document).ready(function(){
 
         $(function () {
-            queryAndDisplay("statusDel=" + "Deleted" + "&firstName=" + "<%= user.firstName %>" + "&lastName=" + "<%= user.lastName %>");
-
             flatpickr(".date", {
                 dateFormat: "Y-m-d",
                 time_24hr: true
@@ -224,6 +207,11 @@
                 $("#userMenu").empty();
                 $("#userMenu").append(DropMenu)
             }
+
+            table.clear();
+            table.draw();
+            queryAndDisplay("statusDel=" + "Deleted" + "&firstName=" + "<%= user.firstName %>" + "&lastName=" + "<%= user.lastName %>");
+
         });
 
         $('#dataDisplay tbody').on('click', 'tr', function () {
@@ -257,11 +245,6 @@
 
         $("#recoverButton").on("click", function () {
             if (confirm("Are you sure you would like to recover this row(s)?") === true) {
-//                 alert(d);
-//                 alert("Row: " + rowSelected[1].Name);
-//                alert(rowSelected[2].Name);
-//                alert(rowSelected[2].Value);
-
                 var transactionIDStr = "transactionIDStr=";
                 for (var i = 0; i < transactionID.length; i++) {
                     transactionIDStr += transactionID[i] + ",";
@@ -311,53 +294,52 @@
     }
 
     var queryAndDisplay = function (querystr) {
+        $.ajax({
+            url: '/filterQuery',
+            type: 'GET',
+            dataType: 'json',
+            async: false,
+            data: querystr,
+            success: function (resp) {
 
-            $.ajax({
-                url: '/filterQuery',
-                type: 'GET',
-                dataType: 'json',
-                async: false,
-                data: querystr,
-                success: function (resp) {
-
-                    if (!resp[0].errStatus) {
-                        for (var i = 0; i < resp.length; i++) {
-                            table.row.add([
-                                resp[i].transactionID,
-                                resp[i].date,
-                                resp[i].trapOwner,
-                                resp[i].locationName,
-                                resp[i].locationType,
-                                resp[i].latitude,
-                                resp[i].longitude,
-                                resp[i].country,
-                                resp[i].province,
-                                resp[i].district,
-                                resp[i].croppingSystem,
-                                resp[i].rota_inter_crop,
-                                resp[i].maizeVariety,
-                                resp[i].plantingDate,
-                                resp[i].fieldSize,
-                                resp[i].healthOfMaize,
-                                resp[i].lastRainDate,
-                                resp[i].entryType,
-                                resp[i].pestsPresent,
-                                resp[i].fawStage,
-                                resp[i].earlyDamageLevel,
-                                resp[i].lateDamageLevel,
-                                resp[i].naturalEnemies,
-                                resp[i].deadLarvae,
-                                resp[i].percentInfested,
-                                resp[i].control,
-                                resp[i].pesticide,
-                                resp[i].pestPhoto,
-                                resp[i].damagePhoto
-                            ]).draw(false);
-                        }
+                if (!resp[0].errMsg) {
+                    for (var i = 0; i < resp.length; i++) {
+                        table.row.add([
+                            resp[i].transactionID,
+                            resp[i].date,
+                            resp[i].trapOwner,
+                            resp[i].locationName,
+                            resp[i].locationType,
+                            resp[i].latitude,
+                            resp[i].longitude,
+                            resp[i].country,
+                            resp[i].province,
+                            resp[i].district,
+                            resp[i].croppingSystem,
+                            resp[i].rota_inter_crop,
+                            resp[i].maizeVariety,
+                            resp[i].plantingDate,
+                            resp[i].fieldSize,
+                            resp[i].healthOfMaize,
+                            resp[i].lastRainDate,
+                            resp[i].entryType,
+                            resp[i].pestsPresent,
+                            resp[i].fawStage,
+                            resp[i].earlyDamageLevel,
+                            resp[i].lateDamageLevel,
+                            resp[i].naturalEnemies,
+                            resp[i].deadLarvae,
+                            resp[i].percentInfested,
+                            resp[i].control,
+                            resp[i].pesticide,
+                            resp[i].pestPhoto,
+                            resp[i].damagePhoto
+                        ]).draw(false);
                     }
                 }
-            });
-        }
-    </script>
+            }
+        });
+    }
+</script>
 </body>
 </html>

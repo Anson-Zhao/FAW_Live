@@ -83,8 +83,8 @@
                 <h6 class="floatingBox">Last Name:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate" type="text" id="lastName" placeholder="Enter Last Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                 <h4 class="floatingBox"><strong>User Role:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="radio" name="userrole" id="Admin" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;
                 <input type="radio" name="userrole" id="Regular" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="userrole" id="Admin" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
             <br>
 
@@ -144,9 +144,10 @@
         var queryString2;
         var table = $('#dataDisplay').DataTable();
         var tstring = "";
-        var UserRole = "<%= user.userrole %>";
+        var UserRol = "<%= user.userrole %>";
         var DropMenu;
         var username = [];
+        var userrole = "";
 
         $(document).ready(function() {
             $(function () {
@@ -157,13 +158,13 @@
                     time_24hr: true
                 });
 
-                if (UserRole === "Admin") {
+                if (UserRol === "Admin") {
                     DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
                         "\t\t\t<li><a href=\"/userManagement\">User Management</a></li>\n" +
                         "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
                     $("#userMenu").empty();
                     $("#userMenu").append(DropMenu)
-                } else if (UserRole === "Regular") {
+                } else if (UserRol === "Regular") {
                     DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
                         "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
                     $("#userMenu").empty();
@@ -276,8 +277,8 @@
             var dateModifiedTo = document.getElementsByClassName("datePicker")[3].value;
             var firstName = document.getElementById("firstName").value;
             var lastName = document.getElementById("lastName").value;
-            if ($("input[name='userrole']").prop("checked")) {
-                var userrole = $("input[name='userrole']:checked").val();
+            if ($("input[name='userrole']").is(":checked")) {
+                userrole = $("input[name='userrole']:checked").val();
             } else {
                 userrole = "";
             }
