@@ -83,8 +83,8 @@
                 <h6 class="floatingBox">Last Name:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate" type="text" id="lastName" placeholder="Enter Last Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                 <h4 class="floatingBox"><strong>User Role:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="radio" name="userrole" id="Admin" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="radio" name="userrole" id="Regular" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="userrole" id="Regular" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="userrole" id="Admin" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
             <br>
 
@@ -147,9 +147,11 @@
         var UserRol = "<%= user.userrole %>";
         var DropMenu;
         var username = [];
+        var userrole = "";
 
         $(document).ready(function() {
             $(function () {
+                alert ("Default: " + userrole);
                 queryAndDisplay();
 
                 flatpickr(".date", {
@@ -276,8 +278,10 @@
             var dateModifiedTo = document.getElementsByClassName("datePicker")[3].value;
             var firstName = document.getElementById("firstName").value;
             var lastName = document.getElementById("lastName").value;
-            if ($("input[type='radio']").prop("checked")) {
-                var userrole = $("input[type='radio']:checked").val();
+//            userrole = $("input[name='userrole']:checked").val();
+//            alert ("Checked: " + userrole);
+            if ($("input[name='userrole']").prop("checked")) {
+                userrole = $("input[name='userrole']:checked").val();
                 alert ("Checked: " + userrole);
             } else {
                 userrole = "";
