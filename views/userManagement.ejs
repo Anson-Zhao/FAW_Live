@@ -151,7 +151,6 @@
 
         $(document).ready(function() {
             $(function () {
-                alert ("Default: " + userrole);
                 queryAndDisplay();
 
                 flatpickr(".date", {
@@ -278,14 +277,10 @@
             var dateModifiedTo = document.getElementsByClassName("datePicker")[3].value;
             var firstName = document.getElementById("firstName").value;
             var lastName = document.getElementById("lastName").value;
-//            userrole = $("input[name='userrole']:checked").val();
-//            alert ("Checked: " + userrole);
-            if ($("input[name='userrole']").prop("checked")) {
+            if ($("input[name='userrole']").is(":checked")) {
                 userrole = $("input[name='userrole']:checked").val();
-                alert ("Checked: " + userrole);
             } else {
                 userrole = "";
-                alert ("Unchecked: " + userrole);
             }
 
             queryString1 = "dateCreatedFrom=" + dateCreatedFrom + "&dateCreatedTo=" + dateCreatedTo + "&dateModifiedFrom=" + dateModifiedFrom + "&dateModifiedTo=" + dateModifiedTo;
