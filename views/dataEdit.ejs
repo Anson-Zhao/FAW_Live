@@ -281,7 +281,6 @@
         $("#locationType").val("<%= data.Location_Type %>");
         var latitude = "<%= data.Latitude %>".split(" ");
         var longitude = "<%= data.Longitude %>".split(" ");
-        alert(latitude + "     " + longitude);
 
         var latitudeTitle = $("#latitudeTitle");
         var latitudeSelect = $("<select id='latitudeDirection' name='latitudeDirection' required>");
@@ -352,7 +351,7 @@
 
             var popWidth = document.getElementById("p" + p).naturalWidth;
             var popHeight = document.getElementById("p" + p).naturalHeight;
-//                            alert("weight: " + popWidth + "     height: " + popHeight);
+
             if (popWidth > popHeight) {
                 document.getElementById("p" + p).setAttribute("class", "x");
             } else if (popWidth < popHeight) {
@@ -408,7 +407,6 @@
         $('#detailed').submit(function(e) {
             // Prevent form submission
             e.preventDefault();
-            alert("Y");
             $("#uploadfiles").ajaxSubmit(options);
             // Prevent form submission
             e.preventDefault();
@@ -417,7 +415,6 @@
         $('#general').submit(function(e) {
             // Prevent form submission
             e.preventDefault();
-            alert("X");
             document.getElementById("title").innerHTML = "Step 2/2: Detailed Form";
             document.getElementById("generalForm").style.display = "none";
             document.getElementById("detailedForm").style.display = "block";
@@ -465,7 +462,6 @@
     }
 
     function refresh() {
-        alert("ABC");
         var latiDirection = document.getElementById("latitudeDirection").value;
         var longDirection = document.getElementById("longitudeDirection").value;
         var latiDegree = document.getElementById("latitudeDegree").value;
@@ -537,15 +533,12 @@
             var four_digit = document.getElementById("fieldSizeInteger").value;
 
             if (key === 190) {
-                //alert(document.getElementById("fieldSizeInteger").value);
                 document.getElementById("fieldSizeInteger").value = four_digit + "00000";
 
                 document.getElementById("fieldSizeDecimal").focus();
             }
 
             if (document.getElementById("fieldSizeInteger").value.length > 4) {
-                //alert(four_digit + " " + four_digit.length);
-
                 document.getElementById("fieldSizeInteger").value = four_digit.substring(0, 4);
             }
         } else if (activeElementId === "fieldSizeDecimal") {
@@ -589,7 +582,7 @@
         var i = 0;
         $('[required]').each(function() {
             if ($(this).val() === '') {
-                alert($(this).val());
+//                alert($(this).val());
                 isValid = false;
             }
         });
@@ -597,8 +590,8 @@
         $('input[type=radio]:checked').each(function() {
             i = i + 1;
         });
-        alert(isValid);
-        alert(i);
+//        alert(isValid);
+//        alert(i);
 
         if (isValid && i === 3) {
             return true;
@@ -609,8 +602,7 @@
 
     function showResponse(responseText, statusText, xhr, $form) {
         if (!responseText.error) {
-            alert(responseText.message);
-            alert("A");
+//            alert(responseText.message);
             $.ajax({
                 type: "post",
                 url: "/generalForm",
