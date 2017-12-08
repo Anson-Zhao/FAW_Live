@@ -143,10 +143,13 @@
         var queryString1;
         var queryString2;
         var table = $('#dataDisplay').DataTable();
+//        var d = table.row('tbody').data();
         var tstring = "";
         var UserRole = "<%= user.userrole %>";
         var DropMenu;
         var username = [];
+//        var counter = table.rows( '.selected' ).count();
+        var rdSelected = table.rows('.selected').data();
 
         $(document).ready(function() {
             $(function () {
@@ -174,7 +177,9 @@
             $('#dataDisplay tbody').on('click', 'tr', function () {
                 if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
-                    d = table.row(this).data();
+                    rdSelected.length+= -1;
+//                    counter+= -1;
+//                    d = table.row(this).data();
                     var index = username.indexOf(d[2]);
                     username.splice(index, 1);
                 } else {
@@ -187,7 +192,12 @@
 
                     username.push(d[2]);
 
+                    rdSelected.length+= 1;
+
+
                     var thArray = [];
+
+
 
                     $('#dataDisplay > thead > tr > th').each(function () {
                         thArray.push($(this).text())
@@ -196,17 +206,25 @@
                     console.log("thArray length: " + thArray.length);
 
                     for (var i = 0; i < thArray.length; i++) {
+//                        classCount.push()
                         rowSelected[i] = {};
                         rowSelected[i].Name = thArray[i];
                         rowSelected[i].Value = d[i];
+
                     }
+
                 }
+                console.log("counter: " + rdSelected.length);
 
             });
 
 
+
             $("#editUserButton").on("click", function () {
-                if (confirm("Please make sure to only select ONE of the users to edit.") === true) {
+//                if (confirm("Please make sure to only select ONE of the users to edit.") === true) {
+
+                console.log(rowSelected.length)
+
 
                     for (var i = 0; i < rowSelected.length; i++) {
                         if (i === 0) {
@@ -216,21 +234,27 @@
                         }
 
                     }
-//                    console.log("tstring for loop: " + tstring);
 
-                        $.ajax({
-                            url: '/editUserQuery',
-                            type: 'GET',
-                            dataType: 'json',
-                            async: false,
-                            data: tstring,
-                            success: function (result) {
-                                window.location.replace('/editUser')
-                            }
-                        })
-                } else {
-                    return false;
-                }
+                if (rdSelected !== 1) {
+                            alert("Only ONE!!!");
+    //                    console.log("tstring for loop: " + tstring);
+
+                    } else {
+
+                            $.ajax({
+                                url: '/editUserQuery',
+                                type: 'GET',
+                                dataType: 'json',
+                                async: false,
+                                data: tstring,
+                                success: function (result) {
+                                    window.location.replace('/editUser')
+                                }
+                            })
+                        }
+//                } else {
+//                    return false;
+//                }
             });
 
 
