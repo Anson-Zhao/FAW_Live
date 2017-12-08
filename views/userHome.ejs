@@ -236,7 +236,6 @@
     </div>
 </div>
 <script type='text/javascript'>
-    var dtstring = "";
     var rowSelected = [];
     var table = $("#dataDisplay").DataTable();
     var UserRole = "<%= user.userrole %>";
@@ -273,6 +272,7 @@
         $('#dataDisplay tbody').on('click', 'tr', function () {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
+
                 d = table.row(this).data();
                 var index = transactionID.indexOf(d[0]);
                 transactionID.splice(index, 1);
@@ -311,8 +311,6 @@
                     }
 
                 }
-
-//                alert("tstring for loop: " + tstring);
 
                 $.ajax({
                     url: '/sendEditData',
