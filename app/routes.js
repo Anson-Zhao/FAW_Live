@@ -367,10 +367,12 @@ module.exports = function (app, passport) {
     app.get('/sendEditData', isLoggedIn, function(req, res) {
         editData = req.query;
         res.json({"error": false, "message": "/editData"});
+
+        console.log("tranID: " + editData.Transaction_ID)
     });
 
     app.get('/editData', isLoggedIn, function(req, res) {
-        console.log("render");
+        console.log("render TranID: " + editData.Transaction_ID);
         res.render('dataEdit.ejs', {
             user: req.user,
             data: editData, // get the user out of session and pass to template

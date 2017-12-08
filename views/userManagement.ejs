@@ -139,7 +139,6 @@
         var rowSelected, thArray, DropMenu, queryString1, queryString2;
         var table = $('#dataDisplay').DataTable({ "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]]});
         var querystr = "";
-        var tstring = "";
         var userrole = "";
         var UserRol = "<%= user.userrole %>";
         var rowUserName = [];
@@ -180,14 +179,19 @@
                 })
 
                 for (var i = 0; i < rowSelected.length; i ++) {
-                    console.log("rowSelected[" + i + "][2]: " + rowSelected[i][2]);
+//                    console.log("rowSelected[" + i + "][2]: " + rowSelected[i][2]);
                     rowUserName.push(rowSelected[i][2]);
                 }
             });
 
 
             $("#editUserButton").on("click", function () {
-                if (confirm("Please make sure to only select ONE of the users to edit.")) {
+                if (rowSelected.length >= 2) {
+                    confirm("Please make sure to only select ONE of the users to edit.")
+                } else if (rowSelected.length === 0) {
+                    confirm("No rows have been selected---- please choose ONE.")
+                } else {
+                    var tstring = "";
 
                     for (var i = 0; i < thArray.length; i++) {
                         if (i === 0) {
@@ -197,6 +201,8 @@
                         }
                     }
 //                    console.log("tstring for loop: " + tstring);
+
+
 
                     $.ajax({
                         url: '/editUserQuery',
@@ -208,7 +214,7 @@
                             window.location.replace('/editUser')
                         }
                     })
-                } else { return false; }
+                }
             });
 
             $("#suspendUserButton").on("click", function () {
@@ -265,7 +271,7 @@
 
         var queryAndDisplay = function (querystr) {
             // alert(querystr);
-            console.log("querystr: " + querystr);
+//            console.log("querystr: " + querystr);
 
             $.ajax({
                 url: '/filterUser',

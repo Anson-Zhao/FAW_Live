@@ -236,11 +236,9 @@
     </div>
 </div>
 <script type='text/javascript'>
-    var rowSelected = [];
+    var rowSelected, thArray, DropMenu, queryString1, queryString2;
     var table = $("#dataDisplay").DataTable();
     var UserRole = "<%= user.userrole %>";
-    var DropMenu;
-    var d;
     var transactionID = [];
 
     $(document).ready(function(){
@@ -270,47 +268,40 @@
         });
 
         $('#dataDisplay tbody').on('click', 'tr', function () {
-            if ($(this).hasClass('selected')) {
-                $(this).removeClass('selected');
+            thArray = [];
+            transactionID = [];
 
-                d = table.row(this).data();
-                var index = transactionID.indexOf(d[0]);
-                transactionID.splice(index, 1);
-            } else {
-                $(this).addClass('selected');
+            $(this).toggleClass('selected');    //toggle class for the rows selected
 
-                d = table.row(this).data();
-                d.counter++;
-                table.row(this).data(d).draw();
+            rowSelected = table.rows('.selected').data();    //Store all the data for selected rows'
 
-                transactionID.push(d[0]);
+            $('#dataDisplay > thead > tr > th').each(function () {
+                thArray.push($(this).text())
+            })
 
-                var thArray = [];
-
-                $('#dataDisplay > thead > tr > th').each(function () {
-                    thArray.push($(this).text())
-                })
-
-                for (var i = 0; i < thArray.length; i++) {
-                    rowSelected[i] = {};
-                    rowSelected[i].Name = thArray[i];
-                    rowSelected[i].Value = d[i];
-                }
+            for (var i = 0; i < rowSelected.length; i ++) {
+//                console.log("rowSelected[" + i + "][2]: " + rowSelected[i][2]);
+                transactionID.push(rowSelected[i][2]);
             }
         });
 
         $("#editButton").on("click", function () {
-            if (confirm("Please make sure to only select ONE of the users to edit.") === true) {
+            if (rowSelected.length >= 2) {
+                confirm("Please make sure to only select ONE of the users to edit.")
+            } else if (rowSelected.length === 0) {
+                confirm("No rows have been selected---- please choose ONE.")
+            } else {
                 var tstring = "";
 
-                for (var i = 0; i < rowSelected.length; i++) {
+                for (var i = 0; i < thArray.length; i++) {
                     if (i === 0) {
-                        tstring += rowSelected[i].Name + "=" + rowSelected[i].Value;
+                        tstring += thArray[i] + "=" + rowSelected[0][i];
                     } else {
-                        tstring += "&" + rowSelected[i].Name + "=" + rowSelected[i].Value;
+                        tstring += "&" + thArray[i] + "=" + rowSelected[0][i];
                     }
-
                 }
+
+//                console.log("rowSelected all: " + tstring);
 
                 $.ajax({
                     url: '/sendEditData',
@@ -322,22 +313,12 @@
                         window.location.replace('/editData')
                     }
                 })
-            } else {
-                return false;
             }
         });
 
         $("#deleteButton").on("click", function () {
             if (confirm("Are you sure you would like to delete this row(s)?") === true) {
-               var transactionIDStr = "transactionIDStr=";
-                for (var i = 0; i < transactionID.length; i++) {
-                    transactionIDStr += transactionID[i] + ",";
-                    if (i === transactionID.length - 1) {
-                        transactionIDStr = transactionIDStr.substring(0, transactionIDStr.length - 1);
-//                            alert(usernameStr);
-                        update();
-                    }
-                }
+                var transactionIDStr = "transactionIDStr=" + transactionID.toString();
 
                 function update() {
 
@@ -370,7 +351,10 @@
         var content2 = document.getElementsByClassName("content")[1].value;
         var content3 = document.getElementsByClassName("content")[2].value;
 
-        var queryStr = "statusDel=" + "Active" + "&firstName=" + firstName + "&lastName=" + lastName + "&startDate=" + startDate + "&endDate=" + endDate + "&filter1=" + filter1 + "&filter2=" + filter2 + "&filter3=" + filter3 + "&content1=" + content1 + "&content2=" + content2 + "&content3=" + content3;
+        queryString1 = "statusDel=" + "Active" + "&firstName=" + firstName + "&lastName=" + lastName + "&startDate=" + startDate + "&endDate=" + endDate;
+        queryString2 = "&filter1=" + filter1 + "&filter2=" + filter2 + "&filter3=" + filter3 + "&content1=" + content1 + "&content2=" + content2 + "&content3=" + content3;
+
+        queryStr =  queryString1 + queryString2;
         // alert(queryStr);
         table.clear();
         table.draw();

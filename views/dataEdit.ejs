@@ -10,14 +10,13 @@
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.min.css">
     <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBX94wEDdQ52lCDhKAhcfR-flIw1NyLTMA"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="/scripts/jquery.form.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.js"></script>
+    <script src="//unpkg.com/flatpickr"></script>
     <style>
         body 		{ padding-top:80px; word-wrap:break-word; }
         #detailedForm { display: none; }
@@ -643,39 +642,9 @@
     }
 
     function goBack() {
-        document.getElementById("modal-footer").innerHTML = "";
-
-        document.getElementById("modal-header").style.backgroundColor = "#f44242";
-        document.getElementById("modal-footer").style.backgroundColor = "#f44242";
-        document.getElementById("close").innerHTML = "&times";
-
-        document.getElementById("header").innerHTML = "Warning ! Are You Sure to Leave this Page ?";
-        document.getElementById("body").innerHTML = "To Leave this page, press '<strong>Leave</strong>'.<br><br> To Stay on this page, press '<strong>Stay</strong>' or <strong>close the dialog box</strong>.<br>";
-        var footer = $("#modal-footer");
-        footer.append($("<h3 id='leave'><a href='/userhome'>Leave</a></h3><h3 id='stay'><a>Stay</a></h3>"));
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementById("close");
-        var stay = document.getElementById("stay");
-        var leave = document.getElementById("leave");
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function () {
-            document.getElementById("modal").style.display = "none";
-        };
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            if (event.target == document.getElementById("modal")) {
-                document.getElementById("modal").style.display = "none";
-            }
-        };
-
-        stay.onclick = function () {
-            document.getElementById("modal").style.display = "none";
-        };
-
-        document.getElementById("modal").style.display = "block";
+        if (confirm("Are you sure you to leave this page? All the data will be cleared accordingly!!!")) {
+            window.location.replace('/userHome');
+        }
     }
 
     function clearGeneral() {
