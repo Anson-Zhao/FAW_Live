@@ -83,8 +83,8 @@
                 <h6 class="floatingBox">Last Name:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate" type="text" id="lastName" placeholder="Enter Last Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                 <h4 class="floatingBox"><strong>User Role:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="radio" name="userrole" id="Admin" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;
                 <input type="radio" name="userrole" id="Regular" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="userrole" id="Admin" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
             <br>
 
@@ -136,20 +136,13 @@
 
     <script type="text/javascript">
 
-        var d;
-        var rowData = {};
-        var rowSelected = [];
+        var rowSelected, thArray, DropMenu, queryString1, queryString2;
+        var table = $('#dataDisplay').DataTable({ "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]]});
         var querystr = "";
-        var queryString1;
-        var queryString2;
-        var table = $('#dataDisplay').DataTable();
-//        var d = table.row('tbody').data();
         var tstring = "";
-        var UserRole = "<%= user.userrole %>";
-        var DropMenu;
-        var username = [];
-//        var counter = table.rows( '.selected' ).count();
-        var rdSelected = table.rows('.selected').data();
+        var userrole = "";
+        var UserRol = "<%= user.userrole %>";
+        var rowUserName = [];
 
         $(document).ready(function() {
             $(function () {
@@ -160,13 +153,13 @@
                     time_24hr: true
                 });
 
-                if (UserRole === "Admin") {
+                if (UserRol === "Admin") {
                     DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
                         "\t\t\t<li><a href=\"/userManagement\">User Management</a></li>\n" +
                         "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
                     $("#userMenu").empty();
                     $("#userMenu").append(DropMenu)
-                } else if (UserRole === "Regular") {
+                } else if (UserRol === "Regular") {
                     DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
                         "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
                     $("#userMenu").empty();
@@ -175,121 +168,70 @@
             });
 
             $('#dataDisplay tbody').on('click', 'tr', function () {
-                if ($(this).hasClass('selected')) {
-                    $(this).removeClass('selected');
-                    rdSelected.length+= -1;
-//                    counter+= -1;
-//                    d = table.row(this).data();
-                    var index = username.indexOf(d[2]);
-                    username.splice(index, 1);
-                } else {
-//                    table.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
+                thArray = [];
+                rowUserName = [];
 
-                    d = table.row(this).data();
-                    d.counter++;
-                    table.row(this).data(d).draw();
+                $(this).toggleClass('selected');    //toggle class for the rows selected
 
-                    username.push(d[2]);
+                rowSelected = table.rows('.selected').data();    //Store all the data for selected rows'
 
-                    rdSelected.length+= 1;
+                $('#dataDisplay > thead > tr > th').each(function () {
+                    thArray.push($(this).text())
+                })
 
-
-                    var thArray = [];
-
-
-
-                    $('#dataDisplay > thead > tr > th').each(function () {
-                        thArray.push($(this).text())
-                    })
-
-                    console.log("thArray length: " + thArray.length);
-
-                    for (var i = 0; i < thArray.length; i++) {
-//                        classCount.push()
-                        rowSelected[i] = {};
-                        rowSelected[i].Name = thArray[i];
-                        rowSelected[i].Value = d[i];
-
-                    }
-
+                for (var i = 0; i < rowSelected.length; i ++) {
+                    console.log("rowSelected[" + i + "][2]: " + rowSelected[i][2]);
+                    rowUserName.push(rowSelected[i][2]);
                 }
-                console.log("counter: " + rdSelected.length);
-
             });
-
 
 
             $("#editUserButton").on("click", function () {
-//                if (confirm("Please make sure to only select ONE of the users to edit.") === true) {
+                if (confirm("Please make sure to only select ONE of the users to edit.")) {
 
-                console.log(rowSelected.length)
-
-
-                    for (var i = 0; i < rowSelected.length; i++) {
+                    for (var i = 0; i < thArray.length; i++) {
                         if (i === 0) {
-                            tstring += rowSelected[i].Name + "=" + rowSelected[i].Value;
+                            tstring += thArray[i] + "=" + rowSelected[0][i];
                         } else {
-                            tstring += "&" + rowSelected[i].Name + "=" + rowSelected[i].Value;
+                            tstring += "&" + thArray[i] + "=" + rowSelected[0][i];
                         }
-
                     }
+//                    console.log("tstring for loop: " + tstring);
 
-                if (rdSelected !== 1) {
-                            alert("Only ONE!!!");
-    //                    console.log("tstring for loop: " + tstring);
-
-                    } else {
-
-                            $.ajax({
-                                url: '/editUserQuery',
-                                type: 'GET',
-                                dataType: 'json',
-                                async: false,
-                                data: tstring,
-                                success: function (result) {
-                                    window.location.replace('/editUser')
-                                }
-                            })
+                    $.ajax({
+                        url: '/editUserQuery',
+                        type: 'GET',
+                        dataType: 'json',
+                        async: false,
+                        data: tstring,
+                        success: function (result) {
+                            window.location.replace('/editUser')
                         }
-//                } else {
-//                    return false;
-//                }
+                    })
+                } else { return false; }
             });
 
-
             $("#suspendUserButton").on("click", function () {
-//                alert(username);
-                if (confirm("Are you sure you would like to suspend this user(s)?")) {
-                    var usernameStr = "usernameStr=";
-                    for (var i = 0; i < username.length; i++) {
-                        usernameStr += username[i] + ",";
-                        if (i === username.length - 1) {
-                            usernameStr = usernameStr.substring(0, usernameStr.length - 1);
-//                            alert(usernameStr);
-                            update();
-                        }
-                    }
+                if (confirm("Are you sure you would like to suspend the user(s)?")) {
 
-                    function update() {
-                        $.ajax({
-                            url: '/suspendUser',
-                            type: 'GET',
-                            dataType: 'json',
-                            async: false,
-                            data: usernameStr,
-                            success: function (result) {
-                                if (!result.error) {
-                                    window.location.replace('/userManagement')
-                                } else {
-                                    alert(result.message);
-                                }
+                    var usernameStr = "usernameStr=" + rowUserName.toString();
+//                    console.log("usernameStr: " + usernameStr);
+
+                    $.ajax({
+                        url: '/suspendUser',
+                        type: 'GET',
+                        dataType: 'json',
+                        async: false,
+                        data: usernameStr,
+                        success: function (result) {
+                            if (!result.error) {
+                                window.location.replace('/userManagement')
+                            } else {
+                                alert(result.message);
                             }
-                        })
-                    }
-                } else {
-                    return false;
-                }
+                        }
+                    })
+                } else { return false;}
             });
         });
 
@@ -300,8 +242,8 @@
             var dateModifiedTo = document.getElementsByClassName("datePicker")[3].value;
             var firstName = document.getElementById("firstName").value;
             var lastName = document.getElementById("lastName").value;
-            if ($("input[name='userrole']").prop("checked")) {
-                var userrole = $("input[name='userrole']:checked").val();
+            if ($("input[name='userrole']").is(":checked")) {
+                userrole = $("input[name='userrole']:checked").val();
             } else {
                 userrole = "";
             }
@@ -310,7 +252,7 @@
             queryString2 = "&firstName=" + firstName + "&lastName=" + lastName + "&userrole=" + userrole;
 
 
-            var querystr = queryString1 + queryString2;
+            querystr = queryString1 + queryString2;
             // alert(querystr);
 
             if (dateCreatedFrom || dateCreatedTo || dateModifiedFrom || dateModifiedTo || firstName || lastName || userrole) {
