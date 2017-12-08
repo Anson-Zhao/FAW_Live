@@ -319,7 +319,7 @@
         $("#deleteButton").on("click", function () {
             if (confirm("Are you sure you would like to delete this row(s)?") === true) {
                 var transactionIDStr = "transactionIDStr=" + transactionID.toString();
-                console.log ("transactionIDStr: " + transactionIDStr);
+                // console.log ("transactionIDStr: " + transactionIDStr);
 
                 $.ajax({
                     url: '/deleteRow',
