@@ -280,8 +280,8 @@
             })
 
             for (var i = 0; i < rowSelected.length; i ++) {
-//                console.log("rowSelected[" + i + "][2]: " + rowSelected[i][2]);
-                transactionID.push(rowSelected[i][2]);
+//                console.log("rowSelected[" + i + "][0]: " + rowSelected[i][0]);
+                transactionID.push(rowSelected[i][0]);
             }
         });
 
@@ -319,23 +319,19 @@
         $("#deleteButton").on("click", function () {
             if (confirm("Are you sure you would like to delete this row(s)?") === true) {
                 var transactionIDStr = "transactionIDStr=" + transactionID.toString();
+                console.log ("transactionIDStr: " + transactionIDStr);
 
-                function update() {
-
-                    $.ajax({
-                        url: '/deleteRow',
-                        type: 'GET',
-                        dataType: 'json',
-                        async: false,
-                        data: transactionIDStr,
-                        success: function (result) {
-                            window.location.replace('/userHome')
-                        }
-                    })
-                }
-            } else {
-                return false;
-            }
+                $.ajax({
+                    url: '/deleteRow',
+                    type: 'GET',
+                    dataType: 'json',
+                    async: false,
+                    data: transactionIDStr,
+                    success: function (result) {
+                        window.location.replace('/userHome')
+                    }
+                })
+            } else { return false;}
         });
     });
 
