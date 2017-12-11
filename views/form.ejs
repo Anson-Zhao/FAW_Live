@@ -223,7 +223,7 @@
                     <input id="hide" type="submit">
                 </div>
             </form>
-            <form id="uploadfiles" enctype="multipart/form-data" method="post">
+            <form id="upload" enctype="multipart/form-data" method="post">
                 <div class="FAW">
                     <h2>Photos</h2>
                     <h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>
@@ -284,8 +284,8 @@
             //timeout:   3000
         };
 
-        $('#uploadfiles').submit(function(e) {
-            // $("#uploadfiles").ajaxSubmit(options);
+        $('#upload').submit(function(e) {
+            // $("#upload").ajaxSubmit(options);
             // Prevent form submission
             e.preventDefault();
             $("#hide").click();
@@ -294,8 +294,8 @@
         $('#detailed').submit(function(e) {
             // Prevent form submission
             e.preventDefault();
-            alert("Y");
-            $("#uploadfiles").ajaxSubmit(options);
+            // alert("Y");
+            $("#upload").ajaxSubmit(options);
             // Prevent form submission
             e.preventDefault();
         });
@@ -587,7 +587,7 @@
         var i = 0;
         $('[required]').each(function() {
             if ($(this).val() === '') {
-                alert($(this).val());
+                // alert($(this).val());
                 isValid = false;
             }
         });
@@ -595,8 +595,8 @@
         $('input[type=radio]:checked').each(function() {
             i = i + 1;
         });
-        alert(isValid);
-        alert(i);
+        // alert(isValid);
+        // alert(i);
 
         if (isValid && i === 3) {
             return true;
