@@ -77,69 +77,86 @@
                 font-size:15px;
                 width:10%;
             }
-            /* for 768px or less */
-            @media screen and (max-width:768px) {
-                .button{
-                    font-size:100%;
-                    width:20%;
-                }
-                .date{
-                    width:15%;
-                    font-size:15px;
-                }
-                /* for 480px or less */
-                @media screen and (max-width:480px) {
-                    .button{
-                        font-size:100%;
-                        width:20%;
-                    }
-                    select{
-                        width:35%;
-                    }
-                    input{
-                        width:35%;
-                    }
-                    .date{
-                        width:20%;
-                        font-size:12px;
-                    }
-                    .btn{
-                        font-size:19px;
-                        padding:5px 6px;
-                    }
-                    /* for 320px or less */
-                    @media screen and (max-width:320px) {
-                        .button{
-                            font-size:100%;
-                            width:20%;
-                        }
-                        .floatingBox3{
-                            display: inline-table;
-                            width:350px;
-                        }
-                        select{
-                            width:35%;
-                        }
-                        input{
-                            width:35%;
-                        }
-                        .date{
-                            width:21%;
-                            font-size:10px;
-                        }
-                        .btn{
-                            font-size:15px;
-                            padding:5px 6px;
-                        }
-                        #firstName{
-                            width:20%;
-                            height:20px;
-                        }
-                        #lastName{
-                            width:20%;
-                            height:20px;
-                        }
-                    }</style>
+        }
+        /* for 768px or less */
+        @media screen and (max-width:768px) {
+            .button{
+                font-size:100%;
+                width:20%;
+            }
+            .date{
+                width:15%;
+                font-size:15px;
+            }
+        }
+        /* for 480px or less */
+        @media screen and (max-width:480px) {
+            .button{
+                font-size:100%;
+                width:20%;
+            }
+            select{
+                width:35%;
+            }
+            input{
+                width:35%;
+            }
+            .date{
+                width:20%;
+                font-size:12px;
+            }
+            .btn{
+                font-size:19px;
+                padding:5px 6px;
+            }
+        }
+        /* for 375px or less */
+        @media screen and (max-width:375px) {
+            #firstName{
+                width:20%;
+                height:20px;
+                margin-left:-10px;
+            }
+            #lastName{
+                width:20%;
+                height:20px;
+            }
+        }
+        /* for 320px or less */
+        @media screen and (max-width:320px) {
+            .button{
+                font-size:100%;
+                width:20%;
+            }
+            .floatingBox3{
+                display: inline-table;
+                width:350px;
+            }
+            select{
+                width:35%;
+            }
+            input{
+                width:35%;
+            }
+            .date{
+                width:21%;
+                font-size:10px;
+            }
+            .btn{
+                font-size:15px;
+                padding:5px 6px;
+            }
+            #firstName{
+                width:20%;
+                height:20px;
+                margin-left:-10px;
+            }
+            #lastName{
+                width:20%;
+                height:20px;
+
+            }
+        }</style>
 </head>
 <body>
 <div class="container">
@@ -156,7 +173,7 @@
         <a href="/signup" class="btn btn-default btn-lg">Add User</a>&nbsp;&nbsp;
         <div class="dropdown floating-Box">
             <button class="btn btn-primary btn-lg" type="button" data-toggle="dropdown" id="Username">
-                Minghui
+
                 <span class="caret"></span>
             </button>
             <ul id="userMenu" class="dropdown-menu">
@@ -179,7 +196,7 @@
         <h4 class="floatingBox"><strong>User Name:&nbsp;</strong></h4>
         <div class="name">
             <h5 class="floating-Box">First Name:&nbsp;&nbsp;</h5>
-            <input id="firstName" type="text" name="first name" style="background:WhiteSmoke;" value="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="firstName" type="text" name="first name" style="background:WhiteSmoke;" value="">&nbsp;&nbsp;
             <h5 class="floating-Box">Last Name:&nbsp;&nbsp;</h5>
             <input id="lastName" type="text" name="first name" style="background:WhiteSmoke;" value="">
         </div>
