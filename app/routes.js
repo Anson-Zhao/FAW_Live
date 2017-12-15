@@ -395,19 +395,19 @@ module.exports = function (app, passport) {
     });
 
     app.get('/filterQuery', isLoggedIn, function (req, res) {
-        var myStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID";
+        var myStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Scouting.* FROM Transaction INNER JOIN Users ON Users.username = Transaction.Cr_UN INNER JOIN General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN Detailed_Scouting ON Detailed_Scouting.transactionID = Transaction.transactionID";
         var myQueryObj = [
             {
-                fieldVal: req.query.statusDel,
-                dbCol: "General_Form.statusDel",
+                fieldVal: req.query.Status_del,
+                dbCol: "General_Form.Status_del",
                 op: " = '",
-                adj: req.query.statusDel
+                adj: req.query.Status_del
             },
             {
-                fieldVal: req.query.statusDel,
-                dbCol: "Detailed_Form.statusDel",
+                fieldVal: req.query.Status_del,
+                dbCol: "Detailed_Scouting.Status_del",
                 op: " = '",
-                adj: req.query.statusDel
+                adj: req.query.Status_del
             },
             {
                 fieldVal: req.query.firstName,
@@ -461,14 +461,14 @@ module.exports = function (app, passport) {
     app.get('/newEntry', isLoggedIn, function (req, res) {
         var d = new Date();
         var utcDateTime = d.getUTCFullYear() + "-" + ('0' + (d.getUTCMonth() + 1)).slice(-2) + "-" + ('0' + d.getUTCDate()).slice(-2);
-        var queryTransID = "SELECT COUNT(transactionID) AS number FROM FAW.Transaction WHERE transactionID LIKE '" + utcDateTime + "%';";
+        var queryTransID = "SELECT COUNT(transactionID) AS number FROM Transaction WHERE transactionID LIKE '" + utcDateTime + "%';";
 
         connection.query(queryTransID, function (err, results, fields) {
             transactionID = utcDateTime + "_" + ('0000' + (results[0].number + 1)).slice(-5);
             if (err) {
                 console.log(err);
             } else {
-                var insertTransID = "INSERT INTO FAW.Transaction (transactionID, Cr_UN) VALUE (" + "'" + transactionID + "', '" + req.user.username + "');";
+                var insertTransID = "INSERT INTO Transaction (transactionID, Cr_UN) VALUE (" + "'" + transactionID + "', '" + req.user.username + "');";
                 connection.query(insertTransID, function (err, results, fields) {
                     if (err) {
                         console.log(err);
@@ -487,6 +487,50 @@ module.exports = function (app, passport) {
         });
     });
 
+    // // Upload photos
+    // app.post('/upload', fileUpload, function (req,res) {
+    //     //console.log(req.headers.origin);
+    //     res.setHeader("Access-Control-Allow-Origin", "*");
+    //
+    //     fileUpload(req, res, function (err) {
+    //         if (err) {
+    //             console.log(err);
+    //             res.json({"error": true, "message": "Fail"});
+    //             filePathName = "";
+    //             //res.send("Error uploading file.");
+    //         } else {
+    //             console.log("Success:" + filePathName);
+    //             filePath = filePathName;
+    //             if (!!filePathName){
+    //                 // filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
+    //                 res.json({"error": false, "message": filePathName});
+    //                 filePathName = "";
+    //             } else {
+    //                 var error = false;
+    //                 filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
+    //                 var files = (editData.Photo_of_Pest + ";" + editData.Photo_of_Damage).split(";");
+    //                 for (var i = 0; i < files.length; i++) {
+    //                     fs.unlink(files[i],function(err){
+    //                         if(err) {
+    //                             error = true;
+    //                             res.json({"error": true, "message": "Upload Fail !"});
+    //                             filePathName = "";
+    //                         }
+    //                     });
+    //
+    //                     if (i === files.length - 1 && error === false) {
+    //                         res.json({"error": false, "message": filePathName});
+    //                         filePathName = "";
+    //                     }
+    //                 }
+    //             }
+    //             // res.json({"error": false, "message": filePathName});
+    //             // filePathName = "";
+    //             //res.send("File is uploaded");
+    //         }
+    //     });
+    // });
+
     // Upload photos
     app.post('/upload', fileUpload, function (req,res) {
         //console.log(req.headers.origin);
@@ -501,32 +545,8 @@ module.exports = function (app, passport) {
             } else {
                 console.log("Success:" + filePathName);
                 filePath = filePathName;
-                if (!!filePathName){
-                    // filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
-                    res.json({"error": false, "message": filePathName});
-                    filePathName = "";
-                } else {
-                    var error = false;
-                    filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
-                    var files = (editData.Photo_of_Pest + ";" + editData.Photo_of_Damage).split(";");
-                    for (var i = 0; i < files.length; i++) {
-                        fs.unlink(files[i],function(err){
-                            if(err) {
-                                error = true;
-                                res.json({"error": true, "message": "Upload Fail !"});
-                                filePathName = "";
-                            }
-                        });
-
-                        if (i === files.length - 1 && error === false) {
-                            res.json({"error": false, "message": filePathName});
-                            filePathName = "";
-                        }
-                    }
-                }
-                // res.json({"error": false, "message": filePathName});
-                // filePathName = "";
-                //res.send("File is uploaded");
+                res.json({"error": false, "message": filePathName});
+                filePathName = "";
             }
         });
     });
@@ -534,7 +554,7 @@ module.exports = function (app, passport) {
     // Submit general form
     app.post('/generalForm', isLoggedIn, function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*");
-        // console.log(req.body);
+        console.log(req.body);
 
         var result = Object.keys(req.body).map(function (key) {
             return [String(key), req.body[key]];
@@ -544,19 +564,14 @@ module.exports = function (app, passport) {
         var value = "";
 
         for (var i = 0; i < result.length; i++) {
-            if (result[i][0] === "latitudeDirection" || result[i][0] === "longitudeDirection") {
+            if (result[i][0] === "Latitude_direction" || result[i][0] === "Longitude_direction") {
                 // lati and long
-                name += result[i][0].substring(0, result[i][0].length - 9) + ", ";
+                name += result[i][0].substring(0, result[i][0].length - 10) + ", ";
                 value += '"' + result[i][1] + " " + result[i + 1][1] + "° " + result[i + 2][1] + "' " + result[i + 3][1] + "''" + '"' + ", ";
                 i = i + 3;
-            } else if (result[i][0] === "rota_inter_crop" && result[i][1] === "OTHER") {
-                // other main crop
-                name += result[i][0] + ", ";
-                value += '"' + result[i + 1][1] + '"' + ", ";
-                i = i + 1;
-            } else if (result[i][0] === "fieldSizeInteger") {
+            } else if (result[i][0] === "Field_size_ha_integer") {
                 // field size
-                name += result[i][0].substring(0, result[i][0].length - 7) + ", ";
+                name += result[i][0].substring(0, result[i][0].length - 8) + ", ";
                 // one decimal place = divide by 10
                 value += '"' + (parseFloat(result[i][1]) + (result[i + 1][1] / 10)) + '"' + ", ";
                 i = i + 1;
@@ -573,9 +588,9 @@ module.exports = function (app, passport) {
 
         // console.log(name);
         // console.log(value);
-        var deleteStatement = "DELETE FROM FAW.General_Form WHERE transactionID = '" + transactionID + "'; ";
-        var insertStatement = "INSERT INTO FAW.General_Form (" + name + ") VALUES (" + value + ");";
-        // console.log(insertStatement);
+        var deleteStatement = "DELETE FROM General_Form WHERE transactionID = '" + req.body.transactionID + "'; ";
+        var insertStatement = "INSERT INTO General_Form (" + name + ") VALUES (" + value + ");";
+        console.log(insertStatement);
 
         connection.query(deleteStatement + insertStatement, function (err, results, fields) {
             if (err) {
@@ -587,10 +602,10 @@ module.exports = function (app, passport) {
         });
     });
 
-    // Submit detailed form
-    app.post('/detailedForm', isLoggedIn, function (req, res) {
+    // Submit detailed form Scouting
+    app.post('/detailedFormScouting', isLoggedIn, function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*");
-
+        console.log(req.body);
         var result = Object.keys(req.body).map(function (key) {
             return [String(key), req.body[key]];
         });
@@ -606,24 +621,80 @@ module.exports = function (app, passport) {
         value = value.substring(0, value.length - 2);
 
         var path = filePath.split(";");
-        var pest = "";
+        console.log(path);
         var damage = "";
+        var pest = "";
 
-        for (var i = 0; i < path.length; i++) {
-            if (path[i].substring(0,11) === "photoOfPest") {
-                pest += "https://faw.aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
-            } else if (path[i].substring(0,13) === "photoOfDamage") {
-                damage += "https://faw.aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+        for (var i = 0; i < path.length - 1; i++) {
+            console.log("A");
+            if (path[i].substring(0,12) === "Damage_photo") {
+                damage += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+            } else if (path[i].substring(0,10) === "Pest_photo") {
+                pest += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
             }
         }
-        pest = pest.substring(0, pest.length - 1);
+        console.log(pest + "  " + damage);
         damage = damage.substring(0, damage.length - 1);
+        pest = pest.substring(0, pest.length - 1);
 
-        name += ", pestPhoto, damagePhoto";
-        value += ", '" + pest + "', '" + damage + "'";
+        name += ", Damage_photo, Pest_photo";
+        value += ", '" + damage + "', '" + pest + "'";
 
-        var deleteStatement = "DELETE FROM FAW.Detailed_Form WHERE transactionID = '" + transactionID + "'; ";
-        var insertStatement = "INSERT INTO FAW.Detailed_Form (" + name + ") VALUES (" + value + ");";
+        var deleteStatement = "DELETE FROM Detailed_Scouting WHERE transactionID = '" + req.body.transactionID + "'; ";
+        var insertStatement = "INSERT INTO Detailed_Scouting (" + name + ") VALUES (" + value + ");";
+        console.log(insertStatement);
+
+        connection.query(deleteStatement + insertStatement, function (err, results, fields) {
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "Insert Error! Check your entry."});
+            } else {
+                res.json({"error": false, "message": "/detailedForm"});
+            }
+        });
+    });
+
+    // Submit detailed form trap
+    app.post('/detailedFormTrap', isLoggedIn, function (req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        console.log(req.body);
+        var result = Object.keys(req.body).map(function (key) {
+            return [String(key), req.body[key]];
+        });
+
+        var name = "";
+        var value = "";
+
+        for (var i = 0; i < result.length; i++) {
+            name += result[i][0] + ", ";
+            value += '"' + result[i][1] + '"' + ", ";
+        }
+        name = name.substring(0, name.length - 2);
+        value = value.substring(0, value.length - 2);
+
+        // var path = filePath.split(";");
+        // console.log(path);
+        // var damage = "";
+        // var pest = "";
+        //
+        // for (var i = 0; i < path.length - 1; i++) {
+        //     console.log("A");
+        //     if (path[i].substring(0,12) === "Damage_photo") {
+        //         damage += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+        //     } else if (path[i].substring(0,10) === "Pest_photo") {
+        //         pest += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+        //     }
+        // }
+        // console.log(pest + "  " + damage);
+        // damage = damage.substring(0, damage.length - 1);
+        // pest = pest.substring(0, pest.length - 1);
+        //
+        // name += ", Damage_photo, Pest_photo";
+        // value += ", '" + damage + "', '" + pest + "'";
+
+        var deleteStatement = "DELETE FROM Detailed_Trap WHERE transactionID = '" + req.body.transactionID + "'; ";
+        var insertStatement = "INSERT INTO Detailed_trap (" + name + ") VALUES (" + value + ");";
+        console.log(insertStatement);
 
         connection.query(deleteStatement + insertStatement, function (err, results, fields) {
             if (err) {
@@ -675,8 +746,8 @@ function dateNtime() {
 function del_recov(StatusUpd, ErrMsg, targetURL, req, res) {
 
     transactionID = req.query.transactionIDStr.split(",");
-    statementGeneral = "UPDATE General_Form SET statusDel = '" + StatusUpd + "'";
-    statementDetailed = "UPDATE Detailed_Form SET statusDel = '" + StatusUpd + "'";
+    statementGeneral = "UPDATE General_Form SET Status_del = '" + StatusUpd + "'";
+    statementDetailed = "UPDATE Detailed_Scouting SET Status_del = '" + StatusUpd + "'";
 
     for (var i = 0; i < transactionID.length; i++) {
         if (i === 0) {
