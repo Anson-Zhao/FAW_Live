@@ -42,8 +42,45 @@
             width: 82%;
             margin-left:110px;
         }
-
-        @media only screen and (max-width: 320px){
+        .banner{
+            position:relative;
+            width: 100%;
+        }
+        .floating-Box{
+            display: inline;
+        }
+        .floatingBox {
+            display: inline-block;
+            /*width:350px;*/
+        }
+        .button{
+            width:8%;
+        }
+        table{
+            overflow-x: auto;
+            width: 100%;
+            display: block;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td{
+            border: 1px solid #cdcdcd;
+            text-align:center;
+        }
+        table th, table td{
+            padding: 10px;
+            text-align: left;
+        }
+        table::-webkit-scrollbar-thumb {
+            border-radius: 2px;
+            background-color: rgba(0, 0, 0, .5);
+            -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+        }
+        table::-webkit-scrollbar {
+            -webkit-appearance: none;
+            height: 7px;
+        }
+        @media  screen and (max-width: 320px){
             h1 {
                 font-size: 25px;
             }
@@ -105,7 +142,7 @@
             }
         }
 
-        @media only screen and (min-width:330px) and (max-width: 375px){
+        @media  screen and (min-width:330px) and (max-width: 375px){
             h1 {
                 font-size: 31px;
             }
@@ -160,7 +197,7 @@
             }
         }
 
-        @media only screen and (min-width:380px) and (max-width: 414px){
+        @media  screen and (min-width:380px) and (max-width: 414px){
             h1 {
                 font-size: 34px;
             }
@@ -208,7 +245,7 @@
             }
         }
 
-        @media only screen and (min-width:420px) and (max-width: 768px){
+        @media screen and (min-width:420px) and (max-width: 768px){
             .inputBoxDate {
                 width: 25%;
             }
@@ -242,7 +279,7 @@
                 margin-left: -82px;
             }
         }
-        @media only screen and (min-width:770px) and (max-width: 1024px){
+        @media  screen and (min-width:770px) and (max-width: 1024px){
             .inputBoxDate {
                 font-size:13.5px;
             }
@@ -282,7 +319,7 @@
 <body>
 <div class="container center">
     <a href="//aworldbridge.com">
-        <img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px" />
+        <img class="banner" src="/pic/NewWBBanner.jpg"/>
     </a>
 </div>
 <br>
@@ -336,12 +373,9 @@
         <button id="editUserButton" class="btn delete-row btn-default">Edit User</button>
         <button id="suspendUserButton" class="btn btn-default">Suspend User(s)</button>
         <br>
-        <div class="row">
-            <h4><strong>Most Recent Records:</strong></h4>
-        </div>
     </div>
     <br>
-    <h4 style="margin-left:100px;"><strong>Most Recent Records:</strong></h4>
+    <h4 style="margin-left:80px;"><strong>Most Recent Records:</strong></h4>
 
     <div id="dvData">
 
@@ -365,19 +399,19 @@
 
             </tbody>
             <tfoot>
-                <tr>
-                    <th>First_Name</th>
-                    <th>Last_Name</th>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>User_Role</th>
-                    <th>Date_Created</th>
-                    <th>Created_By</th>
-                    <th>Date_Last_Modified</th>
-                    <th>Last_Modified_By</th>
-                    <th>Status</th>
-                    <th>Last_Login_Time</th>
-                </tr>
+            <tr>
+                <th>First_Name</th>
+                <th>Last_Name</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>User_Role</th>
+                <th>Date_Created</th>
+                <th>Created_By</th>
+                <th>Date_Last_Modified</th>
+                <th>Last_Modified_By</th>
+                <th>Status</th>
+                <th>Last_Login_Time</th>
+            </tr>
             </tfoot>
         </table>
     </div>
