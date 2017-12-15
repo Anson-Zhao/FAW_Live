@@ -19,22 +19,91 @@
     <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
     <script src="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.js"></script>
     <style>
-        body 		{ padding-top:80px; word-wrap:break-word; }
-        #detailedForm { display: none; }
-        #hide { display: none; }
-        .FAW        { display: none; }
-        #stay, #cancel {  position: relative;  width: 20%;  left: 20%;  }
-        #leave, #clear {  position: relative;  width: 20%;  left: 60%;  }
-        .banner{
-            position:relative;
-            left:140px;
-            width:75%;
+        body {
+            padding-top: 80px;
+            word-wrap: break-word;
         }
+
+        #detailedForm {
+            display: none;
+        }
+
+        #hide {
+            display: none;
+        }
+
+        .FAW {
+            display: none;
+        }
+
+        #stay,
+        #cancel {
+            position: relative;
+            width: 20%;
+            left: 20%;
+        }
+
+        #leave,
+        #clear {
+            position: relative;
+            width: 20%;
+            left: 60%;
+        }
+
+        .banner {
+            position: relative;
+            left: 140px;
+            width: 75%;
+        }
+
         .column {
-            float:right;
-           position:relative;
-            right:80px;
-            width:11%;
+            float: right;
+            position: relative;
+            right: 80px;
+            width: 11%;
+        }
+
+        @media only screen and (max-width:320px){
+            h1 {
+                font-size: 27px;
+            }
+            .column{
+                padding:10px 40px;
+            }
+            #trapOwner{
+                font-size:12.5px;
+                width:60%;
+            }
+        }
+        @media only screen and (min-width:330px) and (max-width: 375px){
+            h1 {
+                font-size: 32px;
+            }
+            .column{
+                padding:10px 40px;
+            }
+            #trapOwner{
+                font-size:14px;
+                width:60%;
+            }
+
+        }
+        @media only screen and (min-width:380px) and (max-width: 414px){
+            h1 {
+                font-size: 35px;
+            }
+            .column{
+                padding:10px 40px;
+            }
+            #trapOwner{
+                font-size:13.5px;
+                width:50%;
+            }
+        }
+        @media only screen and (min-width:420px) and (max-width: 768px){
+            #trapOwner{
+                width:27%;
+            }
         }
     </style>
 
