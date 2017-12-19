@@ -110,7 +110,7 @@ input[type='number']{
     font: inherit;
 }
 
-input[type='text'], select {
+input[type='text'], select, .inputNumber {
     color: #5A5A5A;
     font: inherit;
     margin-top: 0px;
