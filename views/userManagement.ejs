@@ -42,94 +42,376 @@
             width: 82%;
             margin-left:110px;
         }
+        .banner{
+            position:relative;
+            width: 100%;
+        }
+        .floating-Box{
+            display: inline;
+        }
+        .floatingBox {
+            display: inline-block;
+            /*width:350px;*/
+        }
+        .button{
+            width:8%;
+        }
+        table{
+            overflow-x: auto;
+            width: 100%;
+            display: block;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td{
+            border: 1px solid #cdcdcd;
+            text-align:center;
+        }
+        table th, table td{
+            padding: 10px;
+            text-align: left;
+        }
+        table::-webkit-scrollbar-thumb {
+            border-radius: 2px;
+            background-color: rgba(0, 0, 0, .5);
+            -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+        }
+        table::-webkit-scrollbar {
+            -webkit-appearance: none;
+            height: 7px;
+        }
+        @media  screen and (max-width: 320px){
+            h1 {
+                font-size: 25px;
+            }
+
+            .inputBoxDate {
+                font-size: 9px;
+                width: 21%;
+                margin-left: -10px;
+            }
+
+            #dvData {
+                width: 82%;
+                margin-left: 10px;
+            }
+
+            .btn {
+                font-size: 14px;
+                padding: 5px 12px;
+            }
+
+            #firstName {
+                font-size: 9px;
+                width: 28%;
+            }
+
+            #lastName {
+                font-size: 9px;
+                width: 28%;
+            }
+
+            h4 {
+                font-size: 13.5px;
+                margin-left: -10px;
+            }
+
+            h6 {
+                margin-left: -19px;
+            }
+
+            .DateModified1 {
+                margin-left: -65px;
+            }
+
+            .DateModified2 {
+                margin-left: -19px;
+            }
+
+            .DateModified3 {
+                margin-left: -12px;
+            }
+
+            .click {
+                margin-left: -12px;
+                font-size: 13px;
+            }
+
+            #Role {
+                margin-right: 1px;
+            }
+        }
+
+        @media  screen and (min-width:330px) and (max-width: 375px){
+            h1 {
+                font-size: 31px;
+            }
+
+            h4 {
+                font-size: 15px;
+                margin-left: -10px;
+            }
+
+            .inputBoxDate {
+                font-size: 12px;
+                width: 23%;
+                margin-left: -10px;
+            }
+
+            #dvData {
+                width: 82%;
+                margin-left: 10px;
+            }
+
+            #firstName {
+                font-size: 13px;
+                width: 36%;
+            }
+
+            #lastName {
+                font-size: 13px;
+                width: 36%;
+            }
+
+            h6 {
+                margin-left: -19px;
+            }
+
+            .DateModified1 {
+                margin-left: -64px;
+            }
+
+            .DateModified2 {
+                margin-left: -21px;
+            }
+
+            .DateModified3 {
+                margin-left: -11px;
+            }
+
+            .click {
+                font-size: 14px;
+            }
+            #Role {
+                margin-right: 1px;
+            }
+        }
+
+        @media  screen and (min-width:380px) and (max-width: 414px){
+            h1 {
+                font-size: 34px;
+            }
+
+            h4 {
+                margin-left: -20px;
+            }
+
+            h6 {
+                margin-left: -19px;
+            }
+
+            .inputBoxDate {
+                width: 25%;
+                margin-left: -10px;
+            }
+
+            #dvData {
+                width: 82%;
+                margin-left: 7px;
+            }
+
+            #firstName {
+                width: 35%;
+            }
+
+            #lastName {
+                width: 35%;
+            }
+
+            .DateModified1 {
+                margin-left: -74px;
+            }
+
+            .DateModified2 {
+                margin-left: -20px;
+            }
+
+            .DateModified3 {
+                margin-left: -14px;
+            }
+
+            #Role {
+                margin-right: 19px;
+            }
+        }
+
+        @media screen and (min-width:420px) and (max-width: 768px){
+            .inputBoxDate {
+                width: 25%;
+            }
+
+            #dvData {
+                width: 82%;
+                margin-left: 60px;
+            }
+
+            #firstName {
+                width: 19%;
+            }
+
+            #lastName {
+                width: 19%;
+            }
+
+            .DateModified1 {
+                margin-left: -2px;
+            }
+
+            .DateModified2 {
+                margin-left: -10px;
+            }
+
+            .DateModified3 {
+                margin-left: -5px;
+            }
+
+            #Role {
+                margin-left: -82px;
+            }
+        }
+        @media  screen and (min-width:770px) and (max-width: 1024px){
+            .inputBoxDate {
+                font-size:13.5px;
+            }
+            #firstName {
+                font-size:9px;
+            }
+
+            #lastName {
+                font-size:9px;
+            }
+
+            .DateModified1 {
+                margin-left: -10px;
+            }
+
+            .DateModified2 {
+                margin-left: -15px;
+            }
+
+            .DateModified3 {
+                margin-left: -7px;
+            }
+
+            #Role {
+                margin-left: -42px;
+            }
+
+            h6 {
+                margin-left: -15px;
+            }
+
+        }
 
     </style>
 
 </head>
 <body>
 <div class="container center">
-    <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px"/></a>
-
-</div><br><br>
-    <div class="page-header text-center">
-        <h1><span class="fa fa-anchor"></span> FAW Project -  User Management </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
-        <a href="/userhome" class="btn btn-default btn-lg">User Home</a>&nbsp;&nbsp;
-        <a href="/signup" class="btn btn-default btn-lg">Add User</a>&nbsp;&nbsp;
-        <div class="dropdown floating-Box">
-            <button class="btn btn-primary btn-lg" type="button" data-toggle="dropdown" id="Username"><%= user.firstName%>
-                <span class="caret"></span></button>
-            <ul id="userMenu" class="dropdown-menu">
-
-            </ul>
+    <a href="//aworldbridge.com">
+        <img class="banner" src="/pic/NewWBBanner.jpg"/>
+    </a>
+</div>
+<br>
+<br>
+<div class="page-header text-center">
+    <h1><span class="fa fa-anchor"></span> FAW Project -  User Management </h1>
+    <h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: Huaqi </h4>
+    <br>
+    <a href="/userhome" class="btn btn-default btn-lg userhome">User Home</a>&nbsp;&nbsp;
+    <a href="/signup" class="btn btn-default btn-lg adduser">Add User</a>&nbsp;&nbsp;
+    <div class="dropdown floating-Box">
+        <button class="btn btn-primary btn-lg" type="button" data-toggle="dropdown" id="Username">
+            Huaqi
+            <span class="caret"></span>
+        </button>
+        <ul id="userMenu" class="dropdown-menu">
+        </ul>
+    </div>
+</div>
+<!--<a href="/newEntry" class="btn btn-default btn-lg" id="class1">New Entry</a>-->
+<!--<a href="/query" class="btn btn-default btn-lg" id="class2">Data History</a>-->
+<div class="container">
+    <div id="userListForm">
+        <div class="row">
+            <h4 class="floatingBox"><strong>Date Created:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h6 class="floatingBox">From:</h6>&nbsp;&nbsp;&nbsp;
+            <input class="inputBoxDate datePicker date" type="text" id="dateCreated" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h6 class="floatingBox">To:</h6>&nbsp;&nbsp;&nbsp;
+            <input class="inputBoxDate datePicker date" type="text" id="dateCreated" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h4 class="floatingBox DateModified1"><strong>Date Modified:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h6 class="floatingBox DateModified2">From:</h6>&nbsp;&nbsp;&nbsp;
+            <input class="inputBoxDate datePicker date DateModified3" type="text" id="dateModified" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h6 class="floatingBox DateModified2">To:</h6>&nbsp;&nbsp;&nbsp;
+            <input class="inputBoxDate datePicker date DateModified3" type="text" id="dateModified" placeholder="Select Date">
         </div>
-    </div><br>
-    <!--<a href="/newEntry" class="btn btn-default btn-lg" id="class1">New Entry</a>-->
-    <!--<a href="/query" class="btn btn-default btn-lg" id="class2">Data History</a>-->
-    <div class="container">
-
-        <div id="userListForm">
-            <div class="row">
-                <h4 class="floatingBox"><strong>Date Created:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <h6 class="floatingBox">From:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateCreated" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <h6 class="floatingBox">To:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateCreated" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                <h4 class="floatingBox"><strong>Date Modified:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <h6 class="floatingBox">From:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateModified" placeholder="Select Date">&nbsp;&nbsp;&nbsp;&nbsp;
-                <h6 class="floatingBox">To:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate datePicker date" type="text" id="dateModified" placeholder="Select Date">
-            </div><br>
-            <div class="row">
-                <h4 class="floatingBox"><strong>User Name:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <h6 class="floatingBox">First Name:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate" type="text" id="firstName" placeholder="Enter First Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <h6 class="floatingBox">Last Name:</h6>&nbsp;&nbsp;&nbsp;<input class="inputBoxDate" type="text" id="lastName" placeholder="Enter Last Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                <h4 class="floatingBox"><strong>User Role:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="radio" name="userrole" id="Regular" value="Regular"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="radio" name="userrole" id="Admin" value="Admin"><h5 class="floatingBox">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;
-            </div>
-            <br>
-
-        <input type="submit" onclick="query()" class="btn-default btn" style="color: #ffffff; background-color: #a7cb9f" value="Filter">
-        <button id="editUserButton" class="delete-row btn-default btn">Edit User</button>
-        <button id="suspendUserButton" class="btn-default btn">Suspend User(s)</button>
+        <br>
+        <div class="row">
+            <h4 class="floatingBox"><strong>User Name:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h6 class="floatingBox">First Name:</h6>&nbsp;&nbsp;&nbsp;
+            <input class="inputBoxDate" type="text" id="firstName" placeholder="Enter First Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h6 id="123" class="floatingBox">Last Name:</h6>&nbsp;&nbsp;&nbsp;
+            <input class="inputBoxDate" type="text" id="lastName" placeholder="Enter Last Name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h4 class="floatingBox" id="Role"><strong>User Role:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="userrole" id="Regular" value="Regular">
+            <h5 class="floatingBox click">&nbsp;&nbsp;&nbsp;Regular</h5>&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="userrole" id="Admin" value="Admin">
+            <h5 class="floatingBox click">&nbsp;&nbsp;&nbsp;Admin</h5>&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        <br>
+        <input type="submit" onclick="query()" id="Filter" class="btn btn-default" style="color: #ffffff; background-color: #a7cb9f" value="Filter">
+        <button id="editUserButton" class="btn delete-row btn-default">Edit User</button>
+        <button id="suspendUserButton" class="btn btn-default">Suspend User(s)</button>
+        <br>
     </div>
     <br>
-    <h4 style="margin-left:100px;"><strong>Most Recent Records:</strong></h4>
+    <h4 style="margin-left:80px;"><strong>Most Recent Records:</strong></h4>
 
     <div id="dvData">
 
         <table id="dataDisplay" cellspacing="0" width="100%">
             <thead>
-                <tr>
-                    <th>First_Name</th>
-                    <th>Last_Name</th>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>User_Role</th>
-                    <th>Date_Created</th>
-                    <th>Created_By</th>
-                    <th>Date_Last_Modified</th>
-                    <th>Last_Modified_By</th>
-                    <th>Status</th>
-                    <th>Last_Login_Time</th>
-                </tr>
+            <tr>
+                <th>First_Name</th>
+                <th>Last_Name</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>User_Role</th>
+                <th>Date_Created</th>
+                <th>Created_By</th>
+                <th>Date_Last_Modified</th>
+                <th>Last_Modified_By</th>
+                <th>Status</th>
+                <th>Last_Login_Time</th>
+            </tr>
             </thead>
             <tbody>
 
             </tbody>
             <tfoot>
-                <tr>
-                    <th>First_Name</th>
-                    <th>Last_Name</th>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>User_Role</th>
-                    <th>Date_Created</th>
-                    <th>Created_By</th>
-                    <th>Date_Last_Modified</th>
-                    <th>Last_Modified_By</th>
-                    <th>Status</th>
-                    <th>Last_Login_Time</th>
-                </tr>
+            <tr>
+                <th>First_Name</th>
+                <th>Last_Name</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>User_Role</th>
+                <th>Date_Created</th>
+                <th>Created_By</th>
+                <th>Date_Last_Modified</th>
+                <th>Last_Modified_By</th>
+                <th>Status</th>
+                <th>Last_Login_Time</th>
+            </tr>
             </tfoot>
         </table>
     </div>
@@ -199,6 +481,7 @@
                         } else {
                             tstring += "&" + thArray[i] + "=" + rowSelected[0][i];
                         }
+
                     }
 //                    console.log("tstring for loop: " + tstring);
 
@@ -300,8 +583,8 @@
             });
         }
 
+
     </script>
-</div>
 </div>
 </body>
 </html>
