@@ -723,12 +723,11 @@ module.exports = function (app, passport) {
     app.get('/sendEditData', isLoggedIn, function(req, res) {
         editData = req.query;
         res.json({"error": false, "message": "/editData"});
-
-        console.log("tranID: " + editData.Transaction_ID)
     });
 
     app.get('/editData', isLoggedIn, function(req, res) {
-        console.log("render TranID: " + editData.Transaction_ID);
+        transactionID = editData.Transaction_ID;
+        console.log ("/editData TransactionID: " + transactionID);
         res.render('dataEdit.ejs', {
             user: req.user,
             data: editData, // get the user out of session and pass to template
@@ -752,81 +751,96 @@ module.exports = function (app, passport) {
     });
 
     app.get('/filterQuery', isLoggedIn, function (req, res) {
-        // var myStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID AND General_Form.status = 'Active' INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID AND Detailed_Form.status = 'Active'";
-        var myStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Form.* FROM FAW.Transaction INNER JOIN FAW.Users ON Users.username = Transaction.Cr_UN INNER JOIN FAW.General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN FAW.Detailed_Form ON Detailed_Form.transactionID = Transaction.transactionID";
+        var scoutingStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Scouting.* FROM Transaction INNER JOIN Users ON Users.username = Transaction.Cr_UN INNER JOIN General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN Detailed_Scouting ON Detailed_Scouting.transactionID = Transaction.transactionID";
+        var trapStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Trap.* FROM Transaction INNER JOIN Users ON Users.username = Transaction.Cr_UN INNER JOIN General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN Detailed_Trap ON Detailed_Trap.transactionID = Transaction.transactionID";
+        //console.log(req.query);
         var myQueryObj = [
             {
                 fieldVal: req.query.statusDel,
-                dbCol: "General_Form.statusDel",
+                dbCol: "General_Form.Status_del",
                 op: " = '",
-                adj: req.query.statusDel
+                adj: req.query.statusDel,
+                table: 1
             },
             {
                 fieldVal: req.query.statusDel,
-                dbCol: "Detailed_Form.statusDel",
+                dbCol: "Detailed_Scouting.Status_del",
                 op: " = '",
-                adj: req.query.statusDel
+                adj: req.query.statusDel,
+                table: 2
+            },
+            {
+                fieldVal: req.query.statusDel,
+                dbCol: "Detailed_Trap.Status_del",
+                op: " = '",
+                adj: req.query.statusDel,
+                table: 3
             },
             {
                 fieldVal: req.query.firstName,
                 dbCol: "firstName",
                 op: " = '",
-                adj: req.query.firstName
+                adj: req.query.firstName,
+                table: 1
             },
             {
                 fieldVal: req.query.lastName,
                 dbCol: "lastName",
                 op: " = '",
-                adj: req.query.lastName
+                adj: req.query.lastName,
+                table: 1
             },
             {
                 fieldVal: req.query.startDate,
                 dbCol: "date",
                 op: " >= '",
-                adj: req.query.startDate
+                adj: req.query.startDate,
+                table: 1
             },
             {
                 fieldVal: req.query.endDate,
                 dbCol: "date",
                 op: " <= '",
-                adj: req.query.endDate
+                adj: req.query.endDate,
+                table: 1
             },
             {
                 fieldVal: req.query.content1,
                 dbCol: req.query.filter1,
                 op: " = '",
-                adj: req.query.filter1
+                adj: req.query.filter1,
+                table: req.query.filter1
             },
             {
                 fieldVal: req.query.content2,
                 dbCol: req.query.filter2,
                 op: " = '",
-                adj: req.query.filter2
+                adj: req.query.filter2,
+                table: req.query.filter2
             },
             {
                 fieldVal: req.query.content3,
                 dbCol: req.query.filter3,
                 op: " = '",
-                adj: req.query.filter3
+                adj: req.query.filter3,
+                table: req.query.filter3
             }
         ];
-
-        QueryStat(myQueryObj, myStat, res)
-
+        QueryStat(myQueryObj, scoutingStat, trapStat, res)
     });
 
     // Prepare and assign new transaction ID
     app.get('/newEntry', isLoggedIn, function (req, res) {
         var d = new Date();
         var utcDateTime = d.getUTCFullYear() + "-" + ('0' + (d.getUTCMonth() + 1)).slice(-2) + "-" + ('0' + d.getUTCDate()).slice(-2);
-        var queryTransID = "SELECT COUNT(transactionID) AS number FROM FAW.Transaction WHERE transactionID LIKE '" + utcDateTime + "%';";
+        var queryTransID = "SELECT COUNT(transactionID) AS number FROM Transaction WHERE transactionID LIKE '" + utcDateTime + "%';";
 
         connection.query(queryTransID, function (err, results, fields) {
             transactionID = utcDateTime + "_" + ('0000' + (results[0].number + 1)).slice(-5);
             if (err) {
                 console.log(err);
             } else {
-                var insertTransID = "INSERT INTO FAW.Transaction (transactionID, Cr_UN) VALUE (" + "'" + transactionID + "', '" + req.user.username + "');";
+                var insertTransID = "INSERT INTO Transaction (transactionID, Cr_UN) VALUE (" + "'" + transactionID + "', '" + req.user.username + "');";
                 connection.query(insertTransID, function (err, results, fields) {
                     if (err) {
                         console.log(err);
@@ -845,6 +859,50 @@ module.exports = function (app, passport) {
         });
     });
 
+    // // Upload photos
+    // app.post('/upload', fileUpload, function (req,res) {
+    //     //console.log(req.headers.origin);
+    //     res.setHeader("Access-Control-Allow-Origin", "*");
+    //
+    //     fileUpload(req, res, function (err) {
+    //         if (err) {
+    //             console.log(err);
+    //             res.json({"error": true, "message": "Fail"});
+    //             filePathName = "";
+    //             //res.send("Error uploading file.");
+    //         } else {
+    //             console.log("Success:" + filePathName);
+    //             filePath = filePathName;
+    //             if (!!filePathName){
+    //                 // filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
+    //                 res.json({"error": false, "message": filePathName});
+    //                 filePathName = "";
+    //             } else {
+    //                 var error = false;
+    //                 filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
+    //                 var files = (editData.Photo_of_Pest + ";" + editData.Photo_of_Damage).split(";");
+    //                 for (var i = 0; i < files.length; i++) {
+    //                     fs.unlink(files[i],function(err){
+    //                         if(err) {
+    //                             error = true;
+    //                             res.json({"error": true, "message": "Upload Fail !"});
+    //                             filePathName = "";
+    //                         }
+    //                     });
+    //
+    //                     if (i === files.length - 1 && error === false) {
+    //                         res.json({"error": false, "message": filePathName});
+    //                         filePathName = "";
+    //                     }
+    //                 }
+    //             }
+    //             // res.json({"error": false, "message": filePathName});
+    //             // filePathName = "";
+    //             //res.send("File is uploaded");
+    //         }
+    //     });
+    // });
+
     // Upload photos
     app.post('/upload', fileUpload, function (req,res) {
         //console.log(req.headers.origin);
@@ -859,32 +917,8 @@ module.exports = function (app, passport) {
             } else {
                 console.log("Success:" + filePathName);
                 filePath = filePathName;
-                if (!!filePathName){
-                    // filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
-                    res.json({"error": false, "message": filePathName});
-                    filePathName = "";
-                } else {
-                    var error = false;
-                    filePath = editData.Photo_of_Pest + ";" + editData.Photo_of_Damage;
-                    var files = (editData.Photo_of_Pest + ";" + editData.Photo_of_Damage).split(";");
-                    for (var i = 0; i < files.length; i++) {
-                        fs.unlink(files[i],function(err){
-                            if(err) {
-                                error = true;
-                                res.json({"error": true, "message": "Upload Fail !"});
-                                filePathName = "";
-                            }
-                        });
-
-                        if (i === files.length - 1 && error === false) {
-                            res.json({"error": false, "message": filePathName});
-                            filePathName = "";
-                        }
-                    }
-                }
-                // res.json({"error": false, "message": filePathName});
-                // filePathName = "";
-                //res.send("File is uploaded");
+                res.json({"error": false, "message": filePathName});
+                filePathName = "";
             }
         });
     });
@@ -892,7 +926,7 @@ module.exports = function (app, passport) {
     // Submit general form
     app.post('/generalForm', isLoggedIn, function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*");
-        // console.log(req.body);
+        console.log(req.body);
 
         var result = Object.keys(req.body).map(function (key) {
             return [String(key), req.body[key]];
@@ -902,19 +936,14 @@ module.exports = function (app, passport) {
         var value = "";
 
         for (var i = 0; i < result.length; i++) {
-            if (result[i][0] === "latitudeDirection" || result[i][0] === "longitudeDirection") {
+            if (result[i][0] === "Latitude_direction" || result[i][0] === "Longitude_direction") {
                 // lati and long
-                name += result[i][0].substring(0, result[i][0].length - 9) + ", ";
+                name += result[i][0].substring(0, result[i][0].length - 10) + ", ";
                 value += '"' + result[i][1] + " " + result[i + 1][1] + "° " + result[i + 2][1] + "' " + result[i + 3][1] + "''" + '"' + ", ";
                 i = i + 3;
-            } else if (result[i][0] === "rota_inter_crop" && result[i][1] === "OTHER") {
-                // other main crop
-                name += result[i][0] + ", ";
-                value += '"' + result[i + 1][1] + '"' + ", ";
-                i = i + 1;
-            } else if (result[i][0] === "fieldSizeInteger") {
+            } else if (result[i][0] === "Field_size_ha_integer") {
                 // field size
-                name += result[i][0].substring(0, result[i][0].length - 7) + ", ";
+                name += result[i][0].substring(0, result[i][0].length - 8) + ", ";
                 // one decimal place = divide by 10
                 value += '"' + (parseFloat(result[i][1]) + (result[i + 1][1] / 10)) + '"' + ", ";
                 i = i + 1;
@@ -931,9 +960,9 @@ module.exports = function (app, passport) {
 
         // console.log(name);
         // console.log(value);
-        var deleteStatement = "DELETE FROM FAW.General_Form WHERE transactionID = '" + transactionID + "'; ";
-        var insertStatement = "INSERT INTO FAW.General_Form (" + name + ") VALUES (" + value + ");";
-        // console.log(insertStatement);
+        var deleteStatement = "DELETE FROM General_Form WHERE transactionID = '" + req.body.transactionID + "'; ";
+        var insertStatement = "INSERT INTO General_Form (" + name + ") VALUES (" + value + ");";
+        console.log(insertStatement);
 
         connection.query(deleteStatement + insertStatement, function (err, results, fields) {
             if (err) {
@@ -945,10 +974,10 @@ module.exports = function (app, passport) {
         });
     });
 
-    // Submit detailed form
-    app.post('/detailedForm', isLoggedIn, function (req, res) {
+    // Submit detailed form Scouting
+    app.post('/detailedFormScouting', isLoggedIn, function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*");
-
+        console.log(req.body);
         var result = Object.keys(req.body).map(function (key) {
             return [String(key), req.body[key]];
         });
@@ -964,24 +993,80 @@ module.exports = function (app, passport) {
         value = value.substring(0, value.length - 2);
 
         var path = filePath.split(";");
-        var pest = "";
+        console.log(path);
         var damage = "";
+        var pest = "";
 
-        for (var i = 0; i < path.length; i++) {
-            if (path[i].substring(0,11) === "photoOfPest") {
-                pest += "https://faw.aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
-            } else if (path[i].substring(0,13) === "photoOfDamage") {
-                damage += "https://faw.aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+        for (var i = 0; i < path.length - 1; i++) {
+            console.log("A");
+            if (path[i].substring(0,12) === "Damage_photo") {
+                damage += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+            } else if (path[i].substring(0,10) === "Pest_photo") {
+                pest += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
             }
         }
-        pest = pest.substring(0, pest.length - 1);
+        console.log(pest + "  " + damage);
         damage = damage.substring(0, damage.length - 1);
+        pest = pest.substring(0, pest.length - 1);
 
-        name += ", pestPhoto, damagePhoto";
-        value += ", '" + pest + "', '" + damage + "'";
+        name += ", Damage_photo, Pest_photo";
+        value += ", '" + damage + "', '" + pest + "'";
 
-        var deleteStatement = "DELETE FROM FAW.Detailed_Form WHERE transactionID = '" + transactionID + "'; ";
-        var insertStatement = "INSERT INTO FAW.Detailed_Form (" + name + ") VALUES (" + value + ");";
+        var deleteStatement = "DELETE FROM Detailed_Scouting WHERE transactionID = '" + req.body.transactionID + "'; ";
+        var insertStatement = "INSERT INTO Detailed_Scouting (" + name + ") VALUES (" + value + ");";
+        console.log(insertStatement);
+
+        connection.query(deleteStatement + insertStatement, function (err, results, fields) {
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "Insert Error! Check your entry."});
+            } else {
+                res.json({"error": false, "message": "/detailedForm"});
+            }
+        });
+    });
+
+    // Submit detailed form trap
+    app.post('/detailedFormTrap', isLoggedIn, function (req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        console.log(req.body);
+        var result = Object.keys(req.body).map(function (key) {
+            return [String(key), req.body[key]];
+        });
+
+        var name = "";
+        var value = "";
+
+        for (var i = 0; i < result.length; i++) {
+            name += result[i][0] + ", ";
+            value += '"' + result[i][1] + '"' + ", ";
+        }
+        name = name.substring(0, name.length - 2);
+        value = value.substring(0, value.length - 2);
+
+        // var path = filePath.split(";");
+        // console.log(path);
+        // var damage = "";
+        // var pest = "";
+        //
+        // for (var i = 0; i < path.length - 1; i++) {
+        //     console.log("A");
+        //     if (path[i].substring(0,12) === "Damage_photo") {
+        //         damage += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+        //     } else if (path[i].substring(0,10) === "Pest_photo") {
+        //         pest += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+        //     }
+        // }
+        // console.log(pest + "  " + damage);
+        // damage = damage.substring(0, damage.length - 1);
+        // pest = pest.substring(0, pest.length - 1);
+        //
+        // name += ", Damage_photo, Pest_photo";
+        // value += ", '" + damage + "', '" + pest + "'";
+
+        var deleteStatement = "DELETE FROM Detailed_Trap WHERE transactionID = '" + req.body.transactionID + "'; ";
+        var insertStatement = "INSERT INTO Detailed_trap (" + name + ") VALUES (" + value + ");";
+        console.log(insertStatement);
 
         connection.query(deleteStatement + insertStatement, function (err, results, fields) {
             if (err) {
@@ -1033,8 +1118,8 @@ function dateNtime() {
 function del_recov(StatusUpd, ErrMsg, targetURL, req, res) {
 
     transactionID = req.query.transactionIDStr.split(",");
-    statementGeneral = "UPDATE General_Form SET statusDel = '" + StatusUpd + "'";
-    statementDetailed = "UPDATE Detailed_Form SET statusDel = '" + StatusUpd + "'";
+    statementGeneral = "UPDATE General_Form SET Status_del = '" + StatusUpd + "'";
+    statementDetailed = "UPDATE Detailed_Scouting SET Status_del = '" + StatusUpd + "'";
 
     for (var i = 0; i < transactionID.length; i++) {
         if (i === 0) {
@@ -1088,57 +1173,96 @@ function updateDBNredir(SQLstatement, Value, ErrMsg, failURL, redirURL, res) {
     })
 }
 
-function QueryStat(myObj, myNewStat, res) {
+function QueryStat(myObj, scoutingStat, trapStat, res) {
     var j = 0;
     for (var i = 0; i < myObj.length; i++) {
         //console.log("i = " + i);
         //console.log("field Value: " + !!myObj[i].fieldVal);
-        if (!!myObj[i].adj) {
+        if (!!myObj[i].adj){
+            if (i === 7 || i === 8 || i === 9) {
+                myObj[i].dbCol = myObj[i].dbCol.substring(1, myObj[i].dbCol.length);
+                myObj[i].table = parseInt(myObj[i].table.substring(0, 1));
+            }
+
+            var aw;
             if (j === 0) {
+                aw = " WHERE ";
                 j = 1;
-                if (i === myObj.length - 1) {
-                    if (!!myObj[i].fieldVal) {
-                        myNewStat += " WHERE " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
-                        dataList(myNewStat,res)
-                    } else {
-                        // myNewStat += " WHERE " + myObj[i].dbCol + " IS NULL";
-                        dataList(myNewStat,res)
-                    }
-                } else {
-                    if (!!myObj[i].fieldVal) {
-                        myNewStat += " WHERE " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
-                    } else {
-                        // myNewStat += " WHERE " + myObj[i].dbCol + " IS NULL";
-                    }
-                }
             } else {
-                if (i === myObj.length - 1) {
-                    if (!!myObj[i].fieldVal) {
-                        myNewStat += " AND " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
-                        dataList(myNewStat,res)
-                    } else {
-                        // myNewStat += " AND " + myObj[i].dbCol + " IS NULL";
-                        dataList(myNewStat,res)
-                    }
-                } else {
-                    if (!!myObj[i].fieldVal) {
-                        myNewStat += " AND " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
-                    } else {
-                        // myNewStat += " AND " + myObj[i].dbCol + " IS NULL";
-                    }
-                }
+                aw = " AND ";
+            }
+
+            if (myObj[i].table === 1) {
+                scoutingStat = editStat(scoutingStat, aw, myObj[i].dbCol, myObj[i].op, myObj[i].fieldVal);
+                trapStat = editStat(trapStat, aw, myObj[i].dbCol, myObj[i].op, myObj[i].fieldVal);
+            } else if (myObj[i].table === 2) {
+                scoutingStat = editStat(scoutingStat, aw, myObj[i].dbCol, myObj[i].op, myObj[i].fieldVal);
+            } else if (myObj[i].table === 3) {
+                trapStat = editStat(trapStat, aw, myObj[i].dbCol, myObj[i].op, myObj[i].fieldVal);
+            }
+
+            if (i === myObj.length - 1) {
+                var sqlStatement = scoutingStat + "; " + trapStat;
+                dataList(sqlStatement,res);
             }
         } else {
             if (i === myObj.length - 1) {
-                dataList(myNewStat,res)
+                var sqlStatement = scoutingStat + "; " + trapStat;
+                dataList(sqlStatement,res);
             }
         }
+
+        // if (!!myObj[i].adj) {
+        //     if (j === 0) {
+        //         j = 1;
+        //         if (i === myObj.length - 1) {
+        //             if (!!myObj[i].fieldVal) {
+        //                 myNewStat += " WHERE " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
+        //                 dataList(myNewStat,res)
+        //             } else {
+        //                 // myNewStat += " WHERE " + myObj[i].dbCol + " IS NULL";
+        //                 dataList(myNewStat,res)
+        //             }
+        //         } else {
+        //             if (!!myObj[i].fieldVal) {
+        //                 myNewStat += " WHERE " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
+        //             } else {
+        //                 // myNewStat += " WHERE " + myObj[i].dbCol + " IS NULL";
+        //             }
+        //         }
+        //     } else {
+        //         if (i === myObj.length - 1) {
+        //             if (!!myObj[i].fieldVal) {
+        //                 myNewStat += " AND " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
+        //                 dataList(myNewStat,res)
+        //             } else {
+        //                 // myNewStat += " AND " + myObj[i].dbCol + " IS NULL";
+        //                 dataList(myNewStat,res)
+        //             }
+        //         } else {
+        //             if (!!myObj[i].fieldVal) {
+        //                 myNewStat += " AND " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
+        //             } else {
+        //                 // myNewStat += " AND " + myObj[i].dbCol + " IS NULL";
+        //             }
+        //         }
+        //     }
+        // } else {
+        //     if (i === myObj.length - 1) {
+        //         dataList(myNewStat,res)
+        //     }
+        // }
+    }
+
+    function editStat(stat, aw, dbCol, op, fieldVal) {
+        stat += aw + dbCol + op + fieldVal + "'";
+        return stat;
     }
 }
 
 function dataList(SQLstatement, res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
-
+    //console.log(SQLstatement);
     connection.query(SQLstatement, function (err, results, fields) {
 
         errStatus = [{errMsg: ""}];
@@ -1148,12 +1272,13 @@ function dataList(SQLstatement, res) {
             errStatus[0].errMsg = "fail";
             res.send(errStatus);
             res.end();
-        } else if (results.length === 0) {
+        } else if (results[0].length === 0 && results[1].length === 0) {
             errStatus[0].errMsg = "no data entry";
             res.send(errStatus);
             res.end();
         } else {
-            var JSONresult = JSON.stringify(results, null, "\t");
+            var result = results[0].concat(results[1]);
+            var JSONresult = JSON.stringify(result, null, "\t");
             console.log(JSONresult);
             res.send(JSONresult);
             res.end();
