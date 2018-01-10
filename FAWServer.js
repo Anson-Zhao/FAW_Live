@@ -12,6 +12,7 @@ var port     = process.env.PORT || config.Server_Port;
 var path    = require('path');
 var passport = require('passport');
 var flash    = require('connect-flash');
+var fs = require('fs');
 
 // configuration ===============================================================
 // connect to our database
@@ -20,6 +21,7 @@ require('./config/passport')(passport); // pass passport for configuration
 
 
 // set up our express application
+app.use(express.static(__dirname));
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser.urlencoded({extended: true}));
@@ -32,6 +34,7 @@ app.use("/pic", express.static(__dirname + "/pic"));
 
 app.set('views', path.join(__dirname, './', 'views'));
 app.engine('ejs', require('ejs').renderFile);
+app.set('view engine', 'ejs');
 
 //app.set('view engine', 'ejs'); // set up ejs for templating
 
@@ -56,26 +59,38 @@ var options = {
     }
 };
 
-
 var sessionStore = new MySQLStore(options);
+
+// var opts = {
+//     uri: '/password_reset',
+//     from: 'password-robot@localhost',
+//     transportType: 'SMTP',
+//     transportOptions: {
+//         service: "Gmail",
+//         auth: {
+//             user: "aaaa.zhao@g.feitianacademy.org",
+//             pass: "12344321"
+//         }
+//     }
+// };
 
 app.use(session({
     secret: 'Uesei9872',
     store: sessionStore,
     resave: false,
     saveUninitialized: false
-    //ttl: (Useless * 60 * 60),
-    // cookie: {
-    //     path: "/",
-    //     httpOnly: true,
-
-    //     secure: true,
-    //     maxAge: 300000
-    // }
  })); // session secret
+
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
+
+// example nodemailer config here
+// var forgot = require('./config/NodeMailer')(opts);
+//
+//
+//
+// app.use(forgot.middleware);
 
 
 // routes ======================================================================
