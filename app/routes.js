@@ -395,66 +395,82 @@ module.exports = function (app, passport) {
     });
 
     app.get('/filterQuery', isLoggedIn, function (req, res) {
-        var myStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Scouting.* FROM Transaction INNER JOIN Users ON Users.username = Transaction.Cr_UN INNER JOIN General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN Detailed_Scouting ON Detailed_Scouting.transactionID = Transaction.transactionID";
+        var scoutingStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Scouting.* FROM Transaction INNER JOIN Users ON Users.username = Transaction.Cr_UN INNER JOIN General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN Detailed_Scouting ON Detailed_Scouting.transactionID = Transaction.transactionID";
+        var trapStat = "SELECT Users.username, Users.firstName, Users.lastName, General_Form.*, Detailed_Trap.* FROM Transaction INNER JOIN Users ON Users.username = Transaction.Cr_UN INNER JOIN General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN Detailed_Trap ON Detailed_Trap.transactionID = Transaction.transactionID";
+        //console.log(req.query);
         var myQueryObj = [
             {
-                fieldVal: req.query.Status_del,
+                fieldVal: req.query.statusDel,
                 dbCol: "General_Form.Status_del",
                 op: " = '",
-                adj: req.query.Status_del
+                adj: req.query.statusDel,
+                table: 1
             },
             {
-                fieldVal: req.query.Status_del,
+                fieldVal: req.query.statusDel,
                 dbCol: "Detailed_Scouting.Status_del",
                 op: " = '",
-                adj: req.query.Status_del
+                adj: req.query.statusDel,
+                table: 2
+            },
+            {
+                fieldVal: req.query.statusDel,
+                dbCol: "Detailed_Trap.Status_del",
+                op: " = '",
+                adj: req.query.statusDel,
+                table: 3
             },
             {
                 fieldVal: req.query.firstName,
                 dbCol: "firstName",
                 op: " = '",
-                adj: req.query.firstName
+                adj: req.query.firstName,
+                table: 1
             },
             {
                 fieldVal: req.query.lastName,
                 dbCol: "lastName",
                 op: " = '",
-                adj: req.query.lastName
+                adj: req.query.lastName,
+                table: 1
             },
             {
                 fieldVal: req.query.startDate,
                 dbCol: "date",
                 op: " >= '",
-                adj: req.query.startDate
+                adj: req.query.startDate,
+                table: 1
             },
             {
                 fieldVal: req.query.endDate,
                 dbCol: "date",
                 op: " <= '",
-                adj: req.query.endDate
+                adj: req.query.endDate,
+                table: 1
             },
             {
                 fieldVal: req.query.content1,
                 dbCol: req.query.filter1,
                 op: " = '",
-                adj: req.query.filter1
+                adj: req.query.filter1,
+                table: req.query.filter1
             },
             {
                 fieldVal: req.query.content2,
                 dbCol: req.query.filter2,
                 op: " = '",
-                adj: req.query.filter2
+                adj: req.query.filter2,
+                table: req.query.filter2
             },
             {
                 fieldVal: req.query.content3,
                 dbCol: req.query.filter3,
                 op: " = '",
-                adj: req.query.filter3
+                adj: req.query.filter3,
+                table: req.query.filter3
             }
         ];
-
-        QueryStat(myQueryObj, myStat, res)
-
+        QueryStat(myQueryObj, scoutingStat, trapStat, res)
     });
 
     // Prepare and assign new transaction ID
@@ -801,57 +817,96 @@ function updateDBNredir(SQLstatement, Value, ErrMsg, failURL, redirURL, res) {
     })
 }
 
-function QueryStat(myObj, myNewStat, res) {
+function QueryStat(myObj, scoutingStat, trapStat, res) {
     var j = 0;
     for (var i = 0; i < myObj.length; i++) {
         //console.log("i = " + i);
         //console.log("field Value: " + !!myObj[i].fieldVal);
-        if (!!myObj[i].adj) {
+        if (!!myObj[i].adj){
+            if (i === 7 || i === 8 || i === 9) {
+                myObj[i].dbCol = myObj[i].dbCol.substring(1, myObj[i].dbCol.length);
+                myObj[i].table = parseInt(myObj[i].table.substring(0, 1));
+            }
+
+            var aw;
             if (j === 0) {
+                aw = " WHERE ";
                 j = 1;
-                if (i === myObj.length - 1) {
-                    if (!!myObj[i].fieldVal) {
-                        myNewStat += " WHERE " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
-                        dataList(myNewStat,res)
-                    } else {
-                        // myNewStat += " WHERE " + myObj[i].dbCol + " IS NULL";
-                        dataList(myNewStat,res)
-                    }
-                } else {
-                    if (!!myObj[i].fieldVal) {
-                        myNewStat += " WHERE " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
-                    } else {
-                        // myNewStat += " WHERE " + myObj[i].dbCol + " IS NULL";
-                    }
-                }
             } else {
-                if (i === myObj.length - 1) {
-                    if (!!myObj[i].fieldVal) {
-                        myNewStat += " AND " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
-                        dataList(myNewStat,res)
-                    } else {
-                        // myNewStat += " AND " + myObj[i].dbCol + " IS NULL";
-                        dataList(myNewStat,res)
-                    }
-                } else {
-                    if (!!myObj[i].fieldVal) {
-                        myNewStat += " AND " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
-                    } else {
-                        // myNewStat += " AND " + myObj[i].dbCol + " IS NULL";
-                    }
-                }
+                aw = " AND ";
+            }
+
+            if (myObj[i].table === 1) {
+                scoutingStat = editStat(scoutingStat, aw, myObj[i].dbCol, myObj[i].op, myObj[i].fieldVal);
+                trapStat = editStat(trapStat, aw, myObj[i].dbCol, myObj[i].op, myObj[i].fieldVal);
+            } else if (myObj[i].table === 2) {
+                scoutingStat = editStat(scoutingStat, aw, myObj[i].dbCol, myObj[i].op, myObj[i].fieldVal);
+            } else if (myObj[i].table === 3) {
+                trapStat = editStat(trapStat, aw, myObj[i].dbCol, myObj[i].op, myObj[i].fieldVal);
+            }
+
+            if (i === myObj.length - 1) {
+                var sqlStatement = scoutingStat + "; " + trapStat;
+                dataList(sqlStatement,res);
             }
         } else {
             if (i === myObj.length - 1) {
-                dataList(myNewStat,res)
+                var sqlStatement = scoutingStat + "; " + trapStat;
+                dataList(sqlStatement,res);
             }
         }
+
+        // if (!!myObj[i].adj) {
+        //     if (j === 0) {
+        //         j = 1;
+        //         if (i === myObj.length - 1) {
+        //             if (!!myObj[i].fieldVal) {
+        //                 myNewStat += " WHERE " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
+        //                 dataList(myNewStat,res)
+        //             } else {
+        //                 // myNewStat += " WHERE " + myObj[i].dbCol + " IS NULL";
+        //                 dataList(myNewStat,res)
+        //             }
+        //         } else {
+        //             if (!!myObj[i].fieldVal) {
+        //                 myNewStat += " WHERE " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
+        //             } else {
+        //                 // myNewStat += " WHERE " + myObj[i].dbCol + " IS NULL";
+        //             }
+        //         }
+        //     } else {
+        //         if (i === myObj.length - 1) {
+        //             if (!!myObj[i].fieldVal) {
+        //                 myNewStat += " AND " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
+        //                 dataList(myNewStat,res)
+        //             } else {
+        //                 // myNewStat += " AND " + myObj[i].dbCol + " IS NULL";
+        //                 dataList(myNewStat,res)
+        //             }
+        //         } else {
+        //             if (!!myObj[i].fieldVal) {
+        //                 myNewStat += " AND " + myObj[i].dbCol + myObj[i].op + myObj[i].fieldVal + "'";
+        //             } else {
+        //                 // myNewStat += " AND " + myObj[i].dbCol + " IS NULL";
+        //             }
+        //         }
+        //     }
+        // } else {
+        //     if (i === myObj.length - 1) {
+        //         dataList(myNewStat,res)
+        //     }
+        // }
+    }
+
+    function editStat(stat, aw, dbCol, op, fieldVal) {
+        stat += aw + dbCol + op + fieldVal + "'";
+        return stat;
     }
 }
 
 function dataList(SQLstatement, res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
-
+    //console.log(SQLstatement);
     connection.query(SQLstatement, function (err, results, fields) {
 
         errStatus = [{errMsg: ""}];
@@ -861,12 +916,13 @@ function dataList(SQLstatement, res) {
             errStatus[0].errMsg = "fail";
             res.send(errStatus);
             res.end();
-        } else if (results.length === 0) {
+        } else if (results[0].length === 0 && results[1].length === 0) {
             errStatus[0].errMsg = "no data entry";
             res.send(errStatus);
             res.end();
         } else {
-            var JSONresult = JSON.stringify(results, null, "\t");
+            var result = results[0].concat(results[1]);
+            var JSONresult = JSON.stringify(result, null, "\t");
             console.log(JSONresult);
             res.send(JSONresult);
             res.end();
