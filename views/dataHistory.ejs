@@ -35,7 +35,7 @@
     <div class="page-header text-center">
         <h1><span class="fa fa-anchor"></span> FAW Project -  Data History </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
         <a href="/userhome" class="btn btn-default btn-lg">User Home</a>&nbsp;&nbsp;
-        <a href="/signup" class="btn btn-default btn-lg">Add User</a>&nbsp;&nbsp;
+        <a href="/recovery2" id="restoreButton" class="btn btn-default btn-lg" type="button">Recovery</a>&nbsp;&nbsp;
         <div class="dropdown floating-Box">
             <button class="btn btn-primary btn-lg" type="button" data-toggle="dropdown" id="Username"><%= user.firstName%>
                 <span class="caret"></span></button>
@@ -196,12 +196,15 @@
     </div><br>
     <div class="center">
         <button class="btn btn-primary btn-sm button" type="button" onclick="query()">Filter</button>
+        <button id="deleteButton" class="btn btn-primary btn-sm button" type="button">Delete</button>
         <!--<button id="button" class="btn btn-primary btn-sm" type="button">Edit</button>-->
         <!--<button class="btn btn-primary btn-sm button" type="button">Delete</button>-->
     </div>
     <br>
     <div class="center">
         <h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
+        <h4 style="color: #9d9d9d"><strong>Scouting:</strong></h4>
+
 
         <div id="dvData">
             <table id="dataDisplay" style="width:100%;">
@@ -280,6 +283,11 @@
                 </tfoot>
             </table>
 
+            <div class='btn'>
+                <button onclick="exportTableToCSV('Scouting_<%= user.username %>.csv')">Export above rows to .CSV File</button>
+            </div>
+
+            <h4 style="color: #9d9d9d"><strong>Traps:</strong></h4>
             <table id="trapDisplay" style="width:100%;">
                 <thead>
                 <tr>
@@ -342,8 +350,8 @@
                 </tfoot>
             </table>
         </div>
-        <div class='button'>
-            <button onclick="exportTableToCSV('<%= user.username %>.csv')">Export .CSV File</button>
+        <div class='btn'>
+            <button onclick="exportTableToCSV2('Trap_<%= user.username %>.csv')">Export above rows to .CSV File</button>
         </div>
     </div>
 </div>
@@ -352,7 +360,9 @@
     var trapTable = $("#trapDisplay").DataTable();
     var UserRole = "<%= user.userrole %>";
     var DropMenu;
+    var theArray;
     var rowSelected = [];
+    var transactionID = [];
 
     $(document).ready(function(){
         $(function() {
@@ -382,27 +392,56 @@
         });
 
         $('#dataDisplay tbody').on('click', 'tr', function () {
-            if ($(this).hasClass('selected')) {
-                $(this).removeClass('selected');
-            } else {
-                $(this).addClass('selected');
+            thArray = [];
+            transactionID = [];
 
-                var d = table.row(this).data();
-                d.counter++;
-                table.row(this).data(d).draw();
+            $(this).toggleClass('selected');    //toggle class for the rows selected
 
-                var thArray = [];
+            rowSelected = table.rows('.selected').data();    //Store all the data for selected rows'
 
-                $('#dataDisplay > thead > tr > th').each(function(){
-                    thArray.push($(this).text())
-                })
+            $('#dataDisplay > thead > tr > th').each(function () {
+                thArray.push($(this).text())
+            })
 
-                for (var i = 0; i < thArray.length; i++) {
-                    rowSelected[i] = {};
-                    rowSelected[i].Name = thArray[i];
-                    rowSelected[i].Value = d[i];
-                }
+            for (var i = 0; i < rowSelected.length; i ++) {
+//                console.log("rowSelected[" + i + "][0]: " + rowSelected[i][0]);
+                transactionID.push(rowSelected[i][0]);
             }
+        });
+
+        $('#trapDisplay tbody').on('click', 'tr', function () {
+            thArray = [];
+            transactionID = [];
+
+            $(this).toggleClass('selected');    //toggle class for the rows selected
+
+            rowSelected = table.rows('.selected').data();    //Store all the data for selected rows'
+
+            $('#trapDisplay > thead > tr > th').each(function () {
+                thArray.push($(this).text())
+            })
+
+            for (var i = 0; i < rowSelected.length; i ++) {
+//                console.log("rowSelected[" + i + "][0]: " + rowSelected[i][0]);
+                transactionID.push(rowSelected[i][0]);
+            }
+        });
+        $("#deleteButton").on("click", function () {
+            if (confirm("Are you sure you would like to delete this row(s)?") === true) {
+                var transactionIDStr = "transactionIDStr=" + transactionID.toString();
+                // console.log ("transactionIDStr: " + transactionIDStr);
+
+                $.ajax({
+                    url: '/deleteRow2',
+                    type: 'GET',
+                    dataType: 'json',
+                    async: false,
+                    data: transactionIDStr,
+                    success: function (result) {
+                        window.location.replace('/dataHistory')
+                    }
+                })
+            } else { return false;}
         });
     });
 
@@ -539,7 +578,8 @@
 
     function exportTableToCSV(filename) {
         var csv = [];
-        var rows = document.querySelectorAll(".selected, thead");
+//        var table = document.querySelector('#trapDisplay');
+        var rows = document.querySelector("#dataDisplay").querySelectorAll(".selected, thead");
 
         for (var i = 0; i < rows.length; i++) {
             var row = [], cols = rows[i].querySelectorAll("td, th");
@@ -552,6 +592,52 @@
 
         // Download CSV file
         downloadCSV(csv.join("\n"), filename);
+
+    }
+
+    function downloadCSV2(csv, filename) {
+        var csvFile;
+        var downloadLink;
+
+        // CSV file
+        csvFile = new Blob([csv], {type: "text/csv"});
+
+        // Download link
+        downloadLink = document.createElement("a");
+
+        // File name
+        downloadLink.download = filename;
+
+        // Create a link to the file
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+
+        // Hide download link
+        downloadLink.style.display = "none";
+
+        // Add the link to DOM
+        document.body.appendChild(downloadLink);
+
+        // Click download link
+        downloadLink.click();
+    }
+
+
+    function exportTableToCSV2(filename) {
+        var csv = [];
+//        var table = document.querySelector('#trapDisplay');
+        var rows = document.querySelector("#trapDisplay").querySelectorAll(".selected, thead");
+
+        for (var i = 0; i < rows.length; i++) {
+            var row = [], cols = rows[i].querySelectorAll("td, th");
+
+            for (var j = 0; j < cols.length; j++)
+                row.push(cols[j].innerText);
+
+            csv.push(row.join(","));
+        }
+
+        // Download CSV file
+        downloadCSV2(csv.join("\n"), filename);
 
     }
 

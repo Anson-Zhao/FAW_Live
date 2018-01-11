@@ -247,7 +247,7 @@ module.exports = function (app, passport) {
                 // );
 
                 mailer.extend(app, {
-                    from: '<aaaa.zhao@g.feitianacademy.org> <aaaa.zhao@g.feitianacademy.org>',
+                    from: 'aaaa.zhao@g.feitianacademy.org',
                     host: 'smtp.gmail.com', // hostname
                     secureConnection: true, // use SSL
                     port: 465, // port for secure SMTP
@@ -266,7 +266,7 @@ module.exports = function (app, passport) {
                 });
 
                 app.mailer.send('email', {
-                    from: '<aaaa.zhao@g.feitianacademy.org> <aaaa.zhao@g.feitianacademy.org>',
+                    from: 'aaaa.zhao@g.feitianacademy.org',
                     to: 'req.body.username',
                     subject: 'Password Reset',
                     template: 'email'
@@ -710,6 +710,14 @@ module.exports = function (app, passport) {
         });
     });
 
+    app.get('/deleteRow2', isLoggedIn, function(req, res) {
+        del_recov("Deleted", "Deletion failed!", "/dataHistory", req, res);
+    });
+
+    app.get('/recoverRow2', isLoggedIn, function(req, res){
+        del_recov("Active", "Recovery failed!", "/dataHistory", req, res);
+    });
+
     app.get('/deleteRow', isLoggedIn, function(req, res) {
         del_recov("Deleted", "Deletion failed!", "/userHome", req, res);
     });
@@ -738,6 +746,14 @@ module.exports = function (app, passport) {
     app.get('/recovery', isLoggedIn, function (req, res) {
         // render the page and pass in any flash data if it exists
         res.render('recovery.ejs', {
+            user: req.user,
+            message: req.flash('restoreMessage')
+        });
+    });
+
+    app.get('/recovery2', isLoggedIn, function (req, res) {
+        // render the page and pass in any flash data if it exists
+        res.render('recovery_dataHistory.ejs', {
             user: req.user,
             message: req.flash('restoreMessage')
         });
