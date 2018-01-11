@@ -591,6 +591,14 @@ module.exports = function (app, passport) {
                 // one decimal place = divide by 10
                 value += '"' + (parseFloat(result[i][1]) + (result[i + 1][1] / 10)) + '"' + ", ";
                 i = i + 1;
+            } else if (result[i][0] === "Rotation_intercropping_crop") {
+                name += result[i][0] + ", ";
+                var array = result[i][1].split(",");
+                var str;
+                for (var i = 0; i < array.length; i++) {
+                    str += array[i] + "-";
+                }
+                value += '"' + str.substring(0,str.length - 1) + '"' + ", ";
             } else {
                 // normal
                 if (result[i][1] !== "") {
@@ -630,8 +638,18 @@ module.exports = function (app, passport) {
         var value = "";
 
         for (var i = 0; i < result.length; i++) {
-            name += result[i][0] + ", ";
-            value += '"' + result[i][1] + '"' + ", ";
+            if (result[i][0] === "Pest_stage" || result[i][0] === "Control_undertaken") {
+                name += result[i][0] + ", ";
+                var array = result[i][1].split(",");
+                var str;
+                for (var i = 0; i < array.length; i++) {
+                    str += array[i] + "-";
+                }
+                value += '"' + str.substring(0,str.length - 1) + '"' + ", ";
+            } else {
+                name += result[i][0] + ", ";
+                value += '"' + result[i][1] + '"' + ", ";
+            }
         }
         name = name.substring(0, name.length - 2);
         value = value.substring(0, value.length - 2);
