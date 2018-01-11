@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="80c14deb-75be-43c4-87c4-861bdcc4766a" name="faw" url="http://localhost:9088">
-        <fileTransfer host="aworldbridgelabs.com" port="5532" rootFolder="/var/www/faw/" accessType="SFTP">
+        <fileTransfer host="aworldbridgelabs.com" port="5532" rootFolder="/var/www/faw/current/" accessType="SFTP">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>
