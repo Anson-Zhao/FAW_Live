@@ -204,6 +204,7 @@
 	<br>
     <div class="center">
 	    <h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
+        <h4 style="color: #9d9d9d"><strong>Scouting:</strong></h4>
         <div id="dvData">
             <table id="dataDisplay" style="width:100%;">
                 <thead>
@@ -281,6 +282,7 @@
                 </tfoot>
             </table>
 
+            <h4 style="color: #9d9d9d"><strong>Traps:</strong></h4>
             <table id="trapDisplay" style="width:100%;">
                 <thead>
                 <tr>
@@ -389,6 +391,24 @@
             rowSelected = table.rows('.selected').data();    //Store all the data for selected rows'
 
             $('#dataDisplay > thead > tr > th').each(function () {
+                thArray.push($(this).text())
+            })
+
+            for (var i = 0; i < rowSelected.length; i ++) {
+//                console.log("rowSelected[" + i + "][0]: " + rowSelected[i][0]);
+                transactionID.push(rowSelected[i][0]);
+            }
+        });
+
+        $('#trapDisplay tbody').on('click', 'tr', function () {
+            thArray = [];
+            transactionID = [];
+
+            $(this).toggleClass('selected');    //toggle class for the rows selected
+
+            rowSelected = table.rows('.selected').data();    //Store all the data for selected rows'
+
+            $('#trapDisplay > thead > tr > th').each(function () {
                 thArray.push($(this).text())
             })
 

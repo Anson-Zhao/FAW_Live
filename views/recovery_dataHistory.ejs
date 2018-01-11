@@ -329,13 +329,13 @@
                 function update() {
 
                     $.ajax({
-                        url: '/recoverRow',
+                        url: '/recoverRow2',
                         type: 'GET',
                         dataType: 'json',
                         async: false,
                         data: transactionIDStr,
                         success: function (result) {
-                            window.location.replace('/userHome')
+                            window.location.replace('/dataHistory')
                         }
                     })
                 }
