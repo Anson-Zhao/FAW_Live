@@ -8,16 +8,16 @@ var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt-nodejs');
 var fs = require('fs');
 
-var nodemailer = require('nodemailer');
-var async = require('async');
-var crypto = require('crypto');
+// var nodemailer = require('nodemailer');
+// var async = require('async');
+// var crypto = require('crypto');
 
-var sendmail = require('sendmail')();
-
-var mailer = require('express-mailer');
+// var sendmail = require('sendmail')();
+//
+// var mailer = require('express-mailer');
 
 var filePathName = "";
-var filePath, transactionID, statementGeneral, statementDetailed, myStat, myVal, myErrMsg, errStatus;
+var filePath, transactionID, myStat, myVal, myErrMsg, errStatus;
 var today, date, time2, dateTime;
 
 var storage = multer.diskStorage({
@@ -729,13 +729,32 @@ module.exports = function (app, passport) {
     // edit on homepage
     var editData;
     app.get('/sendEditData', isLoggedIn, function(req, res) {
-        editData = req.query;
-        res.json({"error": false, "message": "/editData"});
+        var editTransactionID = req.query.transactionIDStr;
+        console.log(editTransactionID);
+
+        var scoutingStat = "SELECT Users.firstName, Users.lastName, General_Form.*, Detailed_Scouting.* FROM Transaction INNER JOIN Users ON Users.username = Transaction.Cr_UN INNER JOIN General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN Detailed_Scouting ON Detailed_Scouting.transactionID = Transaction.transactionID WHERE transactionID = " + editTransactionID +";";
+        var trapStat = "SELECT Users.firstName, Users.lastName, General_Form.*, Detailed_Trap.* FROM Transaction INNER JOIN Users ON Users.username = Transaction.Cr_UN INNER JOIN General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN Detailed_Trap ON Detailed_Trap.transactionID = Transaction.transactionID WHERE transactionID = " + editTransactionID + ";";
+
+        connection.query(scoutingStat + trapStat, function (err, results, fields) {
+
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "Fail"});
+            } else {
+                if (!!results[0]) {
+                    editData = results[0][0];
+                    res.json({"error": false, "message": "/editData"});
+                } else if (!!results[1]) {
+                    editData = results[1][0];
+                    res.json({"error": false, "message": "/editData"});
+                } else {
+                    res.json({"error": true, "message": "Fail"});
+                }
+            }
+        });
     });
 
     app.get('/editData', isLoggedIn, function(req, res) {
-        transactionID = editData.Transaction_ID;
-        console.log ("/editData TransactionID: " + transactionID);
         res.render('dataEdit.ejs', {
             user: req.user,
             data: editData, // get the user out of session and pass to template
@@ -1152,39 +1171,45 @@ function dateNtime() {
 function del_recov(StatusUpd, ErrMsg, targetURL, req, res) {
 
     transactionID = req.query.transactionIDStr.split(",");
-    statementGeneral = "UPDATE General_Form SET Status_del = '" + StatusUpd + "'";
-    statementDetailed = "UPDATE Detailed_Scouting SET Status_del = '" + StatusUpd + "'";
+    console.log(transactionID);
+    var statementGeneral = "UPDATE General_Form SET Status_del = '" + StatusUpd + "'";
+    var statementDetailedS = "UPDATE Detailed_Scouting SET Status_del = '" + StatusUpd + "'";
+    var statementDetailedT = "UPDATE Detailed_Trap SET Status_del = '" + StatusUpd + "'";
 
     for (var i = 0; i < transactionID.length; i++) {
         if (i === 0) {
             statementGeneral += " WHERE transactionID = '" + transactionID[i] + "'";
-            statementDetailed += " WHERE transactionID = '" + transactionID[i] + "'";
+            statementDetailedS += " WHERE transactionID = '" + transactionID[i] + "'";
+            statementDetailedT += " WHERE transactionID = '" + transactionID[i] + "'";
 
             if (i === transactionID.length - 1) {
                 statementGeneral += ";";
-                statementDetailed += ";";
-                myStat = statementGeneral + statementDetailed;
+                statementDetailedS += ";";
+                statementDetailedT += ";";
+                myStat = statementGeneral + statementDetailedS + statementDetailedT;
                 updateDBNres(myStat, "", ErrMsg, targetURL, res);
             }
         } else {
             statementGeneral += " OR transactionID = '" + transactionID[i] + "'";
-            statementDetailed += " OR transactionID = '" + transactionID[i] + "'";
+            statementDetailedS += " OR transactionID = '" + transactionID[i] + "'";
+            statementDetailedT += " OR transactionID = '" + transactionID[i] + "'";
 
             if (i === transactionID.length - 1) {
                 statementGeneral += ";";
-                statementDetailed += ";";
-                myStat = statementGeneral + statementDetailed;
+                statementDetailedS += ";";
+                statementDetailedT += ";";
+                myStat = statementGeneral + statementDetailedS + statementDetailedT;
                 updateDBNres(myStat, "", ErrMsg, targetURL, res);
             }
         }
-    }}
+    }
+}
 
 function updateDBNres(SQLstatement, Value, ErrMsg, targetURL, res) {
     res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
     //console.log("Query Statement: " + SQLstatement);
-
+    console.log(SQLstatement);
     connection.query(SQLstatement, Value, function (err, rows) {
-
         if (err) {
             console.log(err);
             res.json({"error": true, "message": ErrMsg});
@@ -1313,7 +1338,7 @@ function dataList(SQLstatement, res) {
         } else {
             var result = results[0].concat(results[1]);
             var JSONresult = JSON.stringify(result, null, "\t");
-            console.log(JSONresult);
+            // console.log(JSONresult);
             res.send(JSONresult);
             res.end();
         }

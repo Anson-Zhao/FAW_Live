@@ -348,11 +348,12 @@
     </div>
 </div>
 <script type='text/javascript'>
-    var rowSelected, thArray, DropMenu, queryString1, queryString2;
+    var scoutingRowSelected, trapRowSelected, DropMenu, queryString1, queryString2;
     var table = $("#dataDisplay").DataTable();
     var trapTable = $("#trapDisplay").DataTable();
     var UserRole = "<%= user.userrole %>";
-    var transactionID = [];
+    var scoutingTransactionID = [];
+    var trapTransactionID = [];
 
     $(document).ready(function(){
 
@@ -383,65 +384,54 @@
         });
 
         $('#dataDisplay tbody').on('click', 'tr', function () {
-            thArray = [];
-            transactionID = [];
+            scoutingTransactionID = [];
 
             $(this).toggleClass('selected');    //toggle class for the rows selected
 
-            rowSelected = table.rows('.selected').data();    //Store all the data for selected rows'
+            scoutingRowSelected = table.rows('.selected').data();    //Store all the data for selected rows'
 
-            $('#dataDisplay > thead > tr > th').each(function () {
-                thArray.push($(this).text())
-            })
+            // $('#dataDisplay > thead > tr > th').each(function () {
+            //     thArray.push($(this).text())
+            // })
 
-            for (var i = 0; i < rowSelected.length; i ++) {
+            for (var i = 0; i < scoutingRowSelected.length; i ++) {
 //                console.log("rowSelected[" + i + "][0]: " + rowSelected[i][0]);
-                transactionID.push(rowSelected[i][0]);
+                scoutingTransactionID.push(scoutingRowSelected[i][0]);
             }
         });
 
         $('#trapDisplay tbody').on('click', 'tr', function () {
-            thArray = [];
-            transactionID = [];
+            trapTransactionID = [];
 
             $(this).toggleClass('selected');    //toggle class for the rows selected
 
-            rowSelected = table.rows('.selected').data();    //Store all the data for selected rows'
+            trapRowSelected = trapTable.rows('.selected').data();    //Store all the data for selected rows'
 
-            $('#trapDisplay > thead > tr > th').each(function () {
-                thArray.push($(this).text())
-            })
+            // $('#trapDisplay > thead > tr > th').each(function () {
+            //     thArray.push($(this).text())
+            // })
 
-            for (var i = 0; i < rowSelected.length; i ++) {
+            for (var i = 0; i < trapRowSelected.length; i ++) {
 //                console.log("rowSelected[" + i + "][0]: " + rowSelected[i][0]);
-                transactionID.push(rowSelected[i][0]);
+                trapTransactionID.push(trapRowSelected[i][0]);
             }
         });
 
         $("#editButton").on("click", function () {
-            if (rowSelected.length >= 2) {
+            var transactionID = scoutingTransactionID.concat(trapTransactionID);
+            if (transactionID.length >= 2) {
                 confirm("Please make sure to only select ONE of the users to edit.")
-            } else if (rowSelected.length === 0) {
+            } else if (transactionID.length === 0) {
                 confirm("No rows have been selected---- please choose ONE.")
             } else {
-                var tstring = "";
-
-                for (var i = 0; i < thArray.length; i++) {
-                    if (i === 0) {
-                        tstring += thArray[i] + "=" + rowSelected[0][i];
-                    } else {
-                        tstring += "&" + thArray[i] + "=" + rowSelected[0][i];
-                    }
-                }
-
-                console.log("/sendEditData : " + tstring);
+                var transactionIDStr = "transactionIDStr=" + transactionID.toString();
 
                 $.ajax({
                     url: '/sendEditData',
                     type: 'GET',
                     dataType: 'json',
                     async: false,
-                    data: tstring,
+                    data: transactionIDStr,
                     success: function (result) {
                         window.location.replace('/editData')
                     }
@@ -451,7 +441,7 @@
 
         $("#deleteButton").on("click", function () {
             if (confirm("Are you sure you would like to delete this row(s)?") === true) {
-                var transactionIDStr = "transactionIDStr=" + transactionID.toString();
+                var transactionIDStr = "transactionIDStr=" + scoutingTransactionID.concat(trapTransactionID).toString();
                 // console.log ("transactionIDStr: " + transactionIDStr);
 
                 $.ajax({
