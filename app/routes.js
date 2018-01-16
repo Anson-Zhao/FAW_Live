@@ -465,6 +465,8 @@ module.exports = function (app, passport) {
         });
     });
 
+    var censorWord, censorEmail;
+
     app.post('/reset/:token', function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
 
@@ -481,9 +483,9 @@ module.exports = function (app, passport) {
                     if (!user) {
                         req.flash('error', 'Password reset token is invalid or has expired.');
 
-                        console.log("You shall not PASS!!!");
+                        console.log("Token invalid");
                     } else {
-                        console.log("Hahahahaha it worked :P");
+                        console.log("Token valid!");
                         console.log("password: " + req.body.newpassword);
                         var newPass = {
                             Newpassword: bcrypt.hashSync(req.body.newpassword, null, null),
@@ -500,34 +502,60 @@ module.exports = function (app, passport) {
                         //         console.log(err);
                         //         res.json({"error": true, "message": "Fail !"});
                         //     } else {
-                        var passComp = bcrypt.compareSync(newPass.currentpassword, user.password);
-                        if (!!req.body.newpassword && passComp) {
+                        // var passComp = bcrypt.compareSync(newPass.currentpassword, user.password);
+                        // if (!!req.body.newpassword && passComp) {
                             var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + user.username + "'";
 
                             connection.query(passReset, function (err, rows) {
 
                                 if (err) {
                                     console.log(err);
-                                    res.send("New User Insert Fail!");
+                                    res.send("New Password Insert Fail!");
                                     res.end();
                                 } else {
                                     done(err, user);
-                                    console.log("yesssssss");
+                                    console.log("Password entered successfully!");
                                     res.render('login.ejs', {
                                         user: req.user // get the user out of session and pass to template
                                     });
                                 }
 
                             });
-                        } else {
-                            console.log("didn't work :/");
-                            res.json({"error": false, "message": "Success !"});
-                        }
+                    //     } else {
+                    //         console.log("didn't work :/");
+                    //         res.json({"error": false, "message": "Success !"});
+                    //     }
                     }
 
                 });
             }, function(user, done, err) {
-                 smtpTrans = nodemailer.createTransport({
+
+                function changeMail(str) {
+                    var spliti = str.split("@");
+                    var letter1 = spliti[0].substring(0, 1);
+                    var letter2 = spliti[0].substring(spliti[0].length - 1, spliti[0].length);
+                    var newFirst = letter1;
+                    for(i = 0; i < spliti[0].length - 2; i++) {
+                        newFirst += "*";
+                    }
+                    newFirst += letter2;
+
+                    var letter3 = spliti[1].substring(0, 1);
+                    var extension = letter3;
+                    for(i = 0; i < spliti[1].split(".")[0].length - 1; i++) {
+                        extension += "*";
+                    }
+                    extension += "." + spliti[1].split(".")[1];
+                    var result = newFirst + "@" + extension;
+
+                    return result;
+                    // censorWord = function (str) {
+                    //         return str[0] + "*".repeat(str.length - 2) + str.slice(-1);
+                    // }, censorEmail = function (email){
+                    //         var arr = email.split("@");
+                    //         return censorWord(arr[0]) + "@" + censorWord(arr[1]);
+                }
+                smtpTrans = nodemailer.createTransport({
                      service: 'Gmail',
                      auth: {
                          user: 'aaaa.zhao@g.feitianacademy.org',
@@ -538,19 +566,20 @@ module.exports = function (app, passport) {
                 var transport = smtpTrans;
 
                 var message = {
-                    to: req.user.username,
 
-                    from: 'Zihao wang <aaaa.zhao@g.feitianacademy.org>',
+                    from: 'FTAA <aaaa.zhao@g.feitianacademy.org>',
+
+                    to: req.body.username,
 
                     subject: 'Your password has been changed',
 
                     text: 'Hello,\n\n' +
-                    'This is a confirmation that the password for your account ' + user.username + ' has just been changed.\n'
+                    'This is a confirmation that the password for your account, ' + changeMail(req.body.username) + ' has just been changed.\n'
                 };
 
-                transport.sendMail(message, function (err) {
+                transport.sendMail(message, function (error) {
                     if(error){
-                        console.log('Error occured');
+                        console.log('Error occurred');
                         console.log(error.message);
                         // alert('Something went wrong! Please double check if your email is valid.');
                         return;
@@ -563,6 +592,7 @@ module.exports = function (app, passport) {
                 });
             }
         ], function(err) {
+            if (err) return next(err);
             res.redirect('/login');
         });
     });
