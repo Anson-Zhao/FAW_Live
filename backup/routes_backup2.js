@@ -441,20 +441,15 @@ module.exports = function (app, passport) {
     app.get('/reset/:token', function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
 
-        myStat = "SELECT * FROM Users WHERE resetPasswordToken = '" + req.params.token + "'";
+        connection.query( "SELECT * FROM Users WHERE resetPasswordToken = ? AND resetPasswordExpires = ?", { resetPasswordToken: req.params.token }, function(err, user) {
 
-        connection.query(myStat, function(err, user) {
-            var userInfo = JSON.stringify(user, null, "\t");
-        //
-        // if (dateNtime() > tokenExpire) {
-        //
-        // }
+        if (dateNtime() > tokenExpire) {
+
+        }
 
 
             console.log("Time and f date: " + tokenExpire);
-            console.log("username: " + userInfo);
-            console.log("sql statement: " + myStat);
-            console.log("token: " + req.params.token);
+            console.log("username: " + user);
             if (!user) {
                 req.flash('error', 'Password reset token is invalid or has expired.');
                 return res.redirect('/login');
@@ -466,74 +461,33 @@ module.exports = function (app, passport) {
     });
 
     app.post('/reset/:token', function(req, res) {
-        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
-
         async.waterfall([
             function(done) {
-
-                myStat = "SELECT * FROM Users WHERE resetPasswordToken = '" + req.params.token + "'";
-
-                connection.query(myStat, function(err, user) {
-                    var userInfo = JSON.stringify(user, null, "\t");
-                    console.log("data: " + userInfo);
-                    console.log("token: " + req.params.token);
-
+                connection.query( "SELECT * FROM Users WHERE resetPasswordToken = ? AND resetPasswordExpires = ? AND username = ?", { resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: dateTime }, username: req.body.username  }, function(err, user) {
                     if (!user) {
                         req.flash('error', 'Password reset token is invalid or has expired.');
-
-                        console.log("You shall not PASS!!!");
-                    } else {
-                        console.log("Hahahahaha it worked :P");
-                        console.log("password: " + req.body.newpassword);
-                        var newPass = {
-                            Newpassword: bcrypt.hashSync(req.body.newpassword, null, null),
-                            ConfirmPassword: bcrypt.hashSync(req.body.Confirmpassword, null, null)
-                        };
-
-                        dateNtime();
-
-                        // myStat = "UPDATE Users SET firstName =?, lastName = ?, dateModified  = ? WHERE username = ? ";
-                        // myVal = [newPass.firstname, newPass.lastname, dateTime, user.username];
-                        //
-                        // connection.query(myStat, myVal, function (err, rows) {
-                        //     if(err){
-                        //         console.log(err);
-                        //         res.json({"error": true, "message": "Fail !"});
-                        //     } else {
-                        var passComp = bcrypt.compareSync(newPass.currentpassword, user.password);
-                        if (!!req.body.newpassword && passComp) {
-                            var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + user.username + "'";
-
-                            connection.query(passReset, function (err, rows) {
-
-                                if (err) {
-                                    console.log(err);
-                                    res.send("New User Insert Fail!");
-                                    res.end();
-                                } else {
-                                    done(err, user);
-                                    console.log("yesssssss");
-                                    res.render('login.ejs', {
-                                        user: req.user // get the user out of session and pass to template
-                                    });
-                                }
-
-                            });
-                        } else {
-                            console.log("didn't work :/");
-                            res.json({"error": false, "message": "Success !"});
-                        }
+                        return res.redirect('back');
                     }
 
+                    req.user.password = req.body.password;
+                    req.user.resetPasswordToken = undefined;
+                    req.user.resetPasswordExpires = undefined;
+
+                    user.save(function(err) {
+                        req.logIn(user, function(err) {
+                            done(err, user);
+                        });
+                    });
                 });
-            }, function(user, done, err) {
-                 smtpTrans = nodemailer.createTransport({
-                     service: 'Gmail',
-                     auth: {
-                         user: 'aaaa.zhao@g.feitianacademy.org',
-                         pass: '12344321'
-                     }
-                 });
+            },
+            function(user, done) {
+                smtpTrans = nodemailer.createTransport({
+                    service: 'Gmail',
+                    auth: {
+                        user: 'aaaa.zhao@g.feitianacademy.org',
+                        pass: '12344321'
+                    }
+                });
 
                 var transport = smtpTrans;
 
@@ -545,21 +499,12 @@ module.exports = function (app, passport) {
                     subject: 'Your password has been changed',
 
                     text: 'Hello,\n\n' +
-                    'This is a confirmation that the password for your account ' + user.username + ' has just been changed.\n'
+                    'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
                 };
 
-                transport.sendMail(message, function (err) {
-                    if(error){
-                        console.log('Error occured');
-                        console.log(error.message);
-                        // alert('Something went wrong! Please double check if your email is valid.');
-                        return;
-                    }
-                    console.log('Message sent successfully!');
-                    res.redirect('/login');
-                    // alert('An e-mail has been sent to ' + req.body.username + ' with further instructions.');
-                    // req.flash('success', 'Success! Your password has been changed.');
-                    // done(err);
+                transport.sendMail(message, function(err){
+                    req.flash('success', 'Success! Your password has been changed.');
+                    done(err);
                 });
             }
         ], function(err) {
