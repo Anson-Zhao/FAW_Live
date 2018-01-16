@@ -31,7 +31,7 @@
         }
         .column {
             float:right;
-           position:relative;
+            position:relative;
             right:80px;
             width:11%;
         }
@@ -63,6 +63,46 @@
         .x:hover, .y:hover, .z:hover {
             box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
         }
+        @media only screen and (max-width:320px){
+            h2 {
+                font-size: 27px;
+            }
+            .column{
+                padding:10px 40px;
+            }
+            #trapOwner{
+                font-size:12.5px;
+                width:60%;
+            }
+        }
+        @media only screen and (min-width:330px) and (max-width: 375px){
+            h2 {
+                font-size: 32px;
+            }
+            .column{
+                padding:10px 40px;
+            }
+            #trapOwner{
+                font-size:14px;
+                width:60%;
+            }
+
+        }
+        @media only screen and (min-width:380px) and (max-width: 414px){
+
+            .column{
+                padding:10px 40px;
+            }
+            #trapOwner{
+                font-size:13.5px;
+                width:50%;
+            }
+        }
+        @media only screen and (min-width:420px) and (max-width: 768px){
+            #trapOwner{
+                width:27%;
+            }
+        }
     </style>
 
 </head>
@@ -83,100 +123,140 @@
             </div>
         </div>
     </div>
-    <h1></h1>
-    <h2 id="title">Step 1/2: General Form</h2>
+
+    <h1 id="title">Step 1/2: General Form</h1>
 
     <div id="container">
         <div id="generalForm">
             <form id = "general" method = "post">
 
-                <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= data.Transaction_ID %>" readonly><br><br>
-                <h4>Your Name: &nbsp;&nbsp;&nbsp;</h4><input id="firstName" type="text" value="<%= user.firstName %>" readonly><input id="lastName" type="text" value="<%= user.lastName %>" readonly><br><br>
-                <h4>1A. Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE1" name="date" class="date" value="<%= data.Date %>" required><br><br>
-                <h4>1B. Trap Owner: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="trapOwner" name="trapOwner" type="text" value="<%= data.Trap_Owner %>" placeholder="Enter The Trap Owner's Name"><br><br>
-                <h4>1C. Location Name: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="locationName" name="locationName" type="text" value="<%= data.Location_Name %>" placeholder="Enter Location Here" required><br><br>
-                <h4>1D. Location Type: &nbsp;&nbsp;&nbsp;</h4>
-                <select class="clearGen" id='locationType' name='locationType' required>
-                    <option value=''>SELECT THE LOCATION TYPE</option>
-                    <option value="Location Type"></option>
-                </select><br><br>
+                <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= data.transactionID %>" readonly><br><br>
+                <h4>Your Name: &nbsp;&nbsp;&nbsp;</h4><input id="firstName" type="text" value="<%= user.firstname %>" readonly><input id="lastName" type="text" value="<%= user.lastname %>" readonly><br><br>
+                <h4>1 . Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE1" name="Date" class="date" value="<%= data.Date %>" required><br><br>
+                <h4>1 . Location Name: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="locationName" name="Location_Name" type="text" value="<%= data.Location_name %>" placeholder="Enter Location Here"><br><br>
                 <h4 id="GPSLocationTitle">E. GPS Location: &nbsp;&nbsp;&nbsp;</h4>
+                <h4 style="color:red" id="errorMessage"></h4>
                 <h5 style="color:#9d9d9d;" id="locationNote"></h5>
-                <div id="locationDiv">
-                    <h4 id='latitudeTitle'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Latitude: </h4>
-                    <h4 id='longitudeTitle'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Longitude: </h4>
-                    <input id="refreshMap" type='button' onclick='refresh()' value='Click here to refresh the map'>
-                </div>
+                <div id="locationDiv"></div>
                 <div id="map"></div><br>
-                <h4>1F. Country: &nbsp;&nbsp;&nbsp;</h4>
-                <select class="clearGen" id='country' name='country' required>
-                    <option value=''>SELECT THE COUNTRY</option>
-                    <option value="Country"></option>
+                <!--<h4>1F. Country: &nbsp;&nbsp;&nbsp;</h4>-->
+                <!--<select class="clearGen" id='country' name='country' required>-->
+                <!--<option>SELECT THE COUNTRY</option>-->
+                <!--<option>COUNTRYA</option>-->
+                <!--<option>COUNTRYB</option>-->
+                <!--<option>COUNTRYC</option>-->
+                <!--</select><br><br>-->
+                <!--<h4>1G. Province: &nbsp;&nbsp;&nbsp;</h4>-->
+                <!--<select class="clearGen" id='province' name='province' required>-->
+                <!--<option value=''>SELECT THE PROVINCE</option>-->
+                <!--<option>PROVINCEA</option>-->
+                <!--<option>PROVINCEB</option>-->
+                <!--<option>PROVINCEC</option>-->
+                <!--</select><br><br>-->
+                <!--<h4>1H. District: &nbsp;&nbsp;&nbsp;</h4>-->
+                <!--<select class="clearGen" id='district' name='district' required>-->
+                <!--<option value=''>SELECT THE DISTRICT</option>-->
+                <!--<option>DISTRICT1</option>-->
+                <!--<option>DISTRICT2</option>-->
+                <!--<option>DISTRICT3</option>-->
+                <!--</select><br><br>-->
+                <h4>1 . Main Crop: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='mainCrop' name="Main_crop" required>
+                    <option value=''>SELECT THE MAIN CROP</option>
+                    <option>ALFALFA</option>
+                    <option>BARLEY</option>
+                    <option>COTTON</option>
+                    <option>FLOWERS</option>
+                    <option>MAIZE</option>
+                    <option>MILLET</option>
+                    <option>PEANUT</option>
+                    <option>RICE</option>
+                    <option>SORGHUM</option>
+                    <option>SOYBEAN</option>
+                    <option>SUGARBEET</option>
+                    <option>SUGARCANE</option>
+                    <option>TEFF</option>
+                    <option>TOBACCO</option>
+                    <option>WEEDS</option>
+                    <option>WHEAT</option>
+                    <option>OTHER CEREALS</option>
+                    <option>OTHER FRUITS</option>
+                    <option>OTHER GRASSES</option>
+                    <option>OTHER VEGETABLES</option>
                 </select><br><br>
-                <h4>1G. Province: &nbsp;&nbsp;&nbsp;</h4>
-                <select class="clearGen" id='province' name='province' required>
-                    <option value=''>SELECT THE PROVINCE</option>
-                    <option value="Province"></option>
+                <h4>1 . Main Crop Variety: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="mainCropVariety" name="Main_crop_variety" type="text" value="<%= data.Main_crop_variety %>" placeholder="Enter Main Crop Variety Here"><br><br>
+                <h4>1 . Irrigation: &nbsp;&nbsp;&nbsp;</h4>
+                <input type="radio" name="Irrigation" value="Irrigated" required> IRRIGATED
+                <input type="radio" name="Irrigation" value="Rain-Fed" required> RAIN-FED <br><br>
+                <h4>1 . Fertilized Used: &nbsp;&nbsp;&nbsp;</h4>
+                <input type="radio" name="Fertilized_used" value="YES" required> YES
+                <input type="radio" name="Fertilized_used" value="NO" required> NO <br><br>
+                <h4>1 . Crop Stage: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='cropStage' name="Crop_stage" required>
+                    <option value=''>SELECT THE CROP STAGE</option>
+                    <option>SOWING</option>
+                    <option>SEEDING</option>
+                    <option>VEGETATIVE</option>
+                    <option>REPRODUCTIVE</option>
+                    <option>MATURITY</option>
                 </select><br><br>
-                <h4>1H. District: &nbsp;&nbsp;&nbsp;</h4>
-                <select class="clearGen" id='district' name='district' required>
-                    <option value=''>SELECT THE DISTRICT</option>
-                    <option value="District"></option>
-                </select><br><br>
-                <h4>1I. Cropping System: &nbsp;&nbsp;&nbsp;</h4>
-                <!--<input type="radio" name="croppingSystem" value="Seasonal" required> SEASONAL-->
-                <!--<input type="radio" name="croppingSystem" value="Rotation/Intercropping" required> ROTATION/INTERCROPPING <br><br>-->
-                <h4 id="cropSystemTitle">
-                    <select class="clearGen" id='cropSystem' name='croppingSystem' onchange='rotationInterCropSystem();' required>
-                        <option value=''>SELECT THE CROP SYSTEM</option>
-
-                        <option>SEASONAL</option>
-                        <option>ROTATION</option>
-                        <option>INTERCROPPING</option>
-                    </select>
-                    <h4 id="mainCropTitle"></h4>
-                </h4><br>
-                <h4>1J. Maize Variety: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="maizeVariety" name="maizeVariety" type="text" value="<%= data.Maize_Variety %>" placeholder="Enter Crop Variety Here" required><br><br>
-                <h4>1K. Maize Planting Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE2" name="plantingDate" class="date" value="<%= data.Maize_Planting_Date %>" required><br><br>
-                <h4>1L. Field Size - ha (numerical XXXX.X): &nbsp;&nbsp;&nbsp;</h4>
-                <h5 style="color:#9d9d9d;">Note: There is no need to enter the decimals, etc. Please enter the number ONLY.</h5>
-                <input class="clearGen" id="fieldSizeInteger" name="fieldSizeInteger" type="number" min="0" max="999999" placeholder="0000" onkeyup="limit()" required>.
-                <input class="clearGen" id="fieldSizeDecimal" name="fieldSizeDecimal" type="number" min="0" max="9" placeholder="0" onkeyup="limit()" required><br><br>
-                <h4>1M. General Health of Maize: &nbsp;&nbsp;&nbsp;</h4>
-                <select class="clearGen" id='healthOfMaize' name='healthOfMaize' required>
+                <h4>1 . General Health of Crop: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='healthOfCrop' name='General_health' required>
                     <option value=''>SELECT THE GENERAL HEALTH LEVEL</option>
                     <option>POOR</option>
                     <option>MEDIUM</option>
                     <option>GOOD</option>
                 </select><br><br>
-                <h4>1N. Date of Last RainFall: &nbsp;&nbsp;&nbsp;</h4><input id="DATE3" name="lastRainDate" class="date" value="<%= data.Date_of_Last_Rain %>" required><br><br>
-                <h4>1O. Entry Type: &nbsp;&nbsp;&nbsp;</h4>
-                <select class="clearGen" id='type' name="entryType" required>
+
+                <h4>1 . Cropping System: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='cropSystem' name='Cropping_system' onchange='rotationInterCropSystem();' required>
+                    <option value=''>SELECT THE CROP SYSTEM</option>
+                    <option>SEASONAL</option>
+                    <option>ROTATION</option>
+                    <option>INTERCROPPING</option>
+                </select>
+                <div id="rotationIntercropping"></div>
+                <h4>1 . Field Size - ha (numerical XXXX.X): &nbsp;&nbsp;&nbsp;</h4>
+                <h5 style="color:#9d9d9d;">Note: There is no need to enter the decimals, etc. Please enter the number ONLY.</h5>
+                <input class="clearGen" id="fieldSizeInteger" name="Field_size_ha_integer" type="number" min="0" max="999999" placeholder="0000" onkeyup="limit()" required>.
+                <input class="clearGen" id="fieldSizeDecimal" name="Field_size_ha_decimal" type="number" min="0" max="9" placeholder="0" onkeyup="limit()" required><br><br>
+                <h4>1 . Main Crop Planting Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE2" name="Main_crop_planting_date" class="date" value="" required><br><br>
+                <h4>1 . Date of Last RainFall: &nbsp;&nbsp;&nbsp;</h4><input id="DATE3" name="Date_of_last_rain" class="date" value=""><br><br>
+                <h4>1 . Rain Amount: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='rainAmount' name="Rain_amount" required>
+                    <option value=''>SELECT THE RAIN AMOUNT</option>
+                    <option>TRACE</option>
+                    <option>LIGHT</option>
+                    <option>MODERATE</option>
+                    <option>HEAVY</option>
+                </select><br><br>
+                <h4>1 . Entry Type: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='entryType' name="Entry_type" required>
                     <option value=''>SELECT THE TYPE</option>
-                    <option>SCOUTING</option>
-                    <option>TRAP (TO BE DEVELOP)</option>
+                    <option>FIELD SCOUTING</option>
+                    <option>PHEROMONE TRAP</option>
                 </select><br><br>
                 <div class="row">
                     <div class="column">
                         <input id="continue" type="submit" value="Continue"/>
                     </div>
                     <div class="column">
-                        <input class="cancel" type="button" onclick="goBack()" value=" Cancel  "/>
+                        <input class="cancel" type="button" onclick="goBack()"value=" Cancel  "/>
                     </div>
+
                     <div class="column">
-                        <input class="clear" type="button" onclick="clearGeneral()" value="   Clear   "/>
+                        <input  class="clear" type="button" onclick="clearGeneral()" value="   Clear   "/>
                     </div>
                 </div>
             </form>
         </div>
 
-        <div id="detailedForm">
-            <form id="detailed" method = "post">
-
+        <div id="detailedFormScouting">
+            <form id="detailedScouting" method = "post">
                 <div>
-                    <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= data.Transaction_ID %>" readonly><br><br>
-                    <h4>2A. Pests Present: &nbsp;&nbsp;&nbsp;</h4>
-                    <select class="clearDet" id='pestsPresent' name='pestsPresent' onchange="pestSelect()" required>
+                    <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= transactionID %>" readonly><br><br>
+                    <h4>2 . Pest Species: &nbsp;&nbsp;&nbsp;</h4>
+                    <select class="clearDetS" id='pestSpecies' name='Pest_species' onchange="pestSelect()" required>
                         <option value=''>SELECT THE TYPE OF THE PEST</option>
                         <option>FAW</option>
                         <option>AAW</option>
@@ -184,75 +264,54 @@
                     </select><br><br>
                 </div>
                 <div class="FAW">
-                    <h2>FAW</h2>
-                    <h4>2B. FAW Stage: &nbsp;&nbsp;&nbsp;</h4>
-                    <select class="clearDet" id='fawStage' name='fawStage' required>
-                        <option value=''>SELECT THE STAGE</option>
-                        <option>EGGS</option>
-                        <option>LARVAE</option>
-                        <option>PUPAE</option>
-                        <option>ADULTS</option>
-                    </select><br><br>
-                    <h4>2C. Early Damage Level: &nbsp;&nbsp;&nbsp;</h4>
-                    <select class="clearDet" id='earlyDamageLevel' name='earlyDamageLevel' required>
-                        <option value=''>SELECT THE DAMAGE LEVEL</option>
-                        <option>NONE</option>
-                        <option>LOW</option>
-                        <option>MEDIUM</option>
-                        <option>HIGH</option>
-                    </select><br><br>
-                    <h4>2D. Late Damage Level: &nbsp;&nbsp;&nbsp;</h4>
-                    <select class="clearDet" id='lastDamageLevel' name='lateDamageLevel' required>
-                        <option value=''>SELECT THE DAMAGE LEVEL</option>
-                        <option>NONE</option>
-                        <option>LOW</option>
-                        <option>MEDIUM</option>
-                        <option>HIGH</option>
-                    </select><br><br>
-                    <h4>2E. Natural Enemies Present ?&nbsp;&nbsp;&nbsp;</h4>
-                    <input id="naturalEnemiesYES" type="radio" name="naturalEnemies" value="YES" required> YES
-                    <input id="naturalEnemiesNO" type="radio" name="naturalEnemies" value="NO" required> NO <br><br>
-                    <h4>2F. Dead Larvae Killed By Natural Enemies ?&nbsp;&nbsp;&nbsp;</h4>
-                    <input id="deadLarvaeYES" type="radio" name="deadLarvae" value="YES" required> YES
-                    <input id="deadLarvaeNO" type="radio" name="deadLarvae" value="NO" required> NO <br><br>
-                    <h4>2G. % Plants Infested (From 50 Plant Examples): &nbsp;&nbsp;&nbsp;</h4><input class="clearDet" id="percentInfested" name="percentInfested" type="text" value="<%= data.Percent_Plants_Infested %>" placeholder="Enter Number (Numerical) Here" required><br><br>
+                    <h2>Pests</h2>
+                    <div id="pests">
+                        <h4>2 . Present / Absent: &nbsp;&nbsp;&nbsp;</h4>
+                        <input type="radio" name="Present_absent" value="PRESENT" onclick="present(this)" required> PRESENT
+                        <input type="radio" name="Present_absent" value="ABSENT" onclick="present(this)" required> ABSENT <br><br>
+                        <div id="damageStage">
 
-                    <h2>FAW Control</h2>
-                    <h4>2H. Control Undertaken: &nbsp;&nbsp;&nbsp;</h4>
-                    <select class="clearDet" id='control' name='control' required>
-                        <option value=''>SELECT THE CONTROL TYPE</option>
-                        <option>NONE</option>
-                        <option>EGG SQUASHING</option>
-                        <option>HAND PICKING</option>
-                        <option>MECHANICAL</option>
-                        <option>CULTURAL</option>
-                        <option>BIOCONTROL</option>
-                        <option>PESTICIDE</option>
-                    </select><br><br>
-                    <h4>2I. Pesticide Litres Sprayed ?&nbsp;&nbsp;&nbsp;</h4>
-                    <input id="pesticideYES" type="radio" name="pesticide" value="YES" required> YES
-                    <input id="pesticideNO" type="radio" name="pesticide" value="NO" required> NO <br><br>
+                        </div>
+                        <h4>2 . Previous Damage: &nbsp;&nbsp;&nbsp;</h4>
+                        <select class="clearDetS" id='previousDamage' name='Previous_damage' required>
+                            <option value=''>SELECT THE DAMAGE LEVEL</option>
+                            <option>NONE</option>
+                            <option>LOW</option>
+                            <option>MODERATE</option>
+                            <option>HIGH</option>
+                        </select><br><br>
+                        <h4>2 . Natural Enemies Present? &nbsp;&nbsp;&nbsp;</h4>
+                        <select class="clearDetS" id='naturalEnemies' name='Natural_enemies' required>
+                            <option value=''>SELECT THE NATURAL ENEMIES</option>
+                            <option>NONE</option>
+                            <option>PARASITOIDES</option>
+                            <option>PATHOGENS</option>
+                            <option>PREDATORS</option>
+                        </select><br><br>
+                        <h4>2 . Dead larvae killed by natural enemies? &nbsp;&nbsp;&nbsp;</h4>
+                        <input type="radio" name="Dead_larvae" value="YES" required> YES
+                        <input type="radio" name="Dead_larvae" value="NO" required> NO <br><br>
+                        <div id="cropInfested">
 
-                    <!--<h2>Photos</h2>-->
-                    <!--<h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>-->
-                    <!--<input id="photoOfPest" type="file" name="photoOfPest" accept="image/*" onchange="previewFile()" multiple/><br>-->
-                    <!--<img id="photoOfPestImage" src="" alt="Image preview..."><br>-->
-                    <!--<h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>-->
-                    <!--<input id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" multiple/><br>-->
-                    <!--<img id="photoOfDamageImage" src="" alt="Image preview..."><br><br>-->
-                    <!--<input type="submit" value="Submit the Form">-->
+                        </div>
+                    </div>
+
+                    <h2>Control</h2>
+                    <div id="control">
+                        <div id="controlType"></div>
+                        <div id="pesticide"></div>
+                    </div>
                     <input id="hide" type="submit">
                 </div>
             </form>
             <form id="upload" enctype="multipart/form-data" method="post">
                 <div class="FAW">
-                    <h2>Photos</h2>
-                    <h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>
-                    <input class="clearDet" id="photoOfPest" type="file" name="photoOfPest" accept="image/*" onchange="previewFile()" multiple/><br>
-                    <div id="photoOfPestDiv"></div><br>
+                    <h2>Resources</h2>
                     <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
-                    <input class="clearDet" id="photoOfDamage" type="file" name="photoOfDamage" accept="image/*" onchange="previewFile()" multiple/><br>
-                    <div id="photoOfDamageDiv"></div><br><br>
+                    <input class="clearDetS" id="photoOfDamage" type="file" name="Damage_photo" accept="image/*" multiple/><br><br>
+                    <div id="photo">
+
+                    </div>
 
                     <div class="row">
                         <div class="column">
@@ -265,8 +324,53 @@
                             <input class="cancel" type="button" onclick="goBack()" value="  Cancel   ">
                         </div>
                         <div class="column">
-                            <input class="clear" type="button" onclick="clearDetailed()" value="    Clear    ">
+                            <input class="clear" type="button" onclick="clearDetSailed()" value="    Clear    ">
                         </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="detailedFormTrap">
+            <form id="detailedTrap" method = "post">
+                <h4>2 . Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= transactionID %>" readonly><br><br>
+                <h4>2 . Trap_ID: &nbsp;&nbsp;&nbsp;</h4><input id="trapID" name="Trap_ID" type="text" required><br><br>
+                <h4>2 . FAW Confirmed: &nbsp;&nbsp;&nbsp;</h4><input id="FAWConfirmed" class="inputNumber" name="FAW_confirmed" type="number" required><br><br>
+                <h4>2 . FAW Suspected: &nbsp;&nbsp;&nbsp;</h4><input id="FAWSuspected" class="inputNumber" name="FAW_suspected" type="number" required><br><br>
+                <h4>2 . Other Species: &nbsp;&nbsp;&nbsp;</h4><input id="otherSpecies" class="inputNumber" name="Other_species" type="number" required><br><br>
+                <h4>2 . Trap Replaced? &nbsp;&nbsp;&nbsp;</h4>
+                <input type="radio" name="Trap_replaced" value="YES" required> YES
+                <input type="radio" name="Trap_replaced" value="NO" required> NO <br><br>
+                <h4>2 . Lure Replaced? &nbsp;&nbsp;&nbsp;</h4>
+                <input type="radio" name="Lure_replaced" value="YES" required> YES
+                <input type="radio" name="Lure_replaced" value="NO" required> NO <br><br>
+                <h4>2 . Lure Name: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='lureName' name="Lure_name" required>
+                    <option value=''>SELECT THE MAIN CROP</option>
+                    <option>CHEMTICA</option>
+                    <option>PHEROTECH</option>
+                    <option>PSU SCENTRY</option>
+                    <option>RUSSELLPM</option>
+                    <option>SCENTRY</option>
+                    <option>SCENTURION</option>
+                    <option>TRÉCÉ</option>
+                    <option>OTHER</option>
+                </select><br><br>
+                <h4>2 . Trap Serviced Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE4" name="Trap_serviced_date" class="date" value="" required><br><br>
+
+                <div class="row">
+                    <div class="column">
+                        <input id="submitTrap" type="submit" value="Complete">
+                    </div>
+                    <div class="column">
+                        <input id="previous" type="button" onclick="previousForm()" value=" Previous ">
+                    </div>
+                    <div class="column">
+                        <input class="cancel" type="button" onclick="goBack()" value="  Cancel   ">
+                    </div>
+                    <div class="column">
+                        <input class="clear" type="button" value="    Clear    ">
+                        <!--<input class="clear" type="button" onclick="clearDetSailed()" value="    Clear    ">-->
                     </div>
                 </div>
             </form>
