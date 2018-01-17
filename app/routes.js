@@ -12,7 +12,7 @@ var crypto = require('crypto');
 
 var filePathName = "";
 var filePath, transactionID, myStat, myVal, myErrMsg, token, errStatus;
-var today, date, time2, dateTime, tokenExpire;
+var today, date, time2, time3, dateTime, tokenExpire;
 
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -137,7 +137,7 @@ module.exports = function (app, passport) {
                         // alert('Something went wrong! Please double check if your email is valid.');
                         return;
                     } else {
-                        res.send('Message sent successfully!');
+                        res.send('Message sent successfully! Please check your email inbox.');
                         console.log('Message sent successfully!');
                         res.redirect('/login');
                         // alert('An e-mail has been sent to ' + req.body.username + ' with further instructions.');
@@ -157,11 +157,9 @@ module.exports = function (app, passport) {
 
         connection.query(myStat, function(err, user) {
             dateNtime();
-            console.log("current: " + dateTime);
             var myDate1 = new Date(user[0].resetPasswordExpires);
 
-            if (dateTime > myDate1.toLocaleString()) {
-                console.log("letter");
+            if (!user || dateTime > myDate1.toLocaleString()) {
                 res.send('Password reset token is invalid or has expired. Please contact Administrator.');
             } else {
                 res.render('reset.ejs', {
@@ -196,7 +194,7 @@ module.exports = function (app, passport) {
                             ConfirmPassword: bcrypt.hashSync(req.body.Confirmpassword, null, null)
                         };
 
-                        dateNtime();
+                        // dateNtime();
 
                         // myStat = "UPDATE Users SET firstName =?, lastName = ?, dateModified  = ? WHERE username = ? ";
                         // myVal = [newPass.firstname, newPass.lastname, dateTime, user.username];
@@ -208,38 +206,28 @@ module.exports = function (app, passport) {
                         //     } else {
                         // var passComp = bcrypt.compareSync(newPass.currentpassword, user.password);
                         // if (!!req.body.newpassword && passComp) {
-                            var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + req.body.username + "'";
 
-                            connection.query(passReset, function (err, rows) {
+                        var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + req.body.username + "'";
 
-                                if (err) {
-                                    console.log(err);
-                                    res.send("New Password Insert Fail!");
-                                } else {
-                                    done(err, user);
-                                    console.log("Password entered successfully!");
-                                    res.send("Password entered successfully!");
-                                    res.render('login.ejs', {
-                                        user: req.user // get the user out of session and pass to template
-                                    });
-                                }
+                        connection.query(passReset, function (err, rows) {
 
-                            });
-                    //     } else {
-                    //         console.log("didn't work :/");
-                    //         res.json({"error": false, "message": "Success !"});
-                    //     }
+                            if (err) {
+                                console.log(err);
+                                res.send("New Password Insert Fail!");
+                            } else {
+                                // done(err, user);
+                                console.log("Password entered successfully!");
+                                done()
+                            }
+                        });
                     }
 
                 });
             }, function(user, done, err) {
 
                 var message = {
-
                     from: 'FTAA <aaaa.zhao@g.feitianacademy.org>',
-
                     to: req.body.username,
-
                     subject: 'Your password has been changed',
                     text: 'Hello,\n\n' +
                     'This is a confirmation that the password for your account, ' + changeMail(req.body.username) + ' has just been changed.\n'
@@ -247,22 +235,21 @@ module.exports = function (app, passport) {
 
                 smtpTrans.sendMail(message, function (error) {
                     if(error){
-                        console.log('Error occurred');
                         console.log(error.message);
                         // alert('Something went wrong! Please double check if your email is valid.');
                         return;
+                    } else {
+                        console.log('Confirmation message sent successfully!');
+                        res.redirect('/login');
                     }
-                    console.log('Message sent successfully!');
-                    res.redirect('/login');
-                    // alert('An e-mail has been sent to ' + req.body.username + ' with further instructions.');
-                    // req.flash('success', 'Success! Your password has been changed.');
-                    // done(err);
                 });
             }
-        ], function(err) {
-            if (err) return next(err);
-            res.redirect('/login');
-        });
+        ]
+        //     , function(err) {
+        //     if (err) return next(err);
+        //     res.redirect('/login');
+        // }
+        );
     });
 
 
@@ -1000,9 +987,9 @@ function dateNtime() {
 
 function tokenExpTime(){
     today = new Date();
-    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-    time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    tokenExpire = date + ' ' + time2;
+    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate()+1);
+    time3 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    tokenExpire = date + ' ' + time3;
 }
 
 function del_recov(StatusUpd, ErrMsg, targetURL, req, res) {

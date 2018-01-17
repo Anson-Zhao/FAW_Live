@@ -72,7 +72,6 @@
         var confirmP =document.getElementById("Confirmpassword").value;
 
         if (newP === confirmP) {
-                alert ("V");
                 return true;
             } else {
                 alert("New passwords don't match!");
@@ -86,7 +85,7 @@
 
         $.ajax({
             type: "post",
-            url: "/login",
+            url: "/reset/:token",
             dataType: 'json',
             data: $(this).serialize(),
             success: function (result) {
