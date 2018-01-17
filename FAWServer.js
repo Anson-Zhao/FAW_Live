@@ -12,7 +12,6 @@ var port     = process.env.PORT || config.Server_Port;
 var path    = require('path');
 var passport = require('passport');
 var flash    = require('connect-flash');
-var fs = require('fs');
 
 // configuration ===============================================================
 // connect to our database
@@ -61,19 +60,6 @@ var options = {
 
 var sessionStore = new MySQLStore(options);
 
-// var opts = {
-//     uri: '/password_reset',
-//     from: 'password-robot@localhost',
-//     transportType: 'SMTP',
-//     transportOptions: {
-//         service: "Gmail",
-//         auth: {
-//             user: "aaaa.zhao@g.feitianacademy.org",
-//             pass: "12344321"
-//         }
-//     }
-// };
-
 app.use(session({
     secret: 'Uesei9872',
     store: sessionStore,
@@ -84,14 +70,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
-
-// example nodemailer config here
-// var forgot = require('./config/NodeMailer')(opts);
-//
-//
-//
-// app.use(forgot.middleware);
-
 
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
