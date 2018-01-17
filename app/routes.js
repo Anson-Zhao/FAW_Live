@@ -156,24 +156,11 @@ module.exports = function (app, passport) {
         myStat = "SELECT * FROM Users WHERE resetPasswordToken = '" + req.params.token + "'";
 
         connection.query(myStat, function(err, user) {
-            var userInfo = JSON.stringify(user, null, "\t");
-
-            // console.log("Time and f date: " + tokenExpire);
-            // console.log("username: " + userInfo);
-            // console.log("sql statement: " + myStat);
-            // console.log("token: " + req.params.token);
-
             dateNtime();
-            // toJSDate(dateTime);
-
             console.log("current: " + dateTime);
-            var myDate = new Date(user[0].resetPasswordExpires);
-            var difference = dateTime - myDate.toLocaleString();
-            //(myDate.toLocaleString());
-            console.log("expires: " + myDate.toLocaleString());
-            console.log("subtracted: " + difference);
+            var myDate1 = new Date(user[0].resetPasswordExpires);
 
-            if (dateTime > myDate.toLocaleString()) {
+            if (dateTime > myDate1.toLocaleString()) {
                 console.log("letter");
                 res.send('Password reset token is invalid or has expired. Please contact Administrator.');
             } else {
@@ -1214,17 +1201,4 @@ function changeMail(str) {
     var result = newFirst + "@" + extension;
 
     return result;
-}
-
-function toJSDate( dateTimes ) {
-
-    dateTime = dateTimes.split(" ");//dateTime[0] = date, dateTime[1] = time
-
-    var date = dateTimes[0].split("-");
-    var time = dateTimes[1].split(":");
-
-//(year, month, day, hours, minutes, seconds, milliseconds)
-//subtract 1 from month because Jan is 0 and Dec is 11
-    return new Date(date[2], (date[1]-1), date[0], time[0], time[1], 0, 0);
-
 }
