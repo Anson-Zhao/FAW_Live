@@ -6,21 +6,13 @@ var connection = mysql.createConnection(config.commondb_connection);
 var uploadPath = config.Upload_Path;
 var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt-nodejs');
-// var fs = require('fs');
-
 var nodemailer = require('nodemailer');
 var async = require('async');
 var crypto = require('crypto');
-// var smtpTransport = require('nodemailer-smtp-transport');
-//
-//
-// var sendmail = require('sendmail')();
-//
-// var mailer = require('express-mailer');
 
 var filePathName = "";
 var filePath, transactionID, myStat, myVal, myErrMsg, token, errStatus;
-var today, date, time2, dateTime;
+var today, date, time2, dateTime, tokenExpire;
 
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -35,6 +27,14 @@ var storage = multer.diskStorage({
 });
 
 var fileUpload = multer({storage: storage}).any();
+
+var smtpTrans = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'aaaa.zhao@g.feitianacademy.org',
+        pass: "12344321"
+    }
+});
 
 connection.query('USE ' + config.Login_db); // Locate Login DB
 
@@ -90,18 +90,13 @@ module.exports = function (app, passport) {
 
     });
 
-
-    today = new Date();
-    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate() + 1);
-    time2 = (today.getHours() + 1) + ":" + today.getMinutes() + ":" + today.getSeconds();
-    var tokenExpire = date + ' ' + time2;
-
     app.post('/email', function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
         async.waterfall([
             function(done) {
                 crypto.randomBytes(20, function(err, buf) {
                     token = buf.toString('hex');
+                    tokenExpTime();
                     done(err, token, tokenExpire);
                 });
             },
@@ -123,41 +118,6 @@ module.exports = function (app, passport) {
                 });
             },
             function(token, done, err) {
-                // var transporter = nodemailer.createTransport(
-                //     {
-                //         host: 'smtp.mail.yahoo.com',
-                //         // secure: true, // use SSL
-                //         port: 465,
-                //         auth: {
-                //             user: 'julial.z@yahoo.com',
-                //             pass: '!yahoo-MAIL!'
-                //         }
-                //         // logger: false,
-                //         // debug: false // include SMTP traffic in the logs
-                //     },
-                //     {
-                //         from: 'julial.z@yahoo.com'
-                //     }
-                // );
-
-                // mailer.extend(app, {
-                //     from: 'aaaa.zhao@g.feitianacademy.org',
-                //     host: 'smtp.gmail.com', // hostname
-                //     secureConnection: true, // use SSL
-                //     port: 465, // port for secure SMTP
-                //     transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts
-                //     auth: {
-                //         user: 'aaaa.zhao@g.feitianacademy.org',
-                //         pass: '12344321'
-                //     }
-                smtpTrans = nodemailer.createTransport({
-                    service: 'Gmail',
-                    auth: {
-                        user: 'aaaa.zhao@g.feitianacademy.org',
-                        pass: "12344321"
-                    }
-                });
-                var transport = smtpTrans;
                 // Message object
                 var message = {
                     from: 'FTAA <aaaa.zhao@g.feitianacademy.org>', // sender info
@@ -171,92 +131,23 @@ module.exports = function (app, passport) {
                     'If you did not request this, please ignore this email and your password will remain unchanged.\n'
                 };
 
-                transport.sendMail(message, function(error){
+                smtpTrans.sendMail(message, function(error){
                     if(error){
-                        console.log('Error occured');
                         console.log(error.message);
                         // alert('Something went wrong! Please double check if your email is valid.');
                         return;
+                    } else {
+                        console.log('Message sent successfully!');
+                        res.redirect('/login');
+                        // alert('An e-mail has been sent to ' + req.body.username + ' with further instructions.');
                     }
-                    console.log('Message sent successfully!');
-                    res.redirect('/login');
-                    // alert('An e-mail has been sent to ' + req.body.username + ' with further instructions.');
                 });
             }
         ], function(err) {
                 if (err) return next(err);
                 res.redirect('/forgot');
-            });
+        });
     });
-    //
-    // app.post('/forgot', function(req, res, next) {
-    //
-    //     async.waterfall([
-    //         function(done) {
-    //             crypto.randomBytes(20, function(err, buf) {
-    //                 var token = buf.toString('hex');
-    //                 done(err, token);
-    //             });
-    //         },
-    //         function(token, done) {
-    //             connection.query("SELECT * FROM Users WHERE username = ?", [req.body.username], function (err, user) {
-    //                 if (!user[0]) {
-    //                     req.flash('error', 'No account with that email address exists.');
-    //                     return res.redirect('/forgot');
-    //                 } else {
-    //
-    //
-    //                     user.resetPasswordToken = token;
-    //                     user.resetPasswordExpires = dateTime + 3600000; // 1 hour
-    //
-    //                     // used to serialize the user for the session
-    //                     passport.serializeUser(function (user, done) {
-    //                         done(null, user.id);
-    //                     });
-    //
-    //                     // used to deserialize the user
-    //                     passport.deserializeUser(function (id, done) {
-    //                         connection.query("SELECT * FROM Users WHERE id = ? ", [id], function (err, rows) {
-    //                             done(err, rows[0]);
-    //                         });
-    //                     });
-    //
-    //
-    //                 }
-    //
-    //                 // user.save(function(err) {
-    //                 //     done(err, token, user);
-    //                 // });
-    //             });
-    //         }
-    //         // },
-    //         // function(token, user, done) {
-    //         //     var smtpTransport = nodemailer.createTransport('SMTP', {
-    //         //         service: 'Gmail',
-    //         //         auth: {
-    //         //             user: 'aaaa.zhao@g.feitianacademy.org',
-    //         //             pass: '12344321'
-    //         //         }
-    //         //     });
-    //         //     var mailOptions = {
-    //         //         to: user.username,
-    //         //         from: 'aaaa.zhao@g.feitianacademy.org',
-    //         //         subject: 'Node.js Password Reset',
-    //         //         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-    //         //         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-    //         //         'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-    //         //         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-    //         //     };
-    //         //     smtpTransport.sendMail(mailOptions, function(err) {
-    //         //         req.flash('info', 'An e-mail has been sent to ' + user.username + ' with further instructions.');
-    //         //         done(err, 'done');
-    //         //     });
-    //         // }
-    //     ], function(err) {
-    //         if (err) return next(err);
-    //         res.redirect('/forgot');
-    //     });
-    // });
 
     app.get('/reset/:token', function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
@@ -265,22 +156,17 @@ module.exports = function (app, passport) {
 
         connection.query(myStat, function(err, user) {
             var userInfo = JSON.stringify(user, null, "\t");
-        //
-        // if (dateNtime() > tokenExpire) {
-        //
-        // }
-
 
             // console.log("Time and f date: " + tokenExpire);
             // console.log("username: " + userInfo);
             // console.log("sql statement: " + myStat);
             // console.log("token: " + req.params.token);
-            if (!user) {
+            if (!user || dateNtime() > user[0].resetPasswordExpires) {
                 req.flash('error', 'Password reset token is invalid or has expired.');
                 return res.redirect('/login');
             } else {
                 res.render('reset.ejs', {
-                    user: req.user
+                    user: user[0]
                 });
             }
         });
@@ -349,35 +235,7 @@ module.exports = function (app, passport) {
                 });
             }, function(user, done, err) {
 
-                function changeMail(str) {
-                    var spliti = str.split("@");
-                    var letter1 = spliti[0].substring(0, 1);
-                    var letter2 = spliti[0].substring(spliti[0].length - 1, spliti[0].length);
-                    var newFirst = letter1;
-                    for(i = 0; i < spliti[0].length - 2; i++) {
-                        newFirst += "*";
-                    }
-                    newFirst += letter2;
-
-                    var letter3 = spliti[1].substring(0, 1);
-                    var extension = letter3;
-                    for(i = 0; i < spliti[1].split(".")[0].length - 1; i++) {
-                        extension += "*";
-                    }
-                    extension += "." + spliti[1].split(".")[1];
-                    var result = newFirst + "@" + extension;
-
-                    return result;
-                }
-                smtpTrans = nodemailer.createTransport({
-                     service: 'Gmail',
-                     auth: {
-                         user: 'aaaa.zhao@g.feitianacademy.org',
-                         pass: '12344321'
-                     }
-                 });
-
-                var transport = smtpTrans;
+                // var transport = smtpTrans;
 
                 var message = {
 
@@ -390,7 +248,7 @@ module.exports = function (app, passport) {
                     'This is a confirmation that the password for your account, ' + changeMail(req.body.username) + ' has just been changed.\n'
                 };
 
-                transport.sendMail(message, function (error) {
+                smtpTrans.sendMail(message, function (error) {
                     if(error){
                         console.log('Error occurred');
                         console.log(error.message);
@@ -1143,6 +1001,13 @@ function dateNtime() {
     dateTime = date + ' ' + time2;
 }
 
+function tokenExpTime() {
+    today = new Date();
+    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate() + 1);
+    time2 = (today.getHours() + 1) + ":" + today.getMinutes() + ":" + today.getSeconds();
+    tokenExpire = date + ' ' + time2;
+}
+
 function del_recov(StatusUpd, ErrMsg, targetURL, req, res) {
 
     transactionID = req.query.transactionIDStr.split(",");
@@ -1318,4 +1183,25 @@ function dataList(SQLstatement, res) {
             res.end();
         }
     });
+}
+
+function changeMail(str) {
+    var spliti = str.split("@");
+    var letter1 = spliti[0].substring(0, 1);
+    var letter2 = spliti[0].substring(spliti[0].length - 1, spliti[0].length);
+    var newFirst = letter1;
+    for(i = 0; i < spliti[0].length - 2; i++) {
+        newFirst += "*";
+    }
+    newFirst += letter2;
+
+    var letter3 = spliti[1].substring(0, 1);
+    var extension = letter3;
+    for(i = 0; i < spliti[1].split(".")[0].length - 1; i++) {
+        extension += "*";
+    }
+    extension += "." + spliti[1].split(".")[1];
+    var result = newFirst + "@" + extension;
+
+    return result;
 }
