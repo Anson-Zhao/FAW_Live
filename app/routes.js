@@ -137,6 +137,7 @@ module.exports = function (app, passport) {
                         // alert('Something went wrong! Please double check if your email is valid.');
                         return;
                     } else {
+                        res.send('Message sent successfully!');
                         console.log('Message sent successfully!');
                         res.redirect('/login');
                         // alert('An e-mail has been sent to ' + req.body.username + ' with further instructions.');
@@ -161,9 +162,20 @@ module.exports = function (app, passport) {
             // console.log("username: " + userInfo);
             // console.log("sql statement: " + myStat);
             // console.log("token: " + req.params.token);
-            if (!user || dateNtime() > user[0].resetPasswordExpires) {
-                req.flash('error', 'Password reset token is invalid or has expired.');
-                return res.redirect('/login');
+
+            dateNtime();
+            // toJSDate(dateTime);
+
+            console.log("current: " + dateTime);
+            var myDate = new Date(user[0].resetPasswordExpires);
+            var difference = dateTime - myDate.toLocaleString();
+            //(myDate.toLocaleString());
+            console.log("expires: " + myDate.toLocaleString());
+            console.log("subtracted: " + difference);
+
+            if (dateTime > myDate.toLocaleString()) {
+                console.log("letter");
+                res.send('Password reset token is invalid or has expired. Please contact Administrator.');
             } else {
                 res.render('reset.ejs', {
                     user: user[0]
@@ -186,7 +198,7 @@ module.exports = function (app, passport) {
                     console.log("token: " + req.params.token);
 
                     if (!user) {
-                        req.flash('error', 'Password reset token is invalid or has expired.');
+                        res.send('Password reset token is invalid or has expired. Please contact Administrator.');
 
                         console.log("Token invalid");
                     } else {
@@ -216,10 +228,10 @@ module.exports = function (app, passport) {
                                 if (err) {
                                     console.log(err);
                                     res.send("New Password Insert Fail!");
-                                    res.end();
                                 } else {
                                     done(err, user);
                                     console.log("Password entered successfully!");
+                                    res.send("Password entered successfully!");
                                     res.render('login.ejs', {
                                         user: req.user // get the user out of session and pass to template
                                     });
@@ -234,15 +246,6 @@ module.exports = function (app, passport) {
 
                 });
             }, function(user, done, err) {
-                smtpTrans = nodemailer.createTransport({
-                     service: 'Gmail',
-                     auth: {
-                         user: 'aaaa.zhao@g.feitianacademy.org',
-                         pass: '12344321'
-                     }
-                 });
-
-                var transport = smtpTrans;
 
                 var message = {
 
@@ -255,7 +258,7 @@ module.exports = function (app, passport) {
                     'This is a confirmation that the password for your account, ' + changeMail(req.body.username) + ' has just been changed.\n'
                 };
 
-                transport.sendMail(message, function (error) {
+                smtpTrans.sendMail(message, function (error) {
                     if(error){
                         console.log('Error occurred');
                         console.log(error.message);
@@ -1010,7 +1013,7 @@ function dateNtime() {
 
 function tokenExpTime(){
     today = new Date();
-    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate() + 1);
+    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     tokenExpire = date + ' ' + time2;
 }
@@ -1211,4 +1214,17 @@ function changeMail(str) {
     var result = newFirst + "@" + extension;
 
     return result;
+}
+
+function toJSDate( dateTimes ) {
+
+    dateTime = dateTimes.split(" ");//dateTime[0] = date, dateTime[1] = time
+
+    var date = dateTimes[0].split("-");
+    var time = dateTimes[1].split(":");
+
+//(year, month, day, hours, minutes, seconds, milliseconds)
+//subtract 1 from month because Jan is 0 and Dec is 11
+    return new Date(date[2], (date[1]-1), date[0], time[0], time[1], 0, 0);
+
 }
