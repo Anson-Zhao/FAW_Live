@@ -274,7 +274,7 @@ module.exports = function (app, passport) {
                 var message = {
 
                     // sender info
-                    from: 'Zihao wang <zihao.wang@g.feitianacademy.org>',
+                    from: 'FTAA <zihao.wang@g.feitianacademy.org>',
 
                     // Comma separated list of recipients
                     to: req.body.username,
@@ -487,6 +487,7 @@ module.exports = function (app, passport) {
                     } else {
                         console.log("Token valid!");
                         console.log("password: " + req.body.newpassword);
+                        console.log("username: " + req.body.username);
                         var newPass = {
                             Newpassword: bcrypt.hashSync(req.body.newpassword, null, null),
                             ConfirmPassword: bcrypt.hashSync(req.body.Confirmpassword, null, null)
@@ -504,7 +505,7 @@ module.exports = function (app, passport) {
                         //     } else {
                         // var passComp = bcrypt.compareSync(newPass.currentpassword, user.password);
                         // if (!!req.body.newpassword && passComp) {
-                            var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + user.username + "'";
+                            var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + req.body.username + "'";
 
                             connection.query(passReset, function (err, rows) {
 
