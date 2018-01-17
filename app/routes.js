@@ -6,20 +6,20 @@ var connection = mysql.createConnection(config.commondb_connection);
 var uploadPath = config.Upload_Path;
 var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt-nodejs');
-var fs = require('fs');
+// var fs = require('fs');
 
 var nodemailer = require('nodemailer');
 var async = require('async');
 var crypto = require('crypto');
-var smtpTransport = require('nodemailer-smtp-transport');
-
-
-var sendmail = require('sendmail')();
-
-var mailer = require('express-mailer');
+// var smtpTransport = require('nodemailer-smtp-transport');
+//
+//
+// var sendmail = require('sendmail')();
+//
+// var mailer = require('express-mailer');
 
 var filePathName = "";
-var filePath, transactionID, myStat, myVal, myErrMsg, errStatus;
+var filePath, transactionID, myStat, myVal, myErrMsg, token, errStatus;
 var today, date, time2, dateTime;
 
 var storage = multer.diskStorage({
@@ -84,115 +84,6 @@ module.exports = function (app, passport) {
         myErrMsg = "Please try to login again";
         updateDBNredir(myStat, myVal, myErrMsg, "login.ejs", "/userhome", res);
     });
-
-    // var fs = require('fs');
-    // var express = require('express');
-    // var app = express.createServer();
-    //
-    // app.use(express.static(__dirname));
-    // app.use(require(session)()); // for sessions
-
-
-    // app.post('/forgot', express.bodyParser(), function(req, res) {
-    //     var email = req.body.email;
-    //
-    //     var callback = {
-    //         error: function(err) {
-    //             res.end('Error sending message: ' + err);
-    //         },
-    //         success: function(success) {
-    //             res.end('Check your inbox for a password reset message.');
-    //         }
-    //     };
-    //     var reset = forgot(email, callback);
-    //
-    //     reset.on('request', function(req_, res_) {
-    //         req_.session.reset = {
-    //             email: email,
-    //             id: reset.id
-    //         };
-    //         fs.createReadStream(__dirname + '/forgot.html').pipe(res_);
-    //     });
-    // });
-    //
-    // app.post('/reset', express.bodyParser(), function(req, res) {
-    //     if (!req.session.reset) return res.end('reset token not set');
-    //
-    //     var password = req.body.password;
-    //     var confirm = req.body.confirm;
-    //     if (password !== confirm) return res.end('passwords do not match');
-    //
-    //     // update the user db here
-    //
-    //     forgot.expire(req.session.reset.id);
-    //     delete req.session.reset;
-    //     res.end('password reset');
-    // });
-    //
-    // app.listen(8080);
-    // console.log('Listening on :8080');
-
-    // passport.use(new LocalStrategy(function(username, password, done) {
-    //     User.findOne({ username: username }, function(err, user) {
-    //         if (err) return done(err);
-    //         if (!user) return done(null, false, { message: 'Incorrect username.' });
-    //         user.comparePassword(password, function(err, isMatch) {
-    //             if (isMatch) {
-    //                 return done(null, user);
-    //             } else {
-    //                 return done(null, false, { message: 'Incorrect password.' });
-    //             }
-    //         });
-    //     });
-    // }));
-    //
-    // passport.serializeUser(function(user, done) {
-    //     done(null, user.id);
-    // });
-    //
-    // passport.deserializeUser(function(id, done) {
-    //     User.findById(id, function(err, user) {
-    //         done(err, user);
-    //     });
-    // });
-    //
-    // var userSchema = new mongoose.Schema({
-    //     username: { type: String, required: true, unique: true },
-    //     email: { type: String, required: true, unique: true },
-    //     password: { type: String, required: true },
-    //     resetPasswordToken: String,
-    //     resetPasswordExpires: Date
-    // });
-    //
-    // userSchema.pre('save', function(next) {
-    //     var user = this;
-    //     var SALT_FACTOR = 5;
-    //
-    //     if (!user.isModified('password')) return next();
-    //
-    //     bcrypt.genSalt(SALT_FACTOR, function(err, salt) {
-    //         if (err) return next(err);
-    //
-    //         bcrypt.hash(user.password, salt, null, function(err, hash) {
-    //             if (err) return next(err);
-    //             user.password = hash;
-    //             next();
-    //         });
-    //     });
-    // });
-    //
-    // userSchema.methods.comparePassword = function(candidatePassword, cb) {
-    //     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-    //         if (err) return cb(err);
-    //         cb(null, isMatch);
-    //     });
-    // };
-    //
-    // var User = mongoose.model('User', userSchema);
-    //
-    // mongoose.connect('localhost');
-
-    var token;
 
     app.get('/forgot', function (req, res) {
         res.render('forgotPassword.ejs', {message: req.flash('forgotPassMessage')});
@@ -267,17 +158,11 @@ module.exports = function (app, passport) {
                     }
                 });
                 var transport = smtpTrans;
-// Message object
+                // Message object
                 var message = {
-
-                    // sender info
-                    from: 'Zihao wang <zihao.wang@g.feitianacademy.org>',
-
-                    // Comma separated list of recipients
-                    to: req.body.username,
-
-                    // Subject of the message
-                    subject: 'Password Reset', //
+                    from: 'FTAA <aaaa.zhao@g.feitianacademy.org>', // sender info
+                    to: req.body.username, // Comma separated list of recipients
+                    subject: 'Password Reset', // Subject of the message
 
                     // plaintext body
                     text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
@@ -297,68 +182,6 @@ module.exports = function (app, passport) {
                     res.redirect('/login');
                     // alert('An e-mail has been sent to ' + req.body.username + ' with further instructions.');
                 });
-
-                //
-                // smtpTransport.sendMail(mailOptions, function(err) {
-                //     console.log("aefawe: " + req.headers.host);
-                //     if (err) {
-                //         console.log(err);
-                //         res.send('Something went wrong! Please double check if your email is valid.');
-                //     } else {
-                //         res.send('info', 'An e-mail has been sent to ' + req.body.username + ' with further instructions.');
-                //         console.log("last3");
-                //     }
-                // });
-                // }, function (req, res) {
-                //     console.log("token value: " + token);
-                //     res.render('email.ejs', {
-                //         user: req.user.username, // get the user out of session and pass to template
-                //         reqhost: req.headers.host,
-                //         token: token
-                //     });
-                // });
-
-                //     app.mailer.send('email', {
-                //         from: 'aaaa.zhao@g.feitianacademy.org',
-                //         to: 'req.body.username',
-                //         subject: 'Password Reset',
-                //         template: 'email',
-                //         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-                //         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                //         'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-                //         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-                //     }, function (err) {
-                //         console.log("aefawe: " + req.headers.host);
-                //         if (err) {
-                //             console.log(err);
-                //             res.send('Something went wrong! Please double check if your email is valid.');
-                //         } else {
-                //             res.send('info', 'An e-mail has been sent to ' + req.body.username + ' with further instructions.');
-                //             console.log("last3");
-                //         }
-                //     });
-                // }
-
-                //     var mailOptions = {
-                //         to: req.body.username,
-                //         subject: 'Password Reset',
-                //         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-                //         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                //         'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-                //         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-                //     };
-                //
-                //     transporter.sendMail(mailOptions, function (err) {
-                //         req.flash('info', 'An e-mail has been sent to ' + req.body.username + ' with further instructions.');
-                //         console.log("last3");
-                //
-                //         done(err);
-                //     });
-                // },
-                // function(err) {
-                //     if (err) return next(err);
-                //     res.redirect('/forgot');
-                // }
             }
         ], function(err) {
                 if (err) return next(err);
@@ -448,21 +271,20 @@ module.exports = function (app, passport) {
         // }
 
 
-            console.log("Time and f date: " + tokenExpire);
-            console.log("username: " + userInfo);
-            console.log("sql statement: " + myStat);
-            console.log("token: " + req.params.token);
+            // console.log("Time and f date: " + tokenExpire);
+            // console.log("username: " + userInfo);
+            // console.log("sql statement: " + myStat);
+            // console.log("token: " + req.params.token);
             if (!user) {
                 req.flash('error', 'Password reset token is invalid or has expired.');
                 return res.redirect('/login');
+            } else {
+                res.render('reset.ejs', {
+                    user: req.user
+                });
             }
-            res.render('reset.ejs', {
-                user: req.user
-            });
         });
     });
-
-    var censorWord, censorEmail;
 
     app.post('/reset/:token', function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
@@ -501,7 +323,7 @@ module.exports = function (app, passport) {
                         //     } else {
                         // var passComp = bcrypt.compareSync(newPass.currentpassword, user.password);
                         // if (!!req.body.newpassword && passComp) {
-                            var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + user.username + "'";
+                            var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + req.body.username + "'";
 
                             connection.query(passReset, function (err, rows) {
 
@@ -546,11 +368,6 @@ module.exports = function (app, passport) {
                     var result = newFirst + "@" + extension;
 
                     return result;
-                    // censorWord = function (str) {
-                    //         return str[0] + "*".repeat(str.length - 2) + str.slice(-1);
-                    // }, censorEmail = function (email){
-                    //         var arr = email.split("@");
-                    //         return censorWord(arr[0]) + "@" + censorWord(arr[1]);
                 }
                 smtpTrans = nodemailer.createTransport({
                      service: 'Gmail',
