@@ -261,26 +261,30 @@ module.exports = function (app, passport) {
     app.get('/reset/:token', function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
 
-        myStat = "SELECT * FROM Users WHERE resetPasswordToken = '" + req.params.token + "'";
-
-        connection.query(myStat, function(err, user) {
-            var userInfo = JSON.stringify(user, null, "\t");
-        //
-        // if (dateNtime() > tokenExpire) {
+        // if (dateNtime()>req.query.resetPasswordExpires) {
+        //     req.flash('error', 'Password reset token is invalid or has expired.');
+        //     return res.redirect('/login');
+        // } else {
         //
         // }
 
+        myStat = "SELECT * FROM Users WHERE resetPasswordToken = '" + req.params.token + "'";
 
-            // console.log("Time and f date: " + tokenExpire);
-            // console.log("username: " + userInfo);
-            // console.log("sql statement: " + myStat);
-            // console.log("token: " + req.params.token);
-            if (!user) {
+        connection.query(myStat, function(err, user) {
+            today = new Date();
+            date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            dateTime = date + ' ' + time2;
+            var userInfo = JSON.stringify(user, null, "\t");
+            console.log("expire date new: " + user[0].resetPasswordExpires);
+            console.log("current date: " + dateTime);
+
+            if (!user || dateTime>user[0].resetPasswordExpires) {
                 req.flash('error', 'Password reset token is invalid or has expired.');
                 return res.redirect('/login');
             } else {
                 res.render('reset.ejs', {
-                    user: req.user
+                    user: user[0]
                 });
             }
         });
