@@ -8,12 +8,14 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
-    <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="//unpkg.com/flatpickr"></script>
+    <script src="//cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!--<script src="//unpkg.com/flatpickr"></script>-->
 
     <style>
         body 		{ padding-top:80px; word-wrap:break-word; }
@@ -103,38 +105,41 @@
 <br><br>
 
         <div id="dvData">
+            <h4 style="color: #7d7d7d"><strong>Scouting:</strong></h4>
             <table id="dataDisplay" style="width:100%;">
                 <thead>
                 <tr>
                     <th>Transaction_ID</th>
                     <th>Date</th>
-                    <th>Trap_Owner</th>
                     <th>Location_Name</th>
-                    <th>Location_Type</th>
                     <th>Latitude</th>
                     <th>Longitude</th>
-                    <th>Country</th>
-                    <th>Province</th>
-                    <th>District</th>
+                    <th>Main_Crop</th>
+                    <th>Main_Crop_Variety</th>
+                    <th>Irrigation</th>
+                    <th>Fertilized_Used</th>
+                    <th>Crop_Stage</th>
+                    <th>General_Health</th>
                     <th>Cropping_System</th>
                     <th>Rotation_Intercropping_Crop</th>
-                    <th>Maize_Variety</th>
-                    <th>Maize_Planting_Date</th>
-                    <th>Field_Size</th>
-                    <th>General_Health_of_Maize</th>
+                    <th>Field_Size_Ha</th>
                     <th>Date_of_Last_Rain</th>
-                    <th>Entry_Type</th>
-                    <th>Pests_Present</th>
-                    <th>FAW_Stage</th>
-                    <th>Early_Damage_Level</th>
-                    <th>Late_Damage_Level</th>
-                    <th>Natural_Enemies_Present</th>
-                    <th>Dead_Larvae_Killed_by_Natural_Enemies</th>
-                    <th>Percent_Plants_Infested</th>
+                    <th>Rain_Amount</th>
+                    <th>Pest_Species</th>
+                    <th>Crop_Damage</th>
+                    <th>Pest_Stage</th>
+                    <th>Current_Damage</th>
+                    <th>Previous_Damage</th>
+                    <th>Natural_Enemies</th>
+                    <th>Dead_Larvae</th>
+                    <th>Crop_Infested</th>
                     <th>Control_Undertaken</th>
-                    <th>Pesticide_Litres_Sprayed</th>
-                    <th>Photo_of_Pest</th>
-                    <th>Photo_of_Damage</th>
+                    <th>Pesticide_Name</th>
+                    <th>Biopesticide_Name</th>
+                    <th>Pesticide_Litres</th>
+                    <th>Biopesticide_Litres</th>
+                    <th>Damage_Photo</th>
+                    <th>Pest_Photo</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -144,33 +149,98 @@
                 <tr>
                     <th>Transaction_ID</th>
                     <th>Date</th>
-                    <th>Trap_Owner</th>
                     <th>Location_Name</th>
-                    <th>Location_Type</th>
                     <th>Latitude</th>
                     <th>Longitude</th>
-                    <th>Country</th>
-                    <th>Province</th>
-                    <th>District</th>
+                    <th>Main_Crop</th>
+                    <th>Main_Crop_Variety</th>
+                    <th>Irrigation</th>
+                    <th>Fertilized_Used</th>
+                    <th>Crop_Stage</th>
+                    <th>General_Health</th>
                     <th>Cropping_System</th>
                     <th>Rotation_Intercropping_Crop</th>
-                    <th>Maize_Variety</th>
-                    <th>Maize_Planting_Date</th>
-                    <th>Field_Size</th>
-                    <th>General_Health_of_Maize</th>
+                    <th>Field_Size_Ha</th>
                     <th>Date_of_Last_Rain</th>
-                    <th>Entry_Type</th>
-                    <th>Pests_Present</th>
-                    <th>FAW_Stage</th>
-                    <th>Early_Damage_Level</th>
-                    <th>Late_Damage_Level</th>
-                    <th>Natural_Enemies_Present</th>
-                    <th>Dead_Larvae_Killed_by_Natural_Enemies</th>
-                    <th>Percent_Plants_Infested</th>
+                    <th>Rain_Amount</th>
+                    <th>Pest_Species</th>
+                    <th>Crop_Damage</th>
+                    <th>Pest_Stage</th>
+                    <th>Current_Damage</th>
+                    <th>Previous_Damage</th>
+                    <th>Natural_Enemies</th>
+                    <th>Dead_Larvae</th>
+                    <th>Crop_Infested</th>
                     <th>Control_Undertaken</th>
-                    <th>Pesticide_Litres_Sprayed</th>
-                    <th>Photo_of_Pest</th>
-                    <th>Photo_of_Damage</th>
+                    <th>Pesticide_Name</th>
+                    <th>Biopesticide_Name</th>
+                    <th>Pesticide_Litres</th>
+                    <th>Biopesticide_Litres</th>
+                    <th>Damage_Photo</th>
+                    <th>Pest_Photo</th>
+                </tr>
+                </tfoot>
+            </table>
+
+            <h4 style="color: #7d7d7d"><strong>Traps:</strong></h4>
+            <table id="trapDisplay" style="width:100%;">
+                <thead>
+                <tr>
+                    <th>Transaction_ID</th>
+                    <th>Date</th>
+                    <th>Location_Name</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Main_Crop</th>
+                    <th>Main_Crop_Variety</th>
+                    <th>Irrigation</th>
+                    <th>Fertilized_Used</th>
+                    <th>Crop_Stage</th>
+                    <th>General_Health</th>
+                    <th>Cropping_System</th>
+                    <th>Rotation_Intercropping_Crop</th>
+                    <th>Field_Size_Ha</th>
+                    <th>Date_of_Last_Rain</th>
+                    <th>Rain_Amount</th>
+                    <th>Trap_ID</th>
+                    <th>FAW_Confirmed</th>
+                    <th>FAW_Suspected</th>
+                    <th>Other_Species</th>
+                    <th>Trap_Replaced</th>
+                    <th>Lure_Replaced</th>
+                    <th>Lure_Name</th>
+                    <th>Trap_Serviced_Date</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>Transaction_ID</th>
+                    <th>Date</th>
+                    <th>Location_Name</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Main_Crop</th>
+                    <th>Main_Crop_Variety</th>
+                    <th>Irrigation</th>
+                    <th>Fertilized_Used</th>
+                    <th>Crop_Stage</th>
+                    <th>General_Health</th>
+                    <th>Cropping_System</th>
+                    <th>Rotation_Intercropping_Crop</th>
+                    <th>Field_Size_Ha</th>
+                    <th>Date_of_Last_Rain</th>
+                    <th>Rain_Amount</th>
+                    <th>Trap_ID</th>
+                    <th>FAW_Confirmed</th>
+                    <th>FAW_Suspected</th>
+                    <th>Other_Species</th>
+                    <th>Trap_Replaced</th>
+                    <th>Lure_Replaced</th>
+                    <th>Lure_Name</th>
+                    <th>Trap_Serviced_Date</th>
                 </tr>
                 </tfoot>
             </table>
@@ -182,6 +252,7 @@
     var dtstring = "";
     var rowSelected = [];
     var table = $("#dataDisplay").DataTable();
+    var trapTable = $("#trapDisplay").DataTable();
     var UserRole = "<%= user.userrole %>";
     var DropMenu;
     var d;
@@ -210,6 +281,8 @@
 
             table.clear();
             table.draw();
+            trapTable.clear();
+            trapTable.draw();
             queryAndDisplay("statusDel=" + "Deleted" + "&firstName=" + "<%= user.firstName %>" + "&lastName=" + "<%= user.lastName %>");
 
         });
@@ -290,6 +363,8 @@
         //alert(queryStr);
         table.clear();
         table.draw();
+        trapTable.clear();
+        trapTable.draw();
         queryAndDisplay(queryStr);
     }
 
@@ -304,38 +379,73 @@
 
                 if (!resp[0].errMsg) {
                     for (var i = 0; i < resp.length; i++) {
-                        table.row.add([
-                            resp[i].transactionID,
-                            resp[i].date,
-                            resp[i].trapOwner,
-                            resp[i].locationName,
-                            resp[i].locationType,
-                            resp[i].latitude,
-                            resp[i].longitude,
-                            resp[i].country,
-                            resp[i].province,
-                            resp[i].district,
-                            resp[i].croppingSystem,
-                            resp[i].rota_inter_crop,
-                            resp[i].maizeVariety,
-                            resp[i].plantingDate,
-                            resp[i].fieldSize,
-                            resp[i].healthOfMaize,
-                            resp[i].lastRainDate,
-                            resp[i].entryType,
-                            resp[i].pestsPresent,
-                            resp[i].fawStage,
-                            resp[i].earlyDamageLevel,
-                            resp[i].lateDamageLevel,
-                            resp[i].naturalEnemies,
-                            resp[i].deadLarvae,
-                            resp[i].percentInfested,
-                            resp[i].control,
-                            resp[i].pesticide,
-                            resp[i].pestPhoto,
-                            resp[i].damagePhoto
-                        ]).draw(false);
+                        if (resp[i].Entry_type === "FIELD SCOUTING") {
+                            table.row.add([
+                                resp[i].transactionID,
+                                resp[i].Date,
+                                resp[i].Location_name,
+                                resp[i].Latitude,
+                                resp[i].Longitude,
+                                resp[i].Main_crop,
+                                resp[i].Main_crop_variety,
+                                resp[i].Irrigation,
+                                resp[i].Fertilized_used,
+                                resp[i].Crop_stage,
+                                resp[i].General_health,
+                                resp[i].Cropping_system,
+                                resp[i].Rotation_intercropping_crop,
+                                resp[i].Field_size_ha,
+                                resp[i].Main_crop_planting_date,
+                                resp[i].Date_of_last_rain,
+                                resp[i].Rain_amount,
+                                resp[i].Pest_species,
+                                resp[i].Present_absent,
+                                resp[i].Crop_damage,
+                                resp[i].Current_damage,
+                                resp[i].Previous_damage,
+                                resp[i].Natural_enemies,
+                                resp[i].Dead_larvae,
+                                resp[i].Crop_infested,
+                                resp[i].Control_undertaken,
+                                resp[i].Pesticide_name,
+                                resp[i].Biopesticide_name,
+                                resp[i].Pesticide_litres,
+                                resp[i].Biopesticide_litres,
+                                resp[i].Damage_photo,
+                                resp[i].Pest_photo
+                            ]).draw(false);
+                        } else if (resp[i].Entry_type === "PHEROMONE TRAP") {
+                            trapTable.row.add([
+                                resp[i].transactionID,
+                                resp[i].Date,
+                                resp[i].Location_name,
+                                resp[i].Latitude,
+                                resp[i].Longitude,
+                                resp[i].Main_crop,
+                                resp[i].Main_crop_variety,
+                                resp[i].Irrigation,
+                                resp[i].Fertilized_used,
+                                resp[i].Crop_stage,
+                                resp[i].General_health,
+                                resp[i].Cropping_system,
+                                resp[i].Rotation_intercropping_crop,
+                                resp[i].Field_size_ha,
+                                resp[i].Main_crop_planting_date,
+                                resp[i].Date_of_last_rain,
+                                resp[i].Rain_amount,
+                                resp[i].Trap_ID,
+                                resp[i].FAW_confirmed,
+                                resp[i].FAW_suspected,
+                                resp[i].Other_species,
+                                resp[i].Trap_replaced,
+                                resp[i].Lure_replaced,
+                                resp[i].Lure_name,
+                                resp[i].Trap_serviced_date
+                            ]).draw(false);
+                        }
                     }
+                } else {
+                    alert(resp[0].errMsg);
                 }
             }
         });

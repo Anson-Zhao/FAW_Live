@@ -10,8 +10,9 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
-    <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
+    <!--<link rel="stylesheet" href="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.min.css">-->
     <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBX94wEDdQ52lCDhKAhcfR-flIw1NyLTMA"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="/scripts/jquery.form.min.js"></script>
@@ -19,93 +20,26 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!--<script src="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.js"></script>-->
     <style>
-        body {
-            padding-top: 80px;
-            word-wrap: break-word;
+        body 		{ padding-top:80px; word-wrap:break-word; }
+        #detailedFormScouting { display: none; }
+        #detailedFormTrap { display: none; }
+        #hide { display: none; }
+        .FAW        { display: none; }
+        #stay, #cancel {  position: relative;  width: 20%;  left: 20%;  }
+        #leave, #clear {  position: relative;  width: 20%;  left: 60%;  }
+        .banner{
+            position:relative;
+            left:140px;
+            width:75%;
         }
-
-        #detailedForm {
-            display: none;
-        }
-
-        #hide {
-            display: none;
-        }
-
-        .FAW {
-            display: none;
-        }
-
-        #stay,
-        #cancel {
-            position: relative;
-            width: 20%;
-            left: 20%;
-        }
-
-        #leave,
-        #clear {
-            position: relative;
-            width: 20%;
-            left: 60%;
-        }
-
-        .banner {
-            position: relative;
-            left: 140px;
-            width: 75%;
-        }
-
         .column {
-            float: right;
-            position: relative;
-            right: 80px;
-            width: 11%;
-        }
-
-        @media only screen and (max-width:320px){
-            h1 {
-                font-size: 27px;
-            }
-            .column{
-                padding:10px 40px;
-            }
-            #trapOwner{
-                font-size:12.5px;
-                width:60%;
-            }
-        }
-        @media only screen and (min-width:330px) and (max-width: 375px){
-            h1 {
-                font-size: 32px;
-            }
-            .column{
-                padding:10px 40px;
-            }
-            #trapOwner{
-                font-size:14px;
-                width:60%;
-            }
-
-        }
-        @media only screen and (min-width:380px) and (max-width: 414px){
-            h1 {
-                font-size: 35px;
-            }
-            .column{
-                padding:10px 40px;
-            }
-            #trapOwner{
-                font-size:13.5px;
-                width:50%;
-            }
-        }
-        @media only screen and (min-width:420px) and (max-width: 768px){
-            #trapOwner{
-                width:27%;
-            }
+            float:right;
+           position:relative;
+            right:80px;
+            width:11%;
         }
     </style>
 
@@ -338,7 +272,7 @@
         <div id="detailedFormTrap">
             <form id="detailedTrap" method = "post">
                 <h4>2 . Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= transactionID %>" readonly><br><br>
-                <h4>2 . Trap_ID: &nbsp;&nbsp;&nbsp;</h4><input id="trapID" name="Trap_ID" type="text" required><br><br>
+                <h4>2 . Trap ID: &nbsp;&nbsp;&nbsp;</h4><input id="trapID" name="Trap_ID" type="text" required><br><br>
                 <h4>2 . FAW Confirmed: &nbsp;&nbsp;&nbsp;</h4><input id="FAWConfirmed" class="inputNumber" name="FAW_confirmed" type="number" required><br><br>
                 <h4>2 . FAW Suspected: &nbsp;&nbsp;&nbsp;</h4><input id="FAWSuspected" class="inputNumber" name="FAW_suspected" type="number" required><br><br>
                 <h4>2 . Other Species: &nbsp;&nbsp;&nbsp;</h4><input id="otherSpecies" class="inputNumber" name="Other_species" type="number" required><br><br>
@@ -423,7 +357,7 @@
         $('#detailedScouting').submit(function(e) {
             // Prevent form submission
             e.preventDefault();
-            // alert("Y");
+            alert("Y");
             $("#upload").ajaxSubmit(options);
             // Prevent form submission
             e.preventDefault();
@@ -742,7 +676,7 @@
             // }
             var title = [$("<h4>2 . Crop Damage: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Pest Stage: &nbsp;&nbsp;&nbsp;</h4><a href='javascript:void(0);' id='pestStage-select_all' onclick='selectAndUnselect()'>select all</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' id='pestStage-deselect_all' onclick='selectAndUnselect()'>deselect all</a>"), $("<br<br><h4>2 . Current Damage: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Crop Infested: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Control Undertaken: &nbsp;&nbsp;&nbsp;</h4><a href='javascript:void(0);' id='controlUndertaken-select_all' onclick='selectAndUnselect()'>select all</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' id='controlUndertaken-deselect_all' onclick='selectAndUnselect()'>deselect all</a>"), $("<h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>")];
             var select = [$("<select class='clearGen' id='cropDamage' name='Crop_damage' required></select><br><br>"), $("<select multiple='multiple' class='clearGen' id='pestStage' name='Pest_stage' required></select>"), $("<select class='clearGen' id='currentDamage' name='Current_damage' required></select><br><br>"), $("<input class='clearGen inputNumber' id='cropInfested' name='Crop_infested' type='text' placeholder='Enter The Percentage of Crop Infested Here' required><br><br>"), $("<select multiple='multiple' class='clearGen' id='controlUndertaken' name='Control_undertaken' onchange='controlType(this)'></select>"), $("<input class='clearDetS' id='photoOfPest' type='file' name='Pest_photo' accept='image/*' multiple/><br><br>")];
-            // alert(title.length);
+            alert(title.length);
             for (var i = 0; i < title.length; i++) {
                 if (i < 3) {
                     damageStageDiv.append(title[i]);
@@ -761,7 +695,7 @@
 
             var damageOptions = document.getElementById("previousDamage").options;
             damageOptions[0].value = "SELECT THE DAMAGE LEVEL";
-            // alert(damageOptions.length);
+            alert(damageOptions.length);
             var stageOptions = ["EGGS", "LARVAE", "PUPAE", "ADULTS"];
             var controlTypeOptions = ["NONE", "BIOPESTICIDE", "CHEMICAL PESTICIDE", "EGG-SQUASHING", "HAND-PICKING", "MECHANICAL", "CULTURAL", "BIOCONTROL"];
             for (var i = 0; i < controlTypeOptions.length; i++) {
@@ -783,7 +717,7 @@
     }
 
     function controlType(type) {
-        // alert("A");
+        alert("A");
         var pesticideDiv = $("#pesticide");
         pesticideDiv.empty();
         var controlType = $(type).val();
