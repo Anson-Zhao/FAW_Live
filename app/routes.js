@@ -12,7 +12,7 @@ var crypto = require('crypto');
 
 var filePathName = "";
 var filePath, transactionID, myStat, myVal, myErrMsg, token, errStatus;
-var today, date, time2, time3, dateTime, tokenExpire;
+var today, date2, date3, time2, time3, dateTime, tokenExpire;
 
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -193,19 +193,6 @@ module.exports = function (app, passport) {
                             Newpassword: bcrypt.hashSync(req.body.newpassword, null, null),
                             ConfirmPassword: bcrypt.hashSync(req.body.Confirmpassword, null, null)
                         };
-
-                        // dateNtime();
-
-                        // myStat = "UPDATE Users SET firstName =?, lastName = ?, dateModified  = ? WHERE username = ? ";
-                        // myVal = [newPass.firstname, newPass.lastname, dateTime, user.username];
-                        //
-                        // connection.query(myStat, myVal, function (err, rows) {
-                        //     if(err){
-                        //         console.log(err);
-                        //         res.json({"error": true, "message": "Fail !"});
-                        //     } else {
-                        // var passComp = bcrypt.compareSync(newPass.currentpassword, user.password);
-                        // if (!!req.body.newpassword && passComp) {
 
                         var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + req.body.username + "'";
 
@@ -981,16 +968,16 @@ function isLoggedIn(req, res, next) {
 
 function dateNtime() {
     today = new Date();
-    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    date2 = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    dateTime = date + ' ' + time2;
+    dateTime = date2 + ' ' + time2;
 }
 
-function tokenExpTime(){
+function tokenExpTime() {
     today = new Date();
-    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate()+1);
+    date3 = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate()+1);
     time3 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    tokenExpire = date + ' ' + time3;
+    tokenExpire = date3 + ' ' + time3;
 }
 
 function del_recov(StatusUpd, ErrMsg, targetURL, req, res) {
