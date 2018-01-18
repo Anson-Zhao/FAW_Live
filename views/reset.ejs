@@ -1,82 +1,106 @@
+<!-- views/profileBK.ejs -->
+<!doctype html>
 <html>
-<body style="margin-left:0px;">
-<div class="custom-header">
-    <div class="custom-header-left">
+<head>
+    <title>FAW/Locust Project - Reset Password</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/Profile.css" type="text/css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
+    <link rel="stylesheet" href="../css/Title.css" type="text/css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!--<script src="//unpkg.com/flatpickr"></script>-->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/flatpickr"></script>
 
-    </div>
-    <div class="custom-header-button">
+    <style>
+        .banner{
+            position:relative;
+            left:60px;
+            top:-35px;
+            width:80%;
+        }
+        body { padding-top:80px; word-wrap:break-word; }
 
-    </div>
-    <div class="custom-header-right">
-        <a class="navbar-brand">
-            <img alt="AGD" src="agdlogo.png" style="width:70%; margin-top:-22%;">
-        </a>
-        <a class="navbar-brand" href="/"> XXX &nbsp;</a>
-        <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </a>
-    </div>
-</div>
+        .container1{
+            margin-left:100px;
+        }
+    </style>
 
-<!-- Top Bar-->
+</head>
+<body>
 
-<div id="fullpage">
-    <div class="">
-        <div class="col-md-12  custom-margin-top">
-            <div class="panel panel-primary text-left">
-                <div class="panel-heading">Reset your Password</div>
-                <div class="panel-body">
-                    <div class="col-md-10 ">
-                        <form id="resetpass" role="form" class="form">
-                            <div>
-                                <div class="form-group">
-                                    <label for="InputEmail">New Password</label>
-                                    <input type="password" class="form-control" id="password" class="password" name="password" placeholder="Enter Email" required>
-                                    <label for="InputEmail">Confirm Password</label>
-                                    <input type="password" class="form-control" id="repass" class="repass" name="repass" placeholder="Enter Email" required>
-                                    <!--    <input type="hidden" name="token" id="token">-->
-                                    <button type="submit">Submit</button>
-                                </div>
-                        </form>
-                    </div>
-                </div>
+<div class="container">
+    <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
+    <ul id="userMenu" class="dropdown-menu dropdown-menu-right">
+    </ul>
+
+    <div class="container1">
+        <br><br>
+        <form id="submit" onsubmit="return checkForm()" action="" method="post">
+            <br>
+            <h4><strong>Password Change</strong>:   </h4>
+
+            <div>
+                <h5>New Password:
+                    <input type="password" id="newpassword" name="newpassword" maxlength="2000px" style="margin-left:74px;">
+                </h5>
             </div>
-        </div>
+            <div>
+                <h5>Confirm New Password:
+                    <input type="password" id="Confirmpassword" name="Confirmpassword" maxlength="2000px" style="margin-left:19px;">
+                </h5>
+            </div>
+            <div>
+                <h5>Username (email):
+                    <input type="email" name="username" maxlength="2000px" style="margin-left:54px;">
+                </h5>
+            </div>
+
+            <button id="SS"  type="submit" class="btn btn-warning btn-sm"> Submit </button>
+            <a href="/login" class="btn btn-warning btn-sm">Cancel</a>
+        </form>
     </div>
 </div>
-</body>
-
 
 <script>
-    var params = location.href;
-    var paramsplit = params.split('/');
-    //console.log(paramsplit);
-    $("#resetpass").submit(function (e) {
-        var resetData = {
-            password: $("#password").val(),
-            repass: $("#repass").val(),
-            token: paramsplit[4]
-        }
 
-        console.log(resetData);
+    function checkForm() {
+        var newP=document.getElementById("newpassword").value;
+        var confirmP =document.getElementById("Confirmpassword").value;
 
-        // console.log(resetData);
-        $.ajax({
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            url: '/reset/:token',
-            data: JSON.stringify(resetData),
-            success: function (data) {
-                //console.log(data); // show response from the php script.
+        if (newP === confirmP) {
+                return true;
+            } else {
+                alert("New passwords don't match!");
+                return false;
             }
-        });
+    }
 
-        // e.preventDefault(); // avoid to execute the actual submit of the form.
+    $('#SS').submit(function(e) {
+        // Prevent form submission
+        e.preventDefault();
+
+        $.ajax({
+            type: "post",
+            url: "/reset/:token",
+            dataType: 'json',
+            data: $(this).serialize(),
+            success: function (result) {
+                if (!result.error) {
+                    alert("SUCCESS");
+                    window.location.replace('/login')
+                } else {
+                    alert(result.message);
+                }
+            }
+        })
     });
 </script>
-<style CSS>
-    @import url("https://bootswatch.com/flatly/bootstrap.min.css");
-</style>
+
+</body>
 </html>

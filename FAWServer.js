@@ -20,6 +20,7 @@ require('./config/passport')(passport); // pass passport for configuration
 
 
 // set up our express application
+app.use(express.static(__dirname));
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser.urlencoded({extended: true}));
@@ -32,6 +33,7 @@ app.use("/pic", express.static(__dirname + "/pic"));
 
 app.set('views', path.join(__dirname, './', 'views'));
 app.engine('ejs', require('ejs').renderFile);
+app.set('view engine', 'ejs');
 
 //app.set('view engine', 'ejs'); // set up ejs for templating
 
@@ -56,7 +58,6 @@ var options = {
     }
 };
 
-
 var sessionStore = new MySQLStore(options);
 
 app.use(session({
@@ -64,19 +65,11 @@ app.use(session({
     store: sessionStore,
     resave: false,
     saveUninitialized: false
-    //ttl: (Useless * 60 * 60),
-    // cookie: {
-    //     path: "/",
-    //     httpOnly: true,
-
-    //     secure: true,
-    //     maxAge: 300000
-    // }
  })); // session secret
+
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
-
 
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport

@@ -9,11 +9,13 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
-    <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
     <link rel="stylesheet" href="../css/Title.css" type="text/css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="//unpkg.com/flatpickr"></script>
+    <!--<script src="//unpkg.com/flatpickr"></script>-->
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <style>
         .banner{
@@ -26,6 +28,77 @@
 
         .container1{
             margin-left:100px;
+        }
+
+        .input {
+            width: 8%;
+        }
+        .change1{
+            width:30%;
+        }
+        @media only screen and (max-width: 320px){
+            .input{
+                font-size: 10px;
+                width: 22%;
+            }
+
+            .container1 {
+                margin-left: 10px;
+            }
+            #currentpassword,#newpassword,#Confirmpassword{
+                width:35%;
+            }
+            .change1{
+                font-size: 10px;
+                width:50%;
+            }
+            h5{
+                margin-left:1px;
+            }
+            #userrole{
+                margin-top:-20px;
+            }
+        }
+
+        @media screen and (max-width:375px) {
+            .container1 {
+                margin-left: 10px;
+            }
+            .input{
+                font-size: 14px;
+                width: 22%;
+            }
+            #userrole{
+                margin-top:-20px;
+            }
+            .change1{
+                font-size: 13px;
+                width:50%;
+            }
+            #currentpassword,#newpassword,#Confirmpassword{
+                width:40%;
+            }
+
+        }
+        @media screen and (max-width:414px) {
+            .container1 {
+                margin-left: 10px;
+            }
+            .input{
+                font-size: 15px;
+                width: 22%;
+            }
+            #userrole{
+                margin-top:-20px;
+            }
+            .change1{
+                font-size: 14px;
+                width:60%;
+            }
+            #currentpassword,#newpassword,#Confirmpassword{
+                width:40%;
+            }
+
         }
     </style>
 
@@ -42,25 +115,25 @@
         <form id="submit" onsubmit="return checkForm()" action="/userProfile" method="post">
             <h4 class="floating-Box"><strong>User Name:&nbsp;</strong></h4>
             <h5 class="floating-Box">First Name:&nbsp;
-            <input type="text" id="usernameF" name="usernameF"  value="<%= user.firstName %>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            Last Name:&nbsp;
+                <input type="text" id="usernameF" name="usernameF"  value="<%= user.firstName %>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+            <h5 class="floating-Box">Last Name:&nbsp;
             <input type="text" id="usernameL" name="usernameL" value="<%= user.lastName %>">
             </h5>
             <br><br>
         <div>
-            <h4 class="floating-Box"><strong>User Role:&nbsp;&nbsp;</strong></h4><input type="text" style="background:WhiteSmoke; width: 8%;" value="<%= user.userrole%>" readonly>
+            <h4 id="userrole" class="floating-Box"><strong>User Role:&nbsp;&nbsp;</strong></h4><input class="input" type="text" style="background:WhiteSmoke;" value="<%= user.userrole%>" readonly>
         </div><br>
         <div>
-            <h4 class="floating-Box"><strong>Date created:&nbsp;&nbsp;</strong></h4><input type="text" style="background:WhiteSmoke; width: 30%;" value="<%= user.dateCreated %>" readonly>
+            <h4 class="floating-Box"><strong>Date created:&nbsp;&nbsp;</strong></h4><input class="change1" type="text" style="background:WhiteSmoke;" value="<%= user.dateCreated %>" readonly>
         </div><br>
         <div>
-            <h4 class="floating-Box"><strong>Last Modification:&nbsp;&nbsp;</strong></h4><input type="text" style="background:WhiteSmoke; width: 30%;" value="<%= user.dateModified %>" readonly>
+            <h4 class="floating-Box"><strong>Last Modification:&nbsp;&nbsp;</strong></h4><input class="change1" type="text" style="background:WhiteSmoke;" value="<%= user.dateModified %>" readonly>
         </div><br>
         <div>
-            <h4 class="floating-Box"><strong>LoginName/Email:&nbsp;&nbsp;</strong></h4><input type="text" style="background:WhiteSmoke; width: 8%;" value="<%= user.username%>" readonly>
+            <h4 class="floating-Box"><strong>LoginName/Email:&nbsp;&nbsp;</strong></h4><input class="input" type="text" style="background:WhiteSmoke;" value="<%= user.username%>" readonly>
         </div><br>
         <div>
-            <h4 class="floating-Box"><strong>Last Modificated by:&nbsp;&nbsp;</strong></h4><input type="text" style="background:WhiteSmoke; width: 8%;" value="<%= user.username%>" readonly>
+            <h4 class="floating-Box"><strong>Last Modificated by:&nbsp;&nbsp;</strong></h4><input class="input" type="text" style="background:WhiteSmoke;" value="<%= user.username%>" readonly>
         </div>
 
             <br>
