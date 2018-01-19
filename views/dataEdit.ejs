@@ -322,7 +322,7 @@
 
         $("#locationDiv").append($("<h4 id='latitudeTitle'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Latitude: </h4><h4 id='longitudeTitle'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Longitude: </h4>"));
         var latitudeTitle = $("#latitudeTitle");
-        var latitudeSelect = $("<select id='latitudeDirection' name='latitudeDirection' required>");
+        var latitudeSelect = $("<select id='latitudeDirection' name='Latitude_direction' required>");
         latitudeTitle.append(latitudeSelect);
         if (latitude[0] === "N" || !latitude[0]) {
             latitudeSelect.append($("<option>N</option><option>S</option>"));
@@ -332,7 +332,7 @@
         latitudeTitle.append($("</select>"));
 
         var longitudeTitle = $("#longitudeTitle");
-        var longitudeSelect = $("<select id='longitudeDirection' name='longitudeDirection' required>");
+        var longitudeSelect = $("<select id='longitudeDirection' name='Longitude_direction' required>");
         longitudeTitle.append(longitudeSelect);
         if (longitude[0] === "E" || !longitude[0]) {
             longitudeSelect.append($("<option>E</option><option>W</option>"));
@@ -353,7 +353,7 @@
         $("#healthOfCrop").val("<%= data.General_health %>");
         $("#croppingSystem").val("<%= data.Cropping_system %>");
         rotationInterCropSystem("<%= data.Cropping_system %>");
-        $('#rotationIntercroppingCrop').multiSelect("select", "<%= data.Rotation_intercropping_crop %>".split(","));
+        $('#rotationIntercroppingCrop').multiSelect("select", "<%= data.Rotation_intercropping_crop %>".split("/"));
         var fieldSize = "<%= data.Field_size_ha %>".split(".");
         $("#fieldSizeInteger").val(fieldSize[0]);
         $("#fieldSizeDecimal").val(fieldSize[1]);
@@ -368,10 +368,10 @@
         $("[name='Dead_larvae'][value='<%= data.Dead_larvae %>']").prop("checked", true);
         present("<%= data.Present_absent %>");
         $("#cropDamage").val("<%= data.Crop_damage %>");
-        $('#pestStage').multiSelect("select", "<%= data.Pest_stage %>".split(","));
+        $('#pestStage').multiSelect("select", "<%= data.Pest_stage %>".split("/"));
         $("#currentDamage").val("<%= data.Current_damage %>");
         $("#cropInfested").val("<%= data.Crop_infested %>");
-        $('#controlUndertaken').multiSelect("select", "<%= data.Control_undertaken %>".split(","));
+        $('#controlUndertaken').multiSelect("select", "<%= data.Control_undertaken %>".split("/"));
         $("#PesticideName").val("<%= data.Pesticide_name %>");
         $("#BiopesticideName").val("<%= data.Biopesticide_name %>");
         $("#PesticideLitres").val("<%= data.Pesticide_litres %>");
@@ -472,7 +472,7 @@
                                     document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
                                     document.getElementById("close").innerHTML = "<a href='/userhome'>&times</a>";
 
-                                    document.getElementById("header").innerHTML = "Congratulations, Your Data Entry is Successfully Complete !";
+                                    document.getElementById("header").innerHTML = "Congratulations, Your Edit is Successfully Complete !";
                                     document.getElementById("body").innerHTML = "<br>Click X to return to the Home Page.<br>";
 
                                     document.getElementById("modal").style.display = "block";
@@ -799,9 +799,9 @@
                     if (!result.error) {
                         $.ajax({
                             type: "post",
-                            url: "/detailedForm",
+                            url: "/detailedFormScouting",
                             dataType: 'json',
-                            data: $("#detailed").serialize(),
+                            data: $("#detailedScouting").serialize(),
                             success: function (result) {
                                 if (!result.error) {
                                     document.getElementById("modal-footer").style.display = "none";
@@ -809,7 +809,7 @@
                                     document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
                                     document.getElementById("close").innerHTML = "<a href='/userhome'>&times</a>";
 
-                                    document.getElementById("header").innerHTML = "Congratulations, Your Data Entry is Successfully Complete !";
+                                    document.getElementById("header").innerHTML = "Congratulations, Your Edit is Successfully Complete !";
                                     document.getElementById("body").innerHTML = "<br>Click X to return to the Home Page.<br>";
 
                                     document.getElementById("modal").style.display = "block";
