@@ -985,10 +985,9 @@ module.exports = function (app, passport) {
                 i = i + 1;
             } else if (result[i][0] === "Rotation_intercropping_crop") {
                 name += result[i][0] + ", ";
-                var array = result[i][1].split(",");
-                var str;
-                for (var i = 0; i < array.length; i++) {
-                    str += array[i] + "-";
+                var str = "";
+                for (var z = 0; z < result[i][1].length; z++) {
+                    str += result[i][1][z] + "-";
                 }
                 value += '"' + str.substring(0,str.length - 1) + '"' + ", ";
             } else {
@@ -1032,10 +1031,9 @@ module.exports = function (app, passport) {
         for (var i = 0; i < result.length; i++) {
             if (result[i][0] === "Pest_stage" || result[i][0] === "Control_undertaken") {
                 name += result[i][0] + ", ";
-                var array = result[i][1].split(",");
-                var str;
-                for (var i = 0; i < array.length; i++) {
-                    str += array[i] + "-";
+                var str = "";
+                for (var z = 0; z < result[i][1].length; z++) {
+                    str += result[i][1][z] + "-";
                 }
                 value += '"' + str.substring(0,str.length - 1) + '"' + ", ";
             } else {
