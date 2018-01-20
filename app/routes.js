@@ -918,7 +918,7 @@ module.exports = function (app, passport) {
         // value += ", '" + damage + "', '" + pest + "'";
 
         var deleteStatement = "DELETE FROM Detailed_Trap WHERE transactionID = '" + req.body.transactionID + "'; ";
-        var insertStatement = "INSERT INTO Detailed_trap (" + name + ") VALUES (" + value + ");";
+        var insertStatement = "INSERT INTO Detailed_Trap (" + name + ") VALUES (" + value + ");";
         console.log(insertStatement);
 
         connection.query(deleteStatement + insertStatement, function (err, results, fields) {
