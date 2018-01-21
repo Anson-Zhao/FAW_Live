@@ -127,7 +127,7 @@ module.exports = function (app, passport) {
                     // plaintext body
                     text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                     'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                    'https://' + req.headers.host + '/reset/' + token + '\n\n' +
+                    'http://' + req.headers.host + '/reset/' + token + '\n\n' +
                     'If you did not request this, please ignore this email and your password will remain unchanged.\n'
                 };
 
@@ -157,14 +157,11 @@ module.exports = function (app, passport) {
 
         connection.query(myStat, function(err, user) {
             dateNtime();
-            var myDate1 = new Date(user[0].resetPasswordExpires);
 
-            if (!user || dateTime > myDate1.toLocaleString()) {
+            if (!user || dateTime > user[0].resetPasswordExpires) {
                 res.send('Password reset token is invalid or has expired. Please contact Administrator.');
             } else {
-                res.render('reset.ejs', {
-                    user: user[0]
-                });
+                res.render('reset.ejs', { user: user[0]});
             }
         });
     });
@@ -179,16 +176,10 @@ module.exports = function (app, passport) {
 
                 connection.query(myStat, function(err, user) {
                     var userInfo = JSON.stringify(user, null, "\t");
-                    console.log("data: " + userInfo);
-                    console.log("token: " + req.params.token);
 
                     if (!user) {
                         res.send('Password reset token is invalid or has expired. Please contact Administrator.');
-
-                        console.log("Token invalid");
                     } else {
-                        console.log("Token valid!");
-                        console.log("password: " + req.body.newpassword);
                         var newPass = {
                             Newpassword: bcrypt.hashSync(req.body.newpassword, null, null),
                             ConfirmPassword: bcrypt.hashSync(req.body.Confirmpassword, null, null)
@@ -197,13 +188,10 @@ module.exports = function (app, passport) {
                         var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + req.body.username + "'";
 
                         connection.query(passReset, function (err, rows) {
-
                             if (err) {
                                 console.log(err);
                                 res.send("New Password Insert Fail!");
                             } else {
-                                // done(err, user);
-                                console.log("Password entered successfully!");
                                 done()
                             }
                         });
@@ -226,17 +214,11 @@ module.exports = function (app, passport) {
                         // alert('Something went wrong! Please double check if your email is valid.');
                         return;
                     } else {
-                        console.log('Confirmation message sent successfully!');
                         res.redirect('/login');
                     }
                 });
             }
-        ]
-        //     , function(err) {
-        //     if (err) return next(err);
-        //     res.redirect('/login');
-        // }
-        );
+        ]);
     });
 
 
