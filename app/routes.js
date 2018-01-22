@@ -157,14 +157,11 @@ module.exports = function (app, passport) {
 
         connection.query(myStat, function(err, user) {
             dateNtime();
-            var myDate1 = new Date(user[0].resetPasswordExpires);
 
-            if (!user || dateTime > myDate1.toLocaleString()) {
+            if (!user || dateTime > user[0].resetPasswordExpires) {
                 res.send('Password reset token is invalid or has expired. Please contact Administrator.');
             } else {
-                res.render('reset.ejs', {
-                    user: user[0]
-                });
+                res.render('reset.ejs', { user: user[0]});
             }
         });
     });
@@ -179,16 +176,10 @@ module.exports = function (app, passport) {
 
                 connection.query(myStat, function(err, user) {
                     var userInfo = JSON.stringify(user, null, "\t");
-                    console.log("data: " + userInfo);
-                    console.log("token: " + req.params.token);
 
                     if (!user) {
                         res.send('Password reset token is invalid or has expired. Please contact Administrator.');
-
-                        console.log("Token invalid");
                     } else {
-                        console.log("Token valid!");
-                        console.log("password: " + req.body.newpassword);
                         var newPass = {
                             Newpassword: bcrypt.hashSync(req.body.newpassword, null, null),
                             ConfirmPassword: bcrypt.hashSync(req.body.Confirmpassword, null, null)
@@ -197,13 +188,10 @@ module.exports = function (app, passport) {
                         var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + req.body.username + "'";
 
                         connection.query(passReset, function (err, rows) {
-
                             if (err) {
                                 console.log(err);
                                 res.send("New Password Insert Fail!");
                             } else {
-                                // done(err, user);
-                                console.log("Password entered successfully!");
                                 done()
                             }
                         });
@@ -226,17 +214,11 @@ module.exports = function (app, passport) {
                         // alert('Something went wrong! Please double check if your email is valid.');
                         return;
                     } else {
-                        console.log('Confirmation message sent successfully!');
                         res.redirect('/login');
                     }
                 });
             }
-        ]
-        //     , function(err) {
-        //     if (err) return next(err);
-        //     res.redirect('/login');
-        // }
-        );
+        ]);
     });
 
 
@@ -545,10 +527,11 @@ module.exports = function (app, passport) {
                 console.log(err);
                 res.json({"error": true, "message": "Fail"});
             } else {
-                if (!!results[0]) {
+                console.log(results);
+                if (results[0].length > 0) {
                     editData = results[0][0];
                     res.json({"error": false, "message": "/editData"});
-                } else if (!!results[1]) {
+                } else if (results[1].length > 0) {
                     editData = results[1][0];
                     res.json({"error": false, "message": "/editData"});
                 } else {
@@ -559,7 +542,7 @@ module.exports = function (app, passport) {
     });
 
     app.get('/editData', isLoggedIn, function(req, res) {
-        console.log(req.user);
+        console.log(editData.transactionID);
         res.render('dataEdit.ejs', {
             user: req.user,
             data: editData, // get the user out of session and pass to template
@@ -766,7 +749,7 @@ module.exports = function (app, passport) {
     // Submit general form
     app.post('/generalForm', isLoggedIn, function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*");
-        console.log(req.body);
+        //console.log(req.body);
 
         var result = Object.keys(req.body).map(function (key) {
             return [String(key), req.body[key]];
@@ -789,12 +772,9 @@ module.exports = function (app, passport) {
                 i = i + 1;
             } else if (result[i][0] === "Rotation_intercropping_crop") {
                 name += result[i][0] + ", ";
-                var array = result[i][1].split(",");
-                var str;
-                for (var i = 0; i < array.length; i++) {
-                    str += array[i] + "-";
-                }
-                value += '"' + str.substring(0,str.length - 1) + '"' + ", ";
+                var str = result[i][1].toString();
+                str = str.replace(/,/g, "/");
+                value += '"' + str + '"' + ", ";
             } else {
                 // normal
                 if (result[i][1] !== "") {
@@ -836,12 +816,9 @@ module.exports = function (app, passport) {
         for (var i = 0; i < result.length; i++) {
             if (result[i][0] === "Pest_stage" || result[i][0] === "Control_undertaken") {
                 name += result[i][0] + ", ";
-                var array = result[i][1].split(",");
-                var str;
-                for (var i = 0; i < array.length; i++) {
-                    str += array[i] + "-";
-                }
-                value += '"' + str.substring(0,str.length - 1) + '"' + ", ";
+                var str = result[i][1].toString();
+                str = str.replace(/,/g, "/");
+                value += '"' + str + '"' + ", ";
             } else {
                 name += result[i][0] + ", ";
                 value += '"' + result[i][1] + '"' + ", ";
@@ -851,19 +828,19 @@ module.exports = function (app, passport) {
         value = value.substring(0, value.length - 2);
 
         var path = filePath.split(";");
-        console.log(path);
+        //console.log(path);
         var damage = "";
         var pest = "";
 
         for (var i = 0; i < path.length - 1; i++) {
-            console.log("A");
+            //console.log("A");
             if (path[i].substring(0,12) === "Damage_photo") {
                 damage += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
             } else if (path[i].substring(0,10) === "Pest_photo") {
                 pest += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
             }
         }
-        console.log(pest + "  " + damage);
+        //console.log(pest + "  " + damage);
         damage = damage.substring(0, damage.length - 1);
         pest = pest.substring(0, pest.length - 1);
 
@@ -923,7 +900,7 @@ module.exports = function (app, passport) {
         // value += ", '" + damage + "', '" + pest + "'";
 
         var deleteStatement = "DELETE FROM Detailed_Trap WHERE transactionID = '" + req.body.transactionID + "'; ";
-        var insertStatement = "INSERT INTO Detailed_trap (" + name + ") VALUES (" + value + ");";
+        var insertStatement = "INSERT INTO Detailed_Trap (" + name + ") VALUES (" + value + ");";
         console.log(insertStatement);
 
         connection.query(deleteStatement + insertStatement, function (err, results, fields) {

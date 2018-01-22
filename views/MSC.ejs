@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+<head>
+    <script type="text/javascript" src="../scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="../scripts/qrcode.js"></script>
+    <style>
+        fieldset {padding: 0.5em; width:50% }
+        legend {font-size: 1.2em; color:#712773; }
+        label {display:block;}
+    </style>
+</head>
+<body>
+<h2>Add data</h2>
+<form action="" method="post">
+    <fieldset>
+        <p><label>Your Name</label></p>
+        <p><label>First name</label><input type="text" name="first_name" size="40"></p>
+        <p><label>Last name</label><input type="text" name="last_name" size="40"></p>
+        <p><label>Birthday</label><input type="text" name="birthday" size="40"></p>
+        <br>
+        <p><label>Location Name</label></p>
+        <p><label>Street and number</label><input type="text" name="home_street" size="40"></p>
+        <p><label>City</label><input type="text" name="home_city" size="40"></p>
+        <p><label>Postal code</label><input type="text" name="home_region" size="40"></p>
+        <p><label>Region</label><input type="text" name="home_post" size="40"></p>
+        <p><label>Country</label><input type="text" name="home_country" size="40"></p>
+        <p><label>Telephone</label><input type="text" name="home_tel" size="40"></p>
+        <p><label>E-mail</label><input type="text" name="home_email" size="40"></p>
+        <p><label>Website</label><input type="text" name="home_url" size="40"></p>
+
+        <p><label>Job title</label><input type="text" name="org_title" size="40"></p>
+        <p><label>Name</label><input type="text" name="org_name" size="40"></p>
+        <p><label>Street and number</label><input type="text" name="org_street" size="40"></p>
+        <p><label>City</label><input type="text" name="org_city" size="40"></p>
+        <p><label>Postal code</label><input type="text" name="org_region" size="40"></p>
+        <p><label>Region</label><input type="text" name="org_post" size="40"></p>
+        <p><label>Country</label><input type="text" name="org_country" size="40"></p>
+        <p><label>Telephone</label><input type="text" name="org_tel" size="40"></p>
+        <p><label>E-mail</label><input type="text" name="org_email" size="40"></p>
+        <p><label>Website</label><input type="text" name="org_url" size="40"></p>
+
+        <p><label>Facebook</label><input type="text" name="facebook" size="40"></p>
+        <p><label>Twitter</label><input type="text" name="twitter" size="40"></p>
+        <p><label>Flickr</label><input type="text" name="flickr" size="40"></p>
+        <p><label>Youtube</label><input type="text" name="youtube" size="40"></p>
+        <p><label>Skype</label><input type="text" name="skype" size="40"></p>
+    </fieldset>
+    <p><input type="button" name="submit" value="Generate"></p>
+</form>
+<h3>Text</h3>
+<textarea name="vcard" cols="60" rows="40"></textarea>
+<h3>QR code</h3>
+
+<img id="qr" src="http://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=" alt="vcard qr">
+<script>
+    /**
+     *
+     * - add picture and company logo
+     */
+    var vcard= {
+        str_start:'BEGIN:VCARD\nVERSION:3.0\n',
+        str_vcard:'BEGIN:VCARD\nVERSION:3.0\n',
+        str_end:'\nEND:VCARD',
+        goog_chart:'http://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=',
+        form:[],
+        get_field: function(field){
+            for(var i in vcard.form){
+                if(vcard.form[i].name === field){
+                    return vcard.form[i].value.replace(/^\s+|\s+$/g,"");
+                }
+            }
+        },
+        add_you: function(){
+            var first_name = vcard.get_field("first_name"),
+                last_name = vcard.get_field("last_name"),
+                birthday = vcard.get_field('birthday'),
+                gender = vcard.get_field('gender');
+
+            vcard.str_vcard += 'N:'+last_name+';'+first_name+'\n'+
+                'FN:'+first_name+' '+last_name;
+            if(birthday !== ''){ vcard.str_vcard += '\nBDAY:'+birthday; }
+
+            if(gender !== ''){ vcard.str_vcard += '\nX-GENDER:'+gender; }
+        },
+        add_address: function(){
+            var home_street = vcard.get_field("home_street"),
+                home_city = vcard.get_field("home_city"),
+                home_region = vcard.get_field("home_region"),
+                home_post = vcard.get_field("home_post"),
+                home_country = vcard.get_field("home_country"),
+                org_street = vcard.get_field("org_street"),
+                org_city = vcard.get_field("org_city"),
+                org_region = vcard.get_field("org_region"),
+                org_post = vcard.get_field("org_post"),
+                org_country = vcard.get_field("org_country");
+
+            if(home_street+home_city+home_region+home_post+home_country !== ''){
+                vcard.str_vcard += '\nADR;TYPE=home:;;'+home_street+';'+home_city+';'+home_region+
+                    ';'+home_post+';'+home_country;
+            }
+            if(org_street+org_city+org_region+org_post+org_country !== ''){
+                vcard.str_vcard += '\nADR;TYPE=work:;;'+org_street+';'+org_city+';'+org_region+
+                    ';'+org_post+';'+org_country;
+            }
+        },
+        add_tel: function(){
+            var home = vcard.get_field("home_tel"),
+                work = vcard.get_field("org_tel");
+
+            if(home !== ''){ vcard.str_vcard += '\nTEL;TYPE=home:'+home; }
+
+            if(work !== ''){ vcard.str_vcard += '\nTEL;TYPE=work:'+work; }
+        },
+        add_email: function(){
+            var home = vcard.get_field("home_email"),
+                work = vcard.get_field("org_email");
+
+            if(home !== ''){ vcard.str_vcard += '\nEMAIL;TYPE=internet,home:'+home; }
+
+            if(work !== ''){ vcard.str_vcard += '\nEMAIL;TYPE=internet,work:'+work; }
+        },
+        add_url: function(){
+            var home = vcard.get_field("home_url"),
+                work = vcard.get_field("org_url");
+
+            if(home !== ''){ vcard.str_vcard += '\nURL;TYPE=home:'+home; }
+
+            if(work !== ''){ vcard.str_vcard += '\nURL;TYPE=work:'+work; }
+        },
+        add_work: function(){
+            var name = vcard.get_field("org_name"),
+                title = vcard.get_field("org_title");
+
+            if(name !== ''){ vcard.str_vcard += '\nORG:'+name; }
+
+            if(title !== ''){ vcard.str_vcard +='\nTITLE:'+title; }
+        },
+        required_check: function(){
+            var first_name = vcard.get_field("first_name"),
+                last_name = vcard.get_field("last_name"),
+                msg = 'Field%FIELD% %NAME% %VERB% required.',
+                fields = [];
+
+            if(first_name === ''){ fields.push('First name'); }
+
+            if(last_name === ''){ fields.push('Last name'); }
+
+            if(fields.length === 0){ return ''; }
+
+            msg = msg.replace('%NAME%',fields.join(', '));
+
+            msg = msg.replace('%FIELD%',(fields.length === 1) ? '' : 's');
+
+            msg = msg.replace('%VERB%',(fields.length === 1) ? 'is' : 'are');
+
+            return msg;
+        },
+        save: function(){
+            vcard.form = $('form').serializeArray();
+
+            var required_check_output = vcard.required_check();
+
+            if(required_check_output !== ''){
+                alert(required_check_output);
+                return;
+            }
+
+            vcard.add_you();
+
+            vcard.add_address();
+
+            vcard.add_tel();
+
+            vcard.add_email();
+
+            vcard.add_url();
+
+            vcard.add_work();
+
+            vcard.str_vcard += vcard.str_end;
+
+            $('textarea[name="vcard"]').val(vcard.str_vcard);
+
+            $('#qr').attr('src',vcard.goog_chart+vcard.str_vcard.replace(/\n/g,'%0A'));
+
+            vcard.str_vcard = vcard.str_start;
+        }
+    };
+
+    $(function(){
+        $('input[name="submit"]').click(vcard.save);
+    });
+</script>
+</body>
+</html>
