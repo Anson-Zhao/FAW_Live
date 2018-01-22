@@ -347,7 +347,7 @@ module.exports = function (app, passport) {
     app.get('/filterUser', isLoggedIn, function (req, res) {
         myStat = "SELECT * FROM Users";
 
-        var myQueryObj = [
+        var myQuery = [
             {
                 fieldVal: req.query.dateCreatedFrom,
                 dbCol: "dateCreated",
@@ -392,7 +392,63 @@ module.exports = function (app, passport) {
             }
         ];
 
-        QueryStat(myQueryObj, myStat, res)
+        // QueryStat(myQueryObj, myStat, res)
+
+        function userQuery() {
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            // console.log("Query Statement: " + queryStat);
+
+            connection.query(myStat, function (err, results, fields) {
+
+                var status = [{errStatus: ""}];
+
+                if (err) {
+                    console.log(err);
+                    status[0].errStatus = "fail";
+                    res.send(status);
+                    res.end();
+                } else if (results.length === 0) {
+                    status[0].errStatus = "no data entry";
+                    res.send(status);
+                    res.end();
+                } else {
+                    var JSONresult = JSON.stringify(results, null, "\t");
+                    console.log(JSONresult);
+                    res.send(JSONresult);
+                    res.end();
+                }
+            });
+        }
+
+        var j = 0;
+
+        for (var i = 0; i < myQuery.length; i++) {
+            // console.log("i = " + i);
+            // console.log("field Value: " + !!myQuery[i].fieldVal);
+            if (i === myQuery.length - 1) {
+                if (!!myQuery[i].fieldVal) {
+                    if (j === 0) {
+                        myStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        j = 1;
+                        userQuery()
+                    } else {
+                        myStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        userQuery()
+                    }
+                } else {
+                    userQuery()
+                }
+            } else {
+                if (!!myQuery[i].fieldVal) {
+                    if (j === 0) {
+                        myStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        j = 1;
+                    } else {
+                        myStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                    }
+                }
+            }
+        }
     });
 
     // Retrieve user data from user management page
@@ -1051,12 +1107,12 @@ function QueryStat(myObj, scoutingStat, trapStat, res) {
 
             if (i === myObj.length - 1) {
                 var sqlStatement = scoutingStat + "; " + trapStat;
-                dataList(sqlStatement,res);
+                dataList(sqlStatement, res);
             }
         } else {
             if (i === myObj.length - 1) {
                 var sqlStatement = scoutingStat + "; " + trapStat;
-                dataList(sqlStatement,res);
+                dataList(sqlStatement, res);
             }
         }
 
@@ -1108,10 +1164,11 @@ function QueryStat(myObj, scoutingStat, trapStat, res) {
     }
 }
 
-function dataList(SQLstatement, res) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    //console.log(SQLstatement);
-    connection.query(SQLstatement, function (err, results, fields) {
+function dataList(sqlStatement, res) {
+    console.log(sqlStatement);
+
+    res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+    connection.query(sqlStatement, function (err, results, fields) {
 
         errStatus = [{errMsg: ""}];
 
