@@ -26,6 +26,34 @@
             width:450px;
         }
 
+        .x {
+            border: 1px solid #ddd; /* Gray border */
+            border-radius: 4px;  /* Rounded border */
+            padding: 5px; /* Some padding */
+            width: 125px; /* Set a small width */
+            height: auto;
+        }
+
+        .y {
+            border: 1px solid #ddd; /* Gray border */
+            border-radius: 4px;  /* Rounded border */
+            padding: 5px; /* Some padding */
+            height: 125px; /* Set a small width */
+            width: auto;
+        }
+
+        .z {
+            border: 1px solid #ddd; /* Gray border */
+            border-radius: 4px;  /* Rounded border */
+            padding: 5px; /* Some padding */
+            height: 125px; /* Set a small width */
+            width: 125px;
+        }
+
+        /* Add a hover effect (blue shadow) */
+        .x:hover, .y:hover, .z:hover {
+            box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -514,9 +542,11 @@
                                 resp[i].Biopesticide_name,
                                 resp[i].Pesticide_litres,
                                 resp[i].Biopesticide_litres,
-                                resp[i].Damage_photo,
-                                resp[i].Pest_photo
+                                "",
+                                ""
                             ]).draw(false);
+                            drawImage(i + 1, 30, resp[i].Damage_photo, "damage");
+                            drawImage(i + 1, 31, resp[i].Pest_photo, "pest");
                         } else if (resp[i].Entry_type === "PHEROMONE TRAP") {
                             trapTable.row.add([
                                 resp[i].transactionID,
@@ -552,6 +582,34 @@
                 }
             }
         });
+    }
+
+    function drawImage(rowNumber, cellNumber, paths, name) {
+        var string = "https://www.w3schools.com/w3css/img_lights.jpg;https://www.w3schools.com/howto/img_fjords.jpg;https://static.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg";
+        //var path = paths.split(";");
+        var path = string.split(";");
+
+        for (var i = 0; i < path.length; i++) {
+            //alert(i);
+            document.getElementById("dataDisplay").rows[rowNumber].cells[cellNumber].innerHTML += "<a target=\"_blank\" href='" + path[i] + "'><img onload='setSize(this.id)' id='" + name + "." + rowNumber + "." + i + "' src='" + path[i] + "'></a>";
+
+        }
+    }
+
+    function setSize(id) {
+        var picWidth = document.getElementById(id).naturalWidth;
+        var picHeight = document.getElementById(id).naturalHeight;
+        // alert(picWidth + "   " + picHeight);
+
+        if (picWidth > picHeight) {
+            document.getElementById(id).setAttribute("class", "x");
+        } else if (picWidth < picHeight) {
+            document.getElementById(id).setAttribute("class", "y");
+        } else if (picWidth === picHeight) {
+            document.getElementById(id).setAttribute("class", "z");
+        }
+
+        // alert(document.getElementById(name + "." + rowNumber + "." + i).width + "   " + document.getElementById(name + "." + rowNumber + "." + i).height);
     }
 
     function downloadCSV(csv, filename) {
