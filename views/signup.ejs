@@ -6,14 +6,53 @@
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
-	<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="//unpkg.com/flatpickr"></script>
+	<script src="//cdn.jsdelivr.net/npm/flatpickr"></script>
+	<!--<script src="//unpkg.com/flatpickr"></script>-->
 	<style>
 		.floatingBox {
 			display: inline-block;
 		}
-		body 		{ padding-top:80px; }
+		body{ padding-top:80px; }
+		.banner{
+			position:relative;
+			width: 100%;
+		}
+		/* for 768px or less */
+		@media screen and (max-width:768px) {
+			.btn-mg {
+				font-size: 15px;
+				width:90px;
+				text-align:center;
+			}
+		}
+		/* for 414px or less */
+		@media screen and (max-width:414px) {
+			.btn-mg {
+				font-size: 13px;
+				width:20%;
+				text-align:center;
+			}
+		}
+		/* for 375px or less */
+		@media screen and (max-width:375px) {
+			.btn-mg{
+				font-size:12px;
+				width:22%;
+				text-align:center;
+			}
+		}
+		/* for 320px or less */
+		@media screen and (max-width:320px) {
+			.btn-mg {
+				font-size: 14px;
+				width:30%;
+				text-align:center;
+			}
+
+		}
 	</style>
 
 </head>
@@ -65,13 +104,13 @@
 			<input type="text" id="status" class="form-control" name="status" value="Never Logged In" readonly >
 		</div>
 
-		<button type="submit" class="btn btn-warning btn-mg"> Add User </button>
-		<a href="/userManagement" class="btn btn-warning btn-mg">Cancel</a>
-	</form>
+			<button type="submit" class="btn btn-warning btn-mg"> Add User </button>
+			<a href="/userManagement" class="btn btn-warning btn-mg">Cancel</a>
+		</form>
 
-	<hr>
+		<hr>
 
-</div>
+	</div>
 
 </div>
 <script>

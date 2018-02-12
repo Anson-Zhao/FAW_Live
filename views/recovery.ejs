@@ -2,44 +2,36 @@
 <!doctype html>
 <html>
 <head>
-	<title>FAW/Locust Project - Recovery Page</title>
+    <title>FAW/Locust Project - Recovery Page</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
-    <link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="//unpkg.com/flatpickr"></script>
+    <script src="//cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!--<script src="//unpkg.com/flatpickr"></script>-->
 
     <style>
         body 		{ padding-top:80px; word-wrap:break-word; }
 
-		.banner{
-			position:relative;
+        .banner{
+            position:relative;
             width: 100%;
         }
         .center {
             margin:auto;
-        }
-        .btn {
-            size: auto;
         }
         .randomText {
             font-size: 100%;
         }
         .floating-Box{
             display: inline;
-        }
-        .floatingBox1{
-            display: inline-block;
-        }
-        .floatingBox3{
-            display: inline-table;
-            width:450px;
         }
         table{
             overflow-x: auto;
@@ -74,6 +66,117 @@
         /*width: 100%;*/
         /*margin-left:10px;*/
         /*}*/
+        /* for1024px or less */
+        @media screen and (max-width:1024px) {
+            .btn-mg{
+                font-size: 20px;
+                height:25px;
+                line-height:0;
+            }
+        }
+        /* for 768px or less */
+        @media screen and (max-width:768px) {
+            .btn-mg {
+                font-size: 15px;
+                height: 22px;
+                line-height: 0;
+            }
+        }
+            /* for 414px or less */
+            @media screen and (max-width:414px) {
+                .btn-mg {
+                    font-size: 12px;
+                    height: 20px;
+                    line-height: 0;
+                }
+
+                #Username {
+                    font-size: 15px;
+                    padding: 5px 2px;
+                    margin: 10px;
+                }
+
+                h1 {
+                    font-size: 30px;
+                }
+
+                .btn {
+                    padding: 8px;
+                }
+            }
+                /* for 375px or less */
+                @media screen and (max-width:375px) {
+
+                    select{
+                        width:35%;
+                    }
+                    input{
+                        width:35%;
+                    }
+                    .date{
+                        width:20%;
+                        font-size:12px;
+                    }
+                    .randomText{
+                        font-size:15px;
+                        padding:5px 6px;
+                    }
+                    #Username{
+                        font-size:10px;
+                        padding:5px 2px;
+                        margin:10px;
+                    }
+                    .btn-mg{
+                        font-size:12px;
+                        height:20px;
+                        line-height:0;
+                    }
+                    h1{
+                        font-size:30px;
+                    }
+                    .btn{
+                        padding:5px;
+                    }
+                }
+                /* for 320px or less */
+                @media screen and (max-width:320px) {
+                    select {
+                        width: 35%;
+                    }
+
+                    input {
+                        width: 35%;
+                    }
+
+                    .randomText {
+                        font-size: 15px;
+                        padding: 2px 2px;
+                    }
+
+                    #Username {
+                        font-size: 10px;
+                        padding: 5px 2px;
+                        margin: 10px;
+                    }
+
+                    .btn-mg {
+                        font-size: 12px;
+                        height: 20px;
+                        line-height: 0;
+                    }
+
+                    .btn {
+                        padding: 5px;
+                    }
+
+                    #subtitles {
+                        font-size: 19px;
+                    }
+
+                    h1 {
+                        font-size: 25px;
+                    }
+                }
     </style>
 </head>
 <body>
