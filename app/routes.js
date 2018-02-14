@@ -139,6 +139,7 @@ module.exports = function (app, passport) {
                     } else {
                         res.send('Message sent successfully! Please check your email inbox.');
                         console.log('Message sent successfully!');
+                        console.log('Email sent: ' + info.response);
                         res.redirect('/login');
                         // alert('An e-mail has been sent to ' + req.body.username + ' with further instructions.');
                     }
