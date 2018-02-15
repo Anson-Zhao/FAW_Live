@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
     <link rel="stylesheet" href="../css/Title.css" type="text/css">
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBX94wEDdQ52lCDhKAhcfR-flIw1NyLTMA"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
@@ -560,6 +561,7 @@
             </table>
         </div>
     </div>
+    <div id="map" style="width:100%; height:400px;"></div>
 </div>
 <script type='text/javascript'>
     var scoutingRowSelected, trapRowSelected, DropMenu, queryString1, queryString2;
@@ -568,6 +570,8 @@
     var UserRole = "<%= user.userrole %>";
     var scoutingTransactionID = [];
     var trapTransactionID = [];
+    var markers = [];
+    var map;
 
     $(document).ready(function(){
 
@@ -601,6 +605,8 @@
             scoutingTransactionID = [];
 
             $(this).toggleClass('selected');    //toggle class for the rows selected
+            $(this).toggleClass('change');    //toggle class change color
+            changeColor();
 
             scoutingRowSelected = table.rows('.selected').data();    //Store all the data for selected rows'
 
@@ -618,6 +624,8 @@
             trapTransactionID = [];
 
             $(this).toggleClass('selected');    //toggle class for the rows selected
+            $(this).toggleClass('change');    //toggle class change color
+            changeColor();
 
             trapRowSelected = trapTable.rows('.selected').data();    //Store all the data for selected rows'
 
@@ -773,6 +781,37 @@
                                 resp[i].Trap_serviced_date
                             ]).draw(false);
                         }
+
+                        // array
+                        var latiDMS = resp[i].Latitude.split(" ");
+                        var longDMS = resp[i].Longitude.split(" ");
+                        // convert latitude & longitude from Degrees Minutes Seconds to Decimal Degree
+                        var latiDD = parseFloat(latiDMS[1].substring(0,latiDMS[1].length - 1)) + (parseFloat(latiDMS[2].substring(0,latiDMS[2].length - 1)) / 60) + (parseFloat(latiDMS[3].substring(0,latiDMS[3].length - 1)) / 3600);
+                        var longDD = parseFloat(longDMS[1].substring(0,longDMS[1].length - 1)) + (parseFloat(longDMS[2].substring(0,longDMS[2].length - 1)) / 60) + (parseFloat(longDMS[3].substring(0,longDMS[3].length - 1)) / 3600);
+                        // change to negative if S or W
+                        if (latiDMS[0] === "S") {
+                            latiDD = latiDD * -1;
+                        }
+                        if (longDMS[0] === "W") {
+                            longDD = longDD * -1;
+                        }
+
+                        var center = {lat: 0, lng: 0};
+                        map = new google.maps.Map(document.getElementById('map'), {
+                            zoom: 2,
+                            center: center,
+                            mapTypeId: 'hybrid'
+                        });
+
+                        var position = {lat: latiDD, lng: longDD};
+                        var marker = new google.maps.Marker({
+                            position: position,
+                            map: map
+                        });
+
+                        marker.DMS = resp[i].Latitude + "; " + resp[i].Longitude;
+                        markers.push(marker);
+                        markers[i].setMap(null);
                     }
                 } else {
                     alert(resp[0].errMsg);
@@ -807,6 +846,26 @@
         }
 
         // alert(document.getElementById(name + "." + rowNumber + "." + i).width + "   " + document.getElementById(name + "." + rowNumber + "." + i).height);
+    }
+
+    function changeColor() {
+        var row = document.getElementsByClassName("change")[0].innerHTML.trim().split("</td>");
+
+        var latiLong = row[3].substring(4, row[3].length) + "; " + row[4].substring(4, row[4].length);
+
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i].DMS === latiLong) {
+                if (document.getElementsByClassName("change")[0].classList.contains("selected") && document.getElementsByClassName("change")[0].classList.contains("change")) {
+                    document.getElementsByClassName("change")[0].classList.remove("change");
+                    markers[i].setMap(map);
+                } else if (document.getElementsByClassName("change")[0].classList.contains("change")) {
+                    document.getElementsByClassName("change")[0].classList.remove("change");
+                    markers[i].setMap(null);
+                }
+                break
+            }
+        }
+        //alert(markers.length)
     }
 </script>
 </body>
