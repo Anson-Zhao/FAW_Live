@@ -82,7 +82,7 @@ module.exports = function (app, passport) {
         myStat = "UPDATE Users SET status = 'Active', lastLoginTime = ? WHERE username = ?";
         myVal = [dateTime, req.user.username];
         myErrMsg = "Please try to login again";
-        updateDBNredir(myStat, myVal, myErrMsg, "login.ejs", "/userhome", res);
+        updateDBNredir(myStat, myVal, myErrMsg, "login.ejs", "/newEntry", res);
     });
 
     app.get('/forgot', function (req, res) {
@@ -428,7 +428,7 @@ module.exports = function (app, passport) {
                     res.end();
                 } else {
                     var JSONresult = JSON.stringify(results, null, "\t");
-                    console.log(JSONresult);
+                    // console.log(JSONresult);
                     res.send(JSONresult);
                     res.end();
                 }
@@ -587,7 +587,7 @@ module.exports = function (app, passport) {
     var editData;
     app.get('/sendEditData', isLoggedIn, function(req, res) {
         var editTransactionID = req.query.transactionIDStr;
-        console.log(editTransactionID);
+        // console.log(editTransactionID);
 
         var scoutingStat = "SELECT Users.firstName, Users.lastName, General_Form.*, Detailed_Scouting.* FROM Transaction INNER JOIN Users ON Users.username = Transaction.Cr_UN INNER JOIN General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN Detailed_Scouting ON Detailed_Scouting.transactionID = Transaction.transactionID WHERE Transaction.transactionID = '" + editTransactionID +"';";
         var trapStat = "SELECT Users.firstName, Users.lastName, General_Form.*, Detailed_Trap.* FROM Transaction INNER JOIN Users ON Users.username = Transaction.Cr_UN INNER JOIN General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN Detailed_Trap ON Detailed_Trap.transactionID = Transaction.transactionID WHERE Transaction.transactionID = '" + editTransactionID + "';";
@@ -598,7 +598,7 @@ module.exports = function (app, passport) {
                 console.log(err);
                 res.json({"error": true, "message": "Fail"});
             } else {
-                console.log(results);
+                // console.log(results);
                 if (results[0].length > 0) {
                     editData = results[0][0];
                     res.json({"error": false, "message": "/editData"});
@@ -613,7 +613,7 @@ module.exports = function (app, passport) {
     });
 
     app.get('/editData', isLoggedIn, function(req, res) {
-        console.log(editData.transactionID);
+        // console.log(editData.transactionID);
         res.render('dataEdit.ejs', {
             user: req.user,
             data: editData, // get the user out of session and pass to template
@@ -861,7 +861,7 @@ module.exports = function (app, passport) {
         // console.log(value);
         var deleteStatement = "DELETE FROM General_Form WHERE transactionID = '" + req.body.transactionID + "'; ";
         var insertStatement = "INSERT INTO General_Form (" + name + ") VALUES (" + value + ");";
-        console.log(insertStatement);
+        // console.log(insertStatement);
 
         connection.query(deleteStatement + insertStatement, function (err, results, fields) {
             if (err) {
@@ -876,7 +876,7 @@ module.exports = function (app, passport) {
     // Submit detailed form Scouting
     app.post('/detailedFormScouting', isLoggedIn, function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*");
-        console.log(req.body);
+        // console.log(req.body);
         var result = Object.keys(req.body).map(function (key) {
             return [String(key), req.body[key]];
         });
@@ -920,7 +920,7 @@ module.exports = function (app, passport) {
 
         var deleteStatement = "DELETE FROM Detailed_Scouting WHERE transactionID = '" + req.body.transactionID + "'; ";
         var insertStatement = "INSERT INTO Detailed_Scouting (" + name + ") VALUES (" + value + ");";
-        console.log(insertStatement);
+        // console.log(insertStatement);
 
         connection.query(deleteStatement + insertStatement, function (err, results, fields) {
             if (err) {
@@ -935,7 +935,7 @@ module.exports = function (app, passport) {
     // Submit detailed form trap
     app.post('/detailedFormTrap', isLoggedIn, function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*");
-        console.log(req.body);
+        // console.log(req.body);
         var result = Object.keys(req.body).map(function (key) {
             return [String(key), req.body[key]];
         });
@@ -972,7 +972,7 @@ module.exports = function (app, passport) {
 
         var deleteStatement = "DELETE FROM Detailed_Trap WHERE transactionID = '" + req.body.transactionID + "'; ";
         var insertStatement = "INSERT INTO Detailed_Trap (" + name + ") VALUES (" + value + ");";
-        console.log(insertStatement);
+        // console.log(insertStatement);
 
         connection.query(deleteStatement + insertStatement, function (err, results, fields) {
             if (err) {
@@ -1031,7 +1031,7 @@ function tokenExpTime() {
 function del_recov(StatusUpd, ErrMsg, targetURL, req, res) {
 
     transactionID = req.query.transactionIDStr.split(",");
-    console.log(transactionID);
+    // console.log(transactionID);
     var statementGeneral = "UPDATE General_Form SET Status_del = '" + StatusUpd + "'";
     var statementDetailedS = "UPDATE Detailed_Scouting SET Status_del = '" + StatusUpd + "'";
     var statementDetailedT = "UPDATE Detailed_Trap SET Status_del = '" + StatusUpd + "'";
@@ -1180,7 +1180,7 @@ function QueryStat(myObj, scoutingStat, trapStat, res) {
 }
 
 function dataList(sqlStatement, res) {
-    console.log(sqlStatement);
+    // console.log(sqlStatement);
 
     res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
     connection.query(sqlStatement, function (err, results, fields) {

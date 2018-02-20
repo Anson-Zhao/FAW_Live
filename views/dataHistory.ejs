@@ -531,6 +531,8 @@
             <button onclick="exportTableToCSV2('Trap_<%= user.username %>.csv')">Export above rows to .CSV File</button>
         </div>
     </div>
+    <br>
+    <div id="map" style="width:100%; height:400px;"></div>
 </div>
 <script type='text/javascript'>
     var table = $("#dataDisplay").DataTable();
@@ -540,6 +542,8 @@
     var theArray;
     var rowSelected = [];
     var transactionID = [];
+    var markers = [];
+    var map;
 
     $(document).ready(function(){
         $(function() {
@@ -573,6 +577,8 @@
             transactionID = [];
 
             $(this).toggleClass('selected');    //toggle class for the rows selected
+            $(this).toggleClass('change');    //toggle class change color
+            changeColor();
 
             rowSelected = table.rows('.selected').data();    //Store all the data for selected rows'
 
@@ -591,6 +597,8 @@
             transactionID = [];
 
             $(this).toggleClass('selected');    //toggle class for the rows selected
+            $(this).toggleClass('change');    //toggle class change color
+            changeColor();
 
             rowSelected = table.rows('.selected').data();    //Store all the data for selected rows'
 
@@ -755,6 +763,26 @@
         }
 
         // alert(document.getElementById(name + "." + rowNumber + "." + i).width + "   " + document.getElementById(name + "." + rowNumber + "." + i).height);
+    }
+
+    function changeColor() {
+        var row = document.getElementsByClassName("change")[0].innerHTML.trim().split("</td>");
+
+        var latiLong = row[3].substring(4, row[3].length) + "; " + row[4].substring(4, row[4].length);
+
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i].DMS === latiLong) {
+                if (document.getElementsByClassName("change")[0].classList.contains("selected") && document.getElementsByClassName("change")[0].classList.contains("change")) {
+                    document.getElementsByClassName("change")[0].classList.remove("change");
+                    markers[i].setMap(map);
+                } else if (document.getElementsByClassName("change")[0].classList.contains("change")) {
+                    document.getElementsByClassName("change")[0].classList.remove("change");
+                    markers[i].setMap(null);
+                }
+                break
+            }
+        }
+        //alert(markers.length)
     }
 
     function downloadCSV(csv, filename) {
