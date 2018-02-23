@@ -619,7 +619,7 @@ module.exports = function (app, passport) {
         connection.query(myStat, function (err, results) {
             console.log("query statement : " + myStat);
 
-            if (!results[0].Damage_photo && !results[0].Damage_photo_name) {
+            if (!results[0].imagePath) {
                 console.log("Error");
             } else {
                 filePath0 = results[0];
@@ -836,39 +836,39 @@ module.exports = function (app, passport) {
 //             filePathName = "";
 //         }
 //     });
-//     app.post("/submit", isLoggedIn, function (req, res) {
-//         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
-//
-//         var newImage = {
-//             Damage_photo: "https://aworldbridgelabs.com/uploadfiles/" + responseDataUuid,
-//             Damage_photo_name: responseDataUuid
-//         };
-//         console.log("path: " + responseDataUuid);
-//         console.log("names: " + responseDataUuid);
-//
-//
-//         var myStat = "INSERT INTO Detailed_Scouting (Damage_photo, Damage_photo_name) VALUES (?,?)";
-//         var myVal = [newImage.Damage_photo, newImage.Damage_photo_name];
-//         console.log("query statement : " + myStat);
-//         console.log("values: " + myVal);
-//
-//         connection.query(myStat, myVal, function (err, results) {
-//             if (err) {
-//                 console.log("query statement T^T: " + myStat);
-//                 console.log("values T^T: " + myVal);
-//                 console.log(err);
-//                 res.send("Unfortunately, there has been an error!");
-//                 res.end();
-//             } else {
-//                 console.log("query statement yay: " + myStat);
-//                 console.log("values yay: " + myVal);
-//                 console.log("All a big success!");
-//                 res.send("All a big success!");
-//                 res.end();
-//             }
-//
-//         });
-//     });
+    app.post("/submit", isLoggedIn, function (req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+
+        var newImage = {
+            Damage_photo: "https://aworldbridgelabs.com/uploadfiles/" + responseDataUuid,
+            Damage_photo_name: responseDataUuid
+        };
+        console.log("path: " + responseDataUuid);
+        console.log("names: " + responseDataUuid);
+
+
+        var myStat = "INSERT INTO Detailed_Scouting (Damage_photo, Damage_photo_name) VALUES (?,?)";
+        var myVal = [newImage.Damage_photo, newImage.Damage_photo_name];
+        console.log("query statement : " + myStat);
+        console.log("values: " + myVal);
+
+        connection.query(myStat, myVal, function (err, results) {
+            if (err) {
+                console.log("query statement T^T: " + myStat);
+                console.log("values T^T: " + myVal);
+                console.log(err);
+                res.send("Unfortunately, there has been an error!");
+                res.end();
+            } else {
+                console.log("query statement yay: " + myStat);
+                console.log("values yay: " + myVal);
+                console.log("All a big success!");
+                res.send("All a big success!");
+                res.end();
+            }
+
+        });
+    });
 
     // Submit general form
     app.post('/generalForm', isLoggedIn, function (req, res) {
@@ -951,42 +951,25 @@ module.exports = function (app, passport) {
         name = name.substring(0, name.length - 2);
         value = value.substring(0, value.length - 2);
 
-        // var path = responseDataUuid.split(";");
-        // //console.log(path);
-        // var damage = "";
-        // var damage_name = "";
-        // var pest = "";
-        //
-        // for (var i = 0; i < path.length - 1; i++) {
-        //     console.log("New paths underway!!!!");
-        //     if (path[i] === "Damage_photo") {
-        //         damage += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
-        //     } else if (path[i] === "Damage_photo_name") {
-        //         damage_name += path[i] + ";";
-        //     // } else if (path[i].substring(0,10) === "Pest_photo") {
-        //     //     pest += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
-        //     }
-        // }
-        // //console.log(pest + "  " + damage);
-        // damage = damage.substring(0, damage.length - 1);
-        // damage_name = damage_name.substring(0, damage_name.length - 1);
-        // // pest = pest.substring(0, pest.length - 1);
-        //
-        // name += ", Damage_photo, Damage_photo_name";
-        // value += ", '" + damage + "', '" + damage_name + "'";
+        var path = responseDataUuid.split(";");
+        //console.log(path);
+        var damage = "";
+        var pest = "";
 
-        var newImage = {
-            Damage_photo: "https://aworldbridgelabs.com/uploadfiles/" + responseDataUuid,
-            Damage_photo_name: responseDataUuid,
-            Pest_photo: "https://aworldbridgelabs.com/uploadfiles/" + responseDataUuid2,
-            Pest_photo_name: responseDataUuid2
-        };
+        for (var i = 0; i < path.length - 1; i++) {
+            //console.log("A");
+            if (path[i].substring(0,12) === "Damage_photo") {
+                damage += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+            } else if (path[i].substring(0,10) === "Pest_photo") {
+                pest += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
+            }
+        }
+        //console.log(pest + "  " + damage);
+        damage = damage.substring(0, damage.length - 1);
+        pest = pest.substring(0, pest.length - 1);
 
-        console.log("path: " + responseDataUuid + "pest: " + responseDataUuid2);
-        console.log("names: " + responseDataUuid + "pest: " + responseDataUuid2);
-
-        name += ", Damage_photo, Damage_photo_name, Pest_photo, Pest_photo_name";
-        value += ", '" + newImage.Damage_photo + "', '" + newImage.Damage_photo_name + "', '" + newImage.Pest_photo + "', '" + newImage.Pest_photo_name + "'";
+        name += ", Damage_photo, Pest_photo";
+        value += ", '" + damage + "', '" + pest + "'";
 
         var deleteStatement = "DELETE FROM Detailed_Scouting WHERE transactionID = '" + req.body.transactionID + "'; ";
         var insertStatement = "INSERT INTO Detailed_Scouting (" + name + ") VALUES (" + value + ");";
@@ -1320,29 +1303,22 @@ function onUpload(req, res, next) {
 }
 
 var responseDataUuid = "",
-    responseDataName = "",
-    responseDataUuid2 = "",
-    responseDataName2 = "";
+    responseDataName = "";
 function onSimpleUpload(fields, file, res) {
     var d = new Date(),
         uuid = d.getUTCFullYear() + "-" + ('0' + (d.getUTCMonth() + 1)).slice(-2) + "-" + ('0' + d.getUTCDate()).slice(-2) + "T" + ('0' + d.getUTCHours()).slice(-2) + ":" + ('0' + d.getUTCMinutes()).slice(-2) + ":" + ('0' + d.getUTCSeconds()).slice(-2) + "Z",
         responseData = {
             success: false,
-            newuuid: uuid + "_" + fields.qqfilename,
-            newuuid2: uuid + "_" + fields.qqfilename
+            newuuid: uuid + "_" + fields.qqfilename
         };
 
     responseDataUuid = responseData.newuuid;
-    responseDataUuid2 = responseData.newuuid2;
 
     file.name = fields.qqfilename;
     responseDataName = file.name;
-    responseDataName2 = file.name;
 
     console.log("forth hokage: " + responseDataUuid);
     console.log("fifth harmony: " + responseDataName);
-    console.log("trials 4 days: " + responseDataUuid2);
-    console.log("pentatonic success: " + responseDataName2);
 
     if (isValid(file.size)) {
         moveUploadedFile(file, uuid, function() {
