@@ -350,10 +350,10 @@
                 <div class="FAW">
                     <h2>Resources</h2>
                     <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
-                    <input type="button" id="edit" value="Edit">
-                    <div id="photo">
-                        <div id="uploader"></div>
-                    </div>
+                    <input type="button" id="edit" value="Edit"><br>
+                    <div id="uploader"></div>
+                    <input type='button' id='edit2' value='Edit'>
+                    <div id="photo"></div>
 
                     <div class="row">
                         <div class="column">
@@ -677,6 +677,7 @@
 
         $('#general').submit(function(e) {
             // Prevent form submission
+            alert("A");
             e.preventDefault();
             //alert("X");
             var entryType = document.getElementById("entryType").value;
@@ -935,6 +936,43 @@
             $("option:first", select[2]).val("");
             select[1].multiSelect();
             select[4].multiSelect();
+            $("#edit2").on("click", function () {
+                if (confirm("Is this button working?")) {
+
+                    $.ajax({
+                        url: '/edit2',
+                        type: 'GET',
+                        dataType: 'json',
+                        async: false,
+                        success: function (results) {
+                            if (!results.error) {
+                                globalResults = results;
+                                console.log("results: " + globalResults[0].imagePath);
+
+                                let list = [];
+                                for (var i = 0; i < globalResults.length; i++) {
+                                    var first = {
+                                        id: i,
+                                        size: 561276,
+                                        thumbnailUrl: globalResults[i].imagePath,
+                                        name: globalResults[i].fileName
+                                    }
+
+                                    list.push(first);
+                                }
+                                console.log("afwefwe: " + qq.supportedFeatures.imagePreviews === true);
+                                console.log("json object array: " + list[0].thumbnailUrl);
+
+                                uploaderPest.addInitialFiles(list);
+                            } else {
+                                console.log("didn't work :(");
+                            }
+                        }
+                    })
+                } else {
+                    return false;
+                }
+            });
         }
         var uploaderPest = new qq.FineUploader({
             element: document.getElementById("uploaderPest"),

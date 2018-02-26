@@ -630,6 +630,29 @@ module.exports = function (app, passport) {
             }
         });
     });
+    app.get('/edit2', isLoggedIn, function (req, res) {
+        // res.render("test.ejs");
+        // console.log("11");
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+
+        var myStat = "SELECT Pest_photo, Pest_photo_name FROM Detailed_Scouting WHERE transactionID = '" + editTransactionID +"';";
+        console.log("This is for editing photos ONLY >:( " + editTransactionID);
+
+        var filePath0;
+        connection.query(myStat, function (err, results) {
+            console.log("query statement : " + myStat);
+
+            if (!results[0].Pest_photo && !results[0].Pest_photo_name) {
+                console.log("Error");
+            } else {
+                filePath0 = results[0];
+                var JSONresult = JSON.stringify(results, null, "\t");
+                console.log(JSONresult);
+                res.send(JSONresult);
+                res.end()
+            }
+        });
+    });
     app.delete("/deleteFiles/:uuid", onDeleteFile);
 
     app.get('/editData', isLoggedIn, function(req, res) {
