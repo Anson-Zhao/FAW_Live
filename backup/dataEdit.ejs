@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>FAW/Locust Project -  Data Entry</title>
+    <title>FAW/Locust Project -  Data Edit</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/style_final.css" type="text/css">
     <link rel="stylesheet" href="/css/multi-select.css" media="screen" type="text/css">
@@ -23,7 +23,6 @@
     <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/file-uploader/5.15.5/fine-uploader.js"></script>
-    <!--<script src="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.js"></script>-->
 
     <script type="text/template" id="qq-template">
         <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="Drop files here">
@@ -101,6 +100,7 @@
             </dialog>
         </div>
     </script>
+    <!--<script src="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.js"></script>-->
     <style>
         body 		{ padding-top:80px; word-wrap:break-word; }
         #detailedFormScouting { display: none; }
@@ -116,14 +116,39 @@
         }
         .column {
             float:right;
-           position:relative;
+            position:relative;
             right:80px;
             width:11%;
+        }
+        @media only screen and (max-width:320px){
+            h1 {
+                font-size: 27px;
+            }
+            .column{
+                padding:10px 40px;
+            }
+        }
+        @media only screen and (min-width:330px) and (max-width: 375px){
+            h1 {
+                font-size: 32px;
+            }
+            .column{
+                padding:10px 40px;
+            }
+
+        }
+        @media only screen and (min-width:380px) and (max-width: 414px){
+            h1 {
+                font-size: 35px;
+            }
+            .column{
+                padding:10px 40px;
+            }
         }
     </style>
 
 </head>
-<body onload="getLocation()">
+<body>
 <div class="container">
     <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
     <div id="modal" class="modal">
@@ -147,10 +172,10 @@
         <div id="generalForm">
             <form id = "general" method = "post">
 
-                <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= transactionID %>" readonly><br><br>
-                <h4>Your Name: &nbsp;&nbsp;&nbsp;</h4><input id="firstName" type="text" value="<%= firstname %>" readonly><input id="lastName" type="text" value="<%= lastname %>" readonly><br><br>
-                <h4>1 . Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE1" name="Date" class="date" value="" required><br><br>
-                <h4>1 . Location Name: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="locationName" name="Location_Name" type="text" placeholder="Enter Location Here"><br><br>
+                <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= data.transactionID %>" readonly><br><br>
+                <h4>Your Name: &nbsp;&nbsp;&nbsp;</h4><input id="firstName" type="text" value="<%= user.firstName %>" readonly><input id="lastName" type="text" value="<%= user.lastName %>" readonly><br><br>
+                <h4>1 . Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE1" name="Date" class="date" value="<%= data.Date %>" required><br><br>
+                <h4>1 . Location Name: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="locationName" name="Location_Name" type="text" value="<%= data.Location_name %>" placeholder="Enter Location Here"><br><br>
                 <h4 id="GPSLocationTitle">E. GPS Location: &nbsp;&nbsp;&nbsp;</h4>
                 <h4 style="color:red" id="errorMessage"></h4>
                 <h5 style="color:#9d9d9d;" id="locationNote"></h5>
@@ -158,24 +183,24 @@
                 <div id="map"></div><br>
                 <!--<h4>1F. Country: &nbsp;&nbsp;&nbsp;</h4>-->
                 <!--<select class="clearGen" id='country' name='country' required>-->
-                    <!--<option>SELECT THE COUNTRY</option>-->
-                    <!--<option>COUNTRYA</option>-->
-                    <!--<option>COUNTRYB</option>-->
-                    <!--<option>COUNTRYC</option>-->
+                <!--<option>SELECT THE COUNTRY</option>-->
+                <!--<option>COUNTRYA</option>-->
+                <!--<option>COUNTRYB</option>-->
+                <!--<option>COUNTRYC</option>-->
                 <!--</select><br><br>-->
                 <!--<h4>1G. Province: &nbsp;&nbsp;&nbsp;</h4>-->
                 <!--<select class="clearGen" id='province' name='province' required>-->
-                    <!--<option value=''>SELECT THE PROVINCE</option>-->
-                    <!--<option>PROVINCEA</option>-->
-                    <!--<option>PROVINCEB</option>-->
-                    <!--<option>PROVINCEC</option>-->
+                <!--<option value=''>SELECT THE PROVINCE</option>-->
+                <!--<option>PROVINCEA</option>-->
+                <!--<option>PROVINCEB</option>-->
+                <!--<option>PROVINCEC</option>-->
                 <!--</select><br><br>-->
                 <!--<h4>1H. District: &nbsp;&nbsp;&nbsp;</h4>-->
                 <!--<select class="clearGen" id='district' name='district' required>-->
-                    <!--<option value=''>SELECT THE DISTRICT</option>-->
-                    <!--<option>DISTRICT1</option>-->
-                    <!--<option>DISTRICT2</option>-->
-                    <!--<option>DISTRICT3</option>-->
+                <!--<option value=''>SELECT THE DISTRICT</option>-->
+                <!--<option>DISTRICT1</option>-->
+                <!--<option>DISTRICT2</option>-->
+                <!--<option>DISTRICT3</option>-->
                 <!--</select><br><br>-->
                 <h4>1 . Main Crop: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='mainCrop' name="Main_crop" required>
@@ -201,7 +226,7 @@
                     <option>OTHER GRASSES</option>
                     <option>OTHER VEGETABLES</option>
                 </select><br><br>
-                <h4>1 . Main Crop Variety: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="mainCropVariety" name="Main_crop_variety" type="text" placeholder="Enter Main Crop Variety Here"><br><br>
+                <h4>1 . Main Crop Variety: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="mainCropVariety" name="Main_crop_variety" type="text" value="<%= data.Main_crop_variety %>" placeholder="Enter Main Crop Variety Here"><br><br>
                 <h4>1 . Irrigation: &nbsp;&nbsp;&nbsp;</h4>
                 <input type="radio" name="Irrigation" value="Irrigated" required> IRRIGATED
                 <input type="radio" name="Irrigation" value="Rain-Fed" required> RAIN-FED <br><br>
@@ -226,7 +251,7 @@
                 </select><br><br>
 
                 <h4>1 . Cropping System: &nbsp;&nbsp;&nbsp;</h4>
-                <select class="clearGen" id='cropSystem' name='Cropping_system' onchange='rotationInterCropSystem();' required>
+                <select class="clearGen" id='croppingSystem' name='Cropping_system' onchange='rotationInterCropSystem(this.value);' required>
                     <option value=''>SELECT THE CROP SYSTEM</option>
                     <option>SEASONAL</option>
                     <option>ROTATION</option>
@@ -237,8 +262,8 @@
                 <h5 style="color:#9d9d9d;">Note: There is no need to enter the decimals, etc. Please enter the number ONLY.</h5>
                 <input class="clearGen" id="fieldSizeInteger" name="Field_size_ha_integer" type="number" min="0" max="999999" placeholder="0000" onkeyup="limit()" required>.
                 <input class="clearGen" id="fieldSizeDecimal" name="Field_size_ha_decimal" type="number" min="0" max="9" placeholder="0" onkeyup="limit()" required><br><br>
-                <h4>1 . Main Crop Planting Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE2" name="Main_crop_planting_date" class="date" value="" required><br><br>
-                <h4>1 . Date of Last RainFall: &nbsp;&nbsp;&nbsp;</h4><input id="DATE3" name="Date_of_last_rain" class="date" value=""><br><br>
+                <h4>1 . Main Crop Planting Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE2" name="Main_crop_planting_date" class="date" value="<%= data.Main_crop_planting_date %>" required><br><br>
+                <h4>1 . Date of Last RainFall: &nbsp;&nbsp;&nbsp;</h4><input id="DATE3" name="Date_of_last_rain" class="date" value="<%= data.Date_of_last_rain %>"><br><br>
                 <h4>1 . Rain Amount: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='rainAmount' name="Rain_amount" required>
                     <option value=''>SELECT THE RAIN AMOUNT</option>
@@ -258,7 +283,7 @@
                         <input id="continue" type="submit" value="Continue"/>
                     </div>
                     <div class="column">
-                        <input class="cancel" type="button" onclick="goBack()"value=" Cancel  "/>
+                        <input class="cancel" type="button" onclick="goBack()" value=" Cancel  "/>
                     </div>
 
                     <div class="column">
@@ -271,7 +296,7 @@
         <div id="detailedFormScouting">
             <form id="detailedScouting" method = "post">
                 <div>
-                    <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= transactionID %>" readonly><br><br>
+                    <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= data.transactionID %>" readonly><br><br>
                     <h4>2 . Pest Species: &nbsp;&nbsp;&nbsp;</h4>
                     <select class="clearDetS" id='pestSpecies' name='Pest_species' onchange="pestSelect()" required>
                         <option value=''>SELECT THE TYPE OF THE PEST</option>
@@ -284,8 +309,8 @@
                     <h2>Pests</h2>
                     <div id="pests">
                         <h4>2 . Present / Absent: &nbsp;&nbsp;&nbsp;</h4>
-                        <input type="radio" name="Present_absent" value="PRESENT" onclick="present(this)" required> PRESENT
-                        <input type="radio" name="Present_absent" value="ABSENT" onclick="present(this)" required> ABSENT <br><br>
+                        <input type="radio" name="Present_absent" value="PRESENT" onclick="present(this.value)" required> PRESENT
+                        <input type="radio" name="Present_absent" value="ABSENT" onclick="present(this.value)" required> ABSENT <br><br>
                         <div id="damageStage">
 
                         </div>
@@ -308,7 +333,7 @@
                         <h4>2 . Dead larvae killed by natural enemies? &nbsp;&nbsp;&nbsp;</h4>
                         <input type="radio" name="Dead_larvae" value="YES" required> YES
                         <input type="radio" name="Dead_larvae" value="NO" required> NO <br><br>
-                        <div id="cropInfested">
+                        <div id="infested">
 
                         </div>
                     </div>
@@ -325,12 +350,7 @@
                 <div class="FAW">
                     <h2>Resources</h2>
                     <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
-                    <!--<input class="clearDetS" id="photoOfDamage" type="file" name="Damage_photo" accept="image/*" multiple/><br><br>-->
                     <div id="uploader"></div>
-
-                    <div id="photo"></div>
-
-
 
                     <div class="row">
                         <div class="column">
@@ -352,11 +372,11 @@
 
         <div id="detailedFormTrap">
             <form id="detailedTrap" method = "post">
-                <h4>2 . Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= transactionID %>" readonly><br><br>
-                <h4>2 . Trap ID: &nbsp;&nbsp;&nbsp;</h4><input id="trapID" name="Trap_ID" type="text" required><br><br>
-                <h4>2 . FAW Confirmed: &nbsp;&nbsp;&nbsp;</h4><input id="FAWConfirmed" class="inputNumber" name="FAW_confirmed" type="number" required><br><br>
-                <h4>2 . FAW Suspected: &nbsp;&nbsp;&nbsp;</h4><input id="FAWSuspected" class="inputNumber" name="FAW_suspected" type="number" required><br><br>
-                <h4>2 . Other Species: &nbsp;&nbsp;&nbsp;</h4><input id="otherSpecies" class="inputNumber" name="Other_species" type="number" required><br><br>
+                <h4>2 . Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= data.transactionID %>" readonly><br><br>
+                <h4>2 . Trap ID: &nbsp;&nbsp;&nbsp;</h4><input id="trapID" name="Trap_ID" type="text" value="<%= data.Trap_ID %>" required><br><br>
+                <h4>2 . FAW Confirmed: &nbsp;&nbsp;&nbsp;</h4><input id="FAWConfirmed" class="inputNumber" name="FAW_confirmed" type="number" value="<%= data.FAW_confirmed %>" required><br><br>
+                <h4>2 . FAW Suspected: &nbsp;&nbsp;&nbsp;</h4><input id="FAWSuspected" class="inputNumber" name="FAW_suspected" type="number" value="<%= data.FAW_suspected %>" required><br><br>
+                <h4>2 . Other Species: &nbsp;&nbsp;&nbsp;</h4><input id="otherSpecies" class="inputNumber" name="Other_species" type="number" value="<%= data.Other_species %>" required><br><br>
                 <h4>2 . Trap Replaced? &nbsp;&nbsp;&nbsp;</h4>
                 <input type="radio" name="Trap_replaced" value="YES" required> YES
                 <input type="radio" name="Trap_replaced" value="NO" required> NO <br><br>
@@ -375,7 +395,7 @@
                     <option>TRÉCÉ</option>
                     <option>OTHER</option>
                 </select><br><br>
-                <h4>2 . Trap Serviced Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE4" name="Trap_serviced_date" class="date" value="" required><br><br>
+                <h4>2 . Trap Serviced Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE4" name="Trap_serviced_date" class="date" value="<%= data.Trap_serviced_date %>" required><br><br>
 
                 <div class="row">
                     <div class="column">
@@ -399,19 +419,147 @@
 <script>
 
     $(function(){
-        //getLocation();
+
+        var latitude = "<%= data.Latitude %>".split(" ");
+        var longitude = "<%= data.Longitude %>".split(" ");
+
+        $("#locationDiv").append($("<h4 id='latitudeTitle'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Latitude: </h4><h4 id='longitudeTitle'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Longitude: </h4>"));
+        var latitudeTitle = $("#latitudeTitle");
+        var latitudeSelect = $("<select id='latitudeDirection' name='Latitude_direction' required>");
+        latitudeTitle.append(latitudeSelect);
+        if (latitude[0] === "N" || !latitude[0]) {
+            latitudeSelect.append($("<option>N</option><option>S</option>"));
+        } else if (latitude[0] === "S") {
+            latitudeSelect.append($("<option>S</option><option>N</option>"));
+        }
+        latitudeTitle.append($("</select>"));
+
+        var longitudeTitle = $("#longitudeTitle");
+        var longitudeSelect = $("<select id='longitudeDirection' name='Longitude_direction' required>");
+        longitudeTitle.append(longitudeSelect);
+        if (longitude[0] === "E" || !longitude[0]) {
+            longitudeSelect.append($("<option>E</option><option>W</option>"));
+        } else if (longitude[0] === "W") {
+            longitudeSelect.append($("<option>W</option><option>E</option>"));
+        }
+        longitudeTitle.append($("</select>"));
+
+        latitudeTitle.append($("<input id='latitudeDegree' name='latitudeDegree' type='number' value='" + latitude[1].substring(0,latitude[1].length - 1) + "' required>°" + " <input id='latitudeMinute' name='latitudeMinute' type='number' value='" + latitude[2].substring(0,latitude[2].length - 5) + "' required>'" + " <input id='latitudeSecond' name='latitudeSecond' type='number' value='" + latitude[3].substring(0,latitude[3].length - 10) + "' required>''" + "<p></p>"));
+        longitudeTitle.append($("<input id='longitudeDegree' name='longitudeDegree' type='number' value='" + longitude[1].substring(0,longitude[1].length - 1) + "' required>°" + " <input id='longitudeMinute' name='longitudeMinute' type='number' value='" + longitude[2].substring(0,longitude[2].length - 5) + "' required>'" + " <input id='longitudeSecond' name='longitudeSecond' type='number' value='" + longitude[3].substring(0,longitude[3].length - 10) + "' required>''" + "<p></p>"));
+        $("#locationDiv").append($("<input id='refreshMap' type='button' onclick='refresh()' value='Click here to refresh the map'>"));
+        $("#refreshMap").click();
+
+        $("#mainCrop").val("<%= data.Main_crop %>");
+        $("[name='Irrigation'][value='<%= data.Irrigation %>']").prop("checked", true);
+        $("[name='Fertilized_used'][value='<%= data.Fertilized_used %>']").prop("checked", true);
+        $("#cropStage").val("<%= data.Crop_stage %>")
+        $("#healthOfCrop").val("<%= data.General_health %>");
+        $("#croppingSystem").val("<%= data.Cropping_system %>");
+        rotationInterCropSystem("<%= data.Cropping_system %>");
+        $('#rotationIntercroppingCrop').multiSelect("select", "<%= data.Rotation_intercropping_crop %>".split("/"));
+        var fieldSize = "<%= data.Field_size_ha %>".split(".");
+        $("#fieldSizeInteger").val(fieldSize[0]);
+        $("#fieldSizeDecimal").val(fieldSize[1]);
+        $("#rainAmount").val("<%= data.Rain_amount %>");
+        $("#entryType").val("<%= data.Entry_type %>");
+
+
+        $("#pestSpecies").val("<%= data.Pest_species %>");
+        $("[name='Present_absent'][value='<%= data.Present_absent %>']").prop("checked", true);
+        $("#previousDamage").val("<%= data.Previous_damage %>");
+        $("#naturalEnemies").val("<%= data.Natural_enemies %>");
+        $("[name='Dead_larvae'][value='<%= data.Dead_larvae %>']").prop("checked", true);
+        present("<%= data.Present_absent %>");
+        $("#cropDamage").val("<%= data.Crop_damage %>");
+        $('#pestStage').multiSelect("select", "<%= data.Pest_stage %>".split("/"));
+        $("#currentDamage").val("<%= data.Current_damage %>");
+        $("#cropInfested").val("<%= data.Crop_infested %>");
+        $('#controlUndertaken').multiSelect("select", "<%= data.Control_undertaken %>".split("/"));
+        $("#PesticideName").val("<%= data.Pesticide_name %>");
+        $("#BiopesticideName").val("<%= data.Biopesticide_name %>");
+        $("#PesticideLitres").val("<%= data.Pesticide_litres %>");
+        $("#BiopesticideLitres").val("<%= data.Biopesticide_litres %>");
+        var photoOfPest = "<%= data.Photo_of_Pest %>".split(";");
+        var photoOfDamage = "<%= data.Photo_of_Damage %>".split(";");
+        $("#edit").on("click", function () {
+            if (confirm("Is this button working?")) {
+
+                $.ajax({
+                    url: '/edit',
+                    type: 'GET',
+                    dataType: 'json',
+                    async: false,
+                    success: function (results) {
+                        if (!results.error) {
+                            globalResults = results;
+                            console.log("results: " + globalResults[0].imagePath);
+
+                            let list = [];
+                            for (var i = 0; i < globalResults.length; i++) {
+                                var first = {
+                                    id: i,
+                                    size: 561276,
+                                    thumbnailUrl: globalResults[i].imagePath,
+                                    name: globalResults[i].fileName
+                                }
+
+                                list.push(first);
+                            }
+                            console.log("afwefwe: " + qq.supportedFeatures.imagePreviews === true);
+                            console.log("json object array: " + list[0].thumbnailUrl);
+
+                            uploader.addInitialFiles(list);
+                        } else {
+                            console.log("didn't work :(");
+                        }
+                    }
+                })
+            } else {
+                return false;
+            }
+        });
+
+
+        // for (var p = 0; p < photoOfPest.length; p++) {
+        //     $("#photoOfPestDiv").append($("<a target=\"_blank\" href='" + photoOfPest[p] + "'><img src='" + photoOfPest[p] + "' id='p" + p + "'></a>"));
+        //
+        //     var popWidth = document.getElementById("p" + p).naturalWidth;
+        //     var popHeight = document.getElementById("p" + p).naturalHeight;
+        //
+        //     if (popWidth > popHeight) {
+        //         document.getElementById("p" + p).setAttribute("class", "x");
+        //     } else if (popWidth < popHeight) {
+        //         document.getElementById("p" + p).setAttribute("class", "y");
+        //     } else if (popWidth === popHeight) {
+        //         document.getElementById("p" + p).setAttribute("class", "z");
+        //     }
+        // }
+        //
+        // for (var d = 0; d < photoOfDamage.length; d++) {
+        //     $("#photoOfDamageDiv").append($("<a target=\"_blank\" href='" + photoOfDamage[d] + "'><img src='" + photoOfDamage[d] + "' id='d" + d + "'></a>"));
+        //
+        //     var podWidth = document.getElementById("d" + d).naturalWidth;
+        //     var podHeight = document.getElementById("d" + d).naturalHeight;
+        //     if (podWidth > podHeight) {
+        //         document.getElementById("d" + d).setAttribute("class", "x");
+        //     } else if (podWidth < podHeight) {
+        //         document.getElementById("d" + d).setAttribute("class", "y");
+        //     } else if (podWidth === podHeight) {
+        //         document.getElementById("d" + d).setAttribute("class", "z");
+        //     }
+        // }
+
+
+        $("[name='Trap_replaced'][value='<%= data.Trap_replaced %>']").prop("checked", true);
+        $("[name='Lure_replaced'][value='<%= data.Lure_replaced %>']").prop("checked", true);
+        $("#lureName").val("<%= data.Lure_name %>");
+
+        pestSelect();
 
         flatpickr(".date", {
             dateFormat: "Y-m-d",
             time_24hr: true
         });
-
-        var today = new Date();
-        var todayDate = today.getFullYear()+'-'+('0' + (today.getMonth()+1)).slice(-2)+'-'+('0' + today.getDate()).slice(-2);
-        var todayDateV = document.getElementsByClassName("date");
-        for (var i = 0; i < todayDateV.length; i++) {
-            todayDateV[i].value = todayDate;
-        }
 
         var options = {
             url: '/upload',    // override for form's 'action' attribute
@@ -432,60 +580,16 @@
             // $("#upload").ajaxSubmit(options);
             // Prevent form submission
             e.preventDefault();
-            alert("This button has actually been selected and this can't possibly be the issue. FIRST");
-
             $("#hide").click();
-            //
-            // console.log("This button has actually been selected and this can't possibly be the issue.");
-            // showResponse();
         });
 
         $('#detailedScouting').submit(function(e) {
             // Prevent form submission
             e.preventDefault();
-            // $.ajax({
-            //     url: '/upload',    // override for form's 'action' attribute
-            //     type: 'post',        // 'get' or 'post', override for form's 'method' attribute
-            //     dataType: 'json',        // 'xml', 'script', or 'json' (expected server response type)
-            //     clearForm: true,        // clear all form fields after successful submit
-            //     // beforeSubmit:  showRequest,  // pre-submit callback
-            //     success: showResponse  // post-submit callback
-            // })
-            alert("This button has actually been selected and this can't possibly be the issue.");
-            $.ajax({
-                type: "post",
-                url: "/generalForm",
-                dataType: 'json',
-                data: $("#general").serialize(),
-                success: function (result) {
-                    if (!result.error) {
-                        $.ajax({
-                            type: "post",
-                            url: "/detailedFormScouting",
-                            dataType: 'json',
-                            data: $("#detailedScouting").serialize(),
-                            success: function (result) {
-                                if (!result.error) {
-                                    document.getElementById("modal-footer").style.display = "none";
-
-                                    document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
-                                    document.getElementById("close").innerHTML = "<a href='/userhome'>&times</a>";
-
-                                    document.getElementById("header").innerHTML = "Congratulations, Your Data Entry is Successfully Complete !";
-                                    document.getElementById("body").innerHTML = "<br>Click X to return to the Home Page.<br>";
-
-                                    document.getElementById("modal").style.display = "block";
-                                } else {
-                                    alert(result.message);
-                                }
-                            }
-                        })
-                    } else {
-                        alert(result.message);
-                    }
-                }
-            })
-
+            //alert("Y");
+            $("#upload").ajaxSubmit(options);
+            // Prevent form submission
+            e.preventDefault();
         });
 
         $('#detailedTrap').submit(function(e) {
@@ -509,7 +613,7 @@
                                     document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
                                     document.getElementById("close").innerHTML = "<a href='/userhome'>&times</a>";
 
-                                    document.getElementById("header").innerHTML = "Congratulations, Your Data Entry is Successfully Complete !";
+                                    document.getElementById("header").innerHTML = "Congratulations, Your Edit is Successfully Complete !";
                                     document.getElementById("body").innerHTML = "<br>Click X to return to the Home Page.<br>";
 
                                     document.getElementById("modal").style.display = "block";
@@ -542,131 +646,7 @@
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         });
-
     });
-
-    var globalPaths;
-
-    var uploader = new qq.FineUploader({
-        element: document.getElementById("uploader"),
-        request: {
-            endpoint: '/upload'
-        },
-        deleteFile: {
-            enabled: true, // defaults to false
-            endpoint: '/deleteFiles'
-        },
-        callbacks: {
-            onComplete: function (id, name, responseJSON) {
-                alert(responseJSON.newuuid);
-                alert(id + "      " + name);
-                uploader.setUuid(id, responseJSON.newuuid);
-                // $.ajax({
-                //     url: '/submit',
-                //     type: 'POST',
-                //     dataType: 'json',
-                //     async: false,
-                //     success: function (product) {
-                //         if (!product.error) {
-                //             globalPaths = product;
-                //             console.log("results: " + globalPaths[0].Damage_photo);
-                //         } else {
-                //             console.log("you're gonna have a bad time");
-                //         }
-                //     }
-                // })
-            }
-        }
-    });
-
-
-    //Get geolocation and map preview
-    function getLocation() {
-
-        $("#locationDiv").append($("<h4 id='latitudeTitle'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Latitude: </h4><h4 id='latitudeStatus'>Locating......</h4><h4 id='longitudeTitle'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Longitude: </h4><h4 id='longitudeStatus'>Locating......</h4>"));
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition, showError);
-        } else {
-            $("#latitudeStatus").remove();
-            $("#longitudeStatus").remove();
-            document.getElementById("errorMessage").innerHTML = "ERROR: Geolocation is not supported by this browser."
-            alert("Geolocation is not supported by this browser.");
-
-            createInputBox();
-        }
-    }
-
-    function showPosition(position) {
-        $("#latitudeStatus").remove();
-        $("#longitudeStatus").remove();
-
-        var uluru = {lat: position.coords.latitude, lng: position.coords.longitude};
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 4,
-            center: uluru,
-            mapTypeId: 'hybrid'
-        });
-
-        var marker = new google.maps.Marker({
-            position: uluru,
-            map: map
-        });
-
-        var latiDD = position.coords.latitude;
-        var longDD = position.coords.longitude;
-
-        var latiDirection;
-        var longDirection;
-        // check direction
-        if (latiDD >= 0) {
-            latiDirection = "N";
-        } else if (latiDD < 0) {
-            latiDirection = "S";
-            latiDD = latiDD * -1;
-        }
-        if (longDD >= 0) {
-            longDirection = "E";
-        } else if (longDD < 0) {
-            longDirection = "W";
-            longDD = longDD * -1;
-        }
-        // convert latitude from Decimal Degree to Degrees Minutes Seconds
-        var latiDegrees = Math.floor(latiDD);
-        var latiMinutes = Math.floor((latiDD - latiDegrees) * 60);
-        var latiSeconds = ((latiDD - latiDegrees) * 60 - latiMinutes) * 60;
-        // convert longitude from Decimal Degree to Degrees Minutes Seconds
-        var longDegrees = Math.floor(longDD);
-        var longMinutes = Math.floor((longDD - longDegrees) * 60);
-        var longSeconds = ((longDD - longDegrees) * 60 - longMinutes) * 60;
-
-        var latitude = latiDirection + " " + latiDegrees + " " + latiMinutes + " " + latiSeconds;
-        var longitude = longDirection + " " + longDegrees + " " + longMinutes + " " + longSeconds;
-
-        createInputBox(latitude, longitude);
-    }
-
-    function showError(error) {
-
-        var errorMessage = document.getElementById("errorMessage");
-        $("#latitudeStatus").remove();
-        $("#longitudeStatus").remove();
-        switch(error.code) {
-            case error.PERMISSION_DENIED:
-                errorMessage.innerHTML = "ERROR: User denied the request for Geolocation."
-                break;
-            case error.POSITION_UNAVAILABLE:
-                errorMessage.innerHTML = "ERROR: Location information is unavailable."
-                break;
-            case error.TIMEOUT:
-                errorMessage.innerHTML = "ERROR: The request to get user location timed out."
-                break;
-            case error.UNKNOWN_ERROR:
-                errorMessage.innerHTML = "ERROR: An unknown error occurred."
-                break;
-        }
-        createInputBox();
-    }
 
     function createInputBox(lati, long) {
         // [0] = direction; [1] = degrees; [2] = minutes; [3] = seconds
@@ -681,7 +661,7 @@
         }
 
         var latitudeTitle = $("#latitudeTitle");
-        var latitudeSelect = $("<select id='latitudeDirection' name='Latitude_direction' required>");
+        var latitudeSelect = $("<select id='latitudeDirection' name='latitudeDirection' required>");
         latitudeTitle.append(latitudeSelect);
         if (latitude[0] === "N" || !latitude[0]) {
             latitudeSelect.append($("<option>N</option><option>S</option>"));
@@ -691,7 +671,7 @@
         latitudeTitle.append($("</select>"));
 
         var longitudeTitle = $("#longitudeTitle");
-        var longitudeSelect = $("<select id='longitudeDirection' name='Longitude_direction' required>");
+        var longitudeSelect = $("<select id='longitudeDirection' name='longitudeDirection' required>");
         longitudeTitle.append(longitudeSelect);
         if (longitude[0] === "E" || !longitude[0]) {
             longitudeSelect.append($("<option>E</option><option>W</option>"));
@@ -700,8 +680,8 @@
         }
         longitudeTitle.append($("</select>"));
 
-        latitudeTitle.append($("<input id='latitudeDegree' name='Latitude_degree' type='number' value='" + latitude[1] + "' required>°" + " <input id='latitudeMinute' name='Latitude_minute' type='number' value='" + latitude[2] + "' required>'" + " <input id='latitudeSecond' name='Latitude_second' type='number' value='" + Math.round(latitude[3] * 1000) / 1000 + "' required>''" + "<p></p>"));
-        longitudeTitle.append($("<input id='longitudeDegree' name='Longitude_degree' type='number' value='" + longitude[1] + "' required>°" + " <input id='longitudeMinute' name='Longitude_minute' type='number' value='" + longitude[2] + "' required>'" + " <input id='longitudeSecond' name='Longitude_second' type='number' value='" + Math.round(longitude[3] * 1000) / 1000 + "' required>''" + "<p></p>"));
+        latitudeTitle.append($("<input id='latitudeDegree' name='latitudeDegree' type='number' value='" + latitude[1] + "' required>°" + " <input id='latitudeMinute' name='latitudeMinute' type='number' value='" + latitude[2] + "' required>'" + " <input id='latitudeSecond' name='latitudeSecond' type='number' value='" + Math.round(latitude[3] * 1000) / 1000 + "' required>''" + "<p></p>"));
+        longitudeTitle.append($("<input id='longitudeDegree' name='longitudeDegree' type='number' value='" + longitude[1] + "' required>°" + " <input id='longitudeMinute' name='longitudeMinute' type='number' value='" + longitude[2] + "' required>'" + " <input id='longitudeSecond' name='longitudeSecond' type='number' value='" + Math.round(longitude[3] * 1000) / 1000 + "' required>''" + "<p></p>"));
 
         $("#locationDiv").append($("<input type='button' onclick='refresh()' value='Click here to refresh the map'>"));
     }
@@ -745,9 +725,9 @@
         }
     }
 
-    function rotationInterCropSystem() {
+    function rotationInterCropSystem(value) {
         $("#rotationIntercropping").empty();
-        if (document.getElementById("cropSystem").value === "ROTATION" || document.getElementById("cropSystem").value === "INTERCROPPING") {
+        if (value === "ROTATION" || value === "INTERCROPPING") {
             //var mainCropList = ["ALFALFA", "BARLEY", "COTTON", "FLOWERS", "MAIZE", "MILLET", "PEANUT", "RICE", "SORGHUM", "SOYBEAN", "SUGARBEET", "SUGARCANE", "TEFF", "TOBACCO", "WEEDS", "WHEAT", "OTHER CEREALS", "OTHER FRUITS", "OTHER GRASSES", "OTHER VEGETABLES"];
             var mainCropList = document.getElementById("mainCrop").options;
             var mainCropDiv = $("#rotationIntercropping");
@@ -760,6 +740,8 @@
             }
             mainCropDiv.append($("</select>"));
             $('#rotationIntercroppingCrop').multiSelect();
+            //var value = "<%= data.Rotation_intercropping_crop %>".split(",");
+
         }
     }
 
@@ -818,7 +800,7 @@
 
     function present(status) {
         var damageStageDiv = $("#damageStage");
-        var cropInfestedDiv = $("#cropInfested");
+        var cropInfestedDiv = $("#infested");
         var controlTypeDiv = $("#controlType");
         var photoDiv = $("#photo");
         damageStageDiv.empty();
@@ -826,7 +808,7 @@
         controlTypeDiv.empty();
         photoDiv.empty();
 
-        if (status.value === "PRESENT") {
+        if (status === "PRESENT") {
             // damageStageDiv.append($("<h4>1 . Crop Damage: &nbsp;&nbsp;&nbsp;</h4>"));
             // var mainCropSelect = $("<select class='clearGen' id='rotationIntercroppingCrop' name='rota_inter_crop'></select>");
             // damageStageDiv.append(mainCropSelect);
@@ -835,12 +817,8 @@
             //     mainCropSelect.append(mainCropOption);
             // }
             var title = [$("<h4>2 . Crop Damage: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Pest Stage: &nbsp;&nbsp;&nbsp;</h4><a href='javascript:void(0);' id='pestStage-select_all' onclick='selectAndUnselect()'>select all</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' id='pestStage-deselect_all' onclick='selectAndUnselect()'>deselect all</a>"), $("<br<br><h4>2 . Current Damage: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Crop Infested: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Control Undertaken: &nbsp;&nbsp;&nbsp;</h4><a href='javascript:void(0);' id='controlUndertaken-select_all' onclick='selectAndUnselect()'>select all</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' id='controlUndertaken-deselect_all' onclick='selectAndUnselect()'>deselect all</a>"), $("<h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>")];
-            var select = [$("<select class='clearGen' id='cropDamage' name='Crop_damage' required></select><br><br>"), $("<select multiple='multiple' class='clearGen' id='pestStage' name='Pest_stage' required></select>"), $("<select class='clearGen' id='currentDamage' name='Current_damage' required></select><br><br>"), $("<input class='clearGen inputNumber' id='cropInfested' name='Crop_infested' type='text' placeholder='Enter The Percentage of Crop Infested Here' required><br><br>"), $("<select multiple='multiple' class='clearGen' id='controlUndertaken' name='Control_undertaken' onchange='controlType(this)'></select>"), $("<div class='clearGen' id='uploaderPest'></div><br><br>")];
-
-
-
-
-
+            var select = [$("<select class='clearGen' id='cropDamage' name='Crop_damage' required></select><br><br>"), $("<select multiple='multiple' class='clearGen' id='pestStage' name='Pest_stage' required></select>"), $("<select class='clearGen' id='currentDamage' name='Current_damage' required></select><br><br>"), $("<input class='clearGen inputNumber' id='cropInfested' name='Crop_infested' type='text' placeholder='Enter The Percentage of Crop Infested Here' required><br><br>"), $("<select multiple='multiple' class='clearGen' id='controlUndertaken' name='Control_undertaken' onchange='controlType(this)'></select>"), $("<input class='clearDetS' id='photoOfPest' type='file' name='Pest_photo' accept='image/*' multiple/><br><br>")];
+            //alert(title.length);
             for (var i = 0; i < title.length; i++) {
                 if (i < 3) {
                     damageStageDiv.append(title[i]);
@@ -859,7 +837,7 @@
 
             var damageOptions = document.getElementById("previousDamage").options;
             damageOptions[0].value = "SELECT THE DAMAGE LEVEL";
-
+            //alert(damageOptions.length);
             var stageOptions = ["EGGS", "LARVAE", "PUPAE", "ADULTS"];
             var controlTypeOptions = ["NONE", "BIOPESTICIDE", "CHEMICAL PESTICIDE", "EGG-SQUASHING", "HAND-PICKING", "MECHANICAL", "CULTURAL", "BIOCONTROL"];
             for (var i = 0; i < controlTypeOptions.length; i++) {
@@ -878,40 +856,10 @@
             select[1].multiSelect();
             select[4].multiSelect();
         }
-        var uploaderPest = new qq.FineUploader({
-            element: document.getElementById("uploaderPest"),
-            request: {
-                endpoint: '/upload'
-            },
-            deleteFile: {
-                enabled: true, // defaults to false
-                endpoint: '/deleteFiles'
-            },
-            callbacks: {
-                onComplete: function (id, name, responseJSON) {
-                    alert(responseJSON.newuuid2);
-                    alert(id + "      " + name);
-                    uploaderPest.setUuid(id, responseJSON.newuuid2);
-                    // $.ajax({
-                    //     url: '/submit',
-                    //     type: 'POST',
-                    //     dataType: 'json',
-                    //     async: false,
-                    //     success: function (product) {
-                    //         if (!product.error) {
-                    //             globalPaths = product;
-                    //             console.log("results: " + globalPaths[0].Damage_photo);
-                    //         } else {
-                    //             console.log("you're gonna have a bad time");
-                    //         }
-                    //     }
-                    // })
-                }
-            }
-        });
     }
 
     function controlType(type) {
+        //alert("A");
         var pesticideDiv = $("#pesticide");
         pesticideDiv.empty();
         var controlType = $(type).val();
@@ -962,7 +910,7 @@
         var i = 0;
         $('[required]').each(function() {
             if ($(this).val() === '') {
-                // alert($(this).val());
+//                alert($(this).val());
                 isValid = false;
             }
         });
@@ -970,8 +918,8 @@
         $('input[type=radio]:checked').each(function() {
             i = i + 1;
         });
-        // alert(isValid);
-        // alert(i);
+//        alert(isValid);
+//        alert(i);
 
         if (isValid && i === 3) {
             return true;
@@ -982,8 +930,7 @@
 
     function showResponse(responseText, statusText, xhr, $form) {
         if (!responseText.error) {
-            alert(responseText.message);
-            //alert("A");
+//            alert(responseText.message);
             $.ajax({
                 type: "post",
                 url: "/generalForm",
@@ -1003,7 +950,7 @@
                                     document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
                                     document.getElementById("close").innerHTML = "<a href='/userhome'>&times</a>";
 
-                                    document.getElementById("header").innerHTML = "Congratulations, Your Data Entry is Successfully Complete !";
+                                    document.getElementById("header").innerHTML = "Congratulations, Your Edit is Successfully Complete !";
                                     document.getElementById("body").innerHTML = "<br>Click X to return to the Home Page.<br>";
 
                                     document.getElementById("modal").style.display = "block";
@@ -1024,8 +971,8 @@
     }
 
     function goBack() {
-        if (confirm("Warning ! Are You Sure to Leave this Page ?") === true) {
-            window.location.replace('/userhome')
+        if (confirm("Are you sure you to leave this page? All the data will be cleared accordingly!!!")) {
+            window.location.replace('/userHome');
         }
     }
 
@@ -1078,7 +1025,7 @@
         document.getElementById("modal").style.display = "block";
     }
 
-    function clearDetSailed() {
+    function clearDetailed() {
         document.getElementById("modal-footer").innerHTML = "";
 
         document.getElementById("modal-header").style.backgroundColor = "#f44242";
@@ -1113,7 +1060,7 @@
 
         clear.onclick = function () {
             document.getElementById("modal").style.display = "none";
-            $(".clearDetS").val("");
+            $(".clearDet").val("");
             $('input[type=radio]:checked').prop("checked", false);
             $(".FAW").css("display", "none");
         };

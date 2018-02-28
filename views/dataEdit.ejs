@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/file-uploader/5.15.5/fine-uploader-gallery.css" rel="stylesheet">
     <!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
     <!--<link rel="stylesheet" href="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.min.css">-->
     <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBX94wEDdQ52lCDhKAhcfR-flIw1NyLTMA"></script>
@@ -21,6 +22,84 @@
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/file-uploader/5.15.5/fine-uploader.js"></script>
+
+    <script type="text/template" id="qq-template">
+        <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="Drop files here">
+            <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+                <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+            </div>
+            <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                <span class="qq-upload-drop-area-text-selector"></span>
+            </div>
+            <div class="qq-upload-button-selector qq-upload-button">
+                <div>Upload a file</div>
+            </div>
+            <span class="qq-drop-processing-selector qq-drop-processing">
+                            <span>Processing dropped files...</span>
+                            <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+                        </span>
+            <ul class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals">
+                <li>
+                    <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                    <div class="qq-progress-bar-container-selector qq-progress-bar-container">
+                        <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+                    </div>
+                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                    <div class="qq-thumbnail-wrapper">
+                        <img class="qq-thumbnail-selector" qq-max-size="120" qq-server-scale>
+                    </div>
+                    <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
+                    <button type="button" class="qq-upload-retry-selector qq-upload-retry">
+                        <span class="qq-btn qq-retry-icon" aria-label="Retry"></span>
+                        Retry
+                    </button>
+
+                    <div class="qq-file-info">
+                        <div class="qq-file-name">
+                            <span class="qq-upload-file-selector qq-upload-file"></span>
+                            <span class="qq-edit-filename-icon-selector qq-btn qq-edit-filename-icon" aria-label="Edit filename"></span>
+                        </div>
+                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                        <span class="qq-upload-size-selector qq-upload-size"></span>
+                        <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">
+                            <span class="qq-btn qq-delete-icon" aria-label="Delete"></span>
+                        </button>
+                        <button type="button" class="qq-btn qq-upload-pause-selector qq-upload-pause">
+                            <span class="qq-btn qq-pause-icon" aria-label="Pause"></span>
+                        </button>
+                        <button type="button" class="qq-btn qq-upload-continue-selector qq-upload-continue">
+                            <span class="qq-btn qq-continue-icon" aria-label="Continue"></span>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+
+            <dialog class="qq-alert-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">Close</button>
+                </div>
+            </dialog>
+
+            <dialog class="qq-confirm-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">No</button>
+                    <button type="button" class="qq-ok-button-selector">Yes</button>
+                </div>
+            </dialog>
+
+            <dialog class="qq-prompt-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <input type="text">
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">Cancel</button>
+                    <button type="button" class="qq-ok-button-selector">Ok</button>
+                </div>
+            </dialog>
+        </div>
+    </script>
     <!--<script src="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.js"></script>-->
     <style>
         body 		{ padding-top:80px; word-wrap:break-word; }
@@ -271,10 +350,10 @@
                 <div class="FAW">
                     <h2>Resources</h2>
                     <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
-                    <input class="clearDetS" id="photoOfDamage" type="file" name="Damage_photo" accept="image/*" multiple/><br><br>
-                    <div id="photo">
-
-                    </div>
+                    <input type="button" id="edit" value="Edit"><br>
+                    <div id="uploader"></div>
+                    <input type='button' id='edit2' value='Edit'>
+                    <div id="photo"></div>
 
                     <div class="row">
                         <div class="column">
@@ -342,6 +421,8 @@
 </div>
 <script>
 
+    var globalResults;
+
     $(function(){
 
         var latitude = "<%= data.Latitude %>".split(" ");
@@ -405,6 +486,44 @@
         $("#BiopesticideLitres").val("<%= data.Biopesticide_litres %>");
         var photoOfPest = "<%= data.Photo_of_Pest %>".split(";");
         var photoOfDamage = "<%= data.Photo_of_Damage %>".split(";");
+        $("#edit").on("click", function () {
+            if (confirm("Is this button working?")) {
+
+                $.ajax({
+                    url: '/edit',
+                    type: 'GET',
+                    dataType: 'json',
+                    async: false,
+                    success: function (results) {
+                        if (!results.error) {
+                            globalResults = results;
+                            console.log("results: " + globalResults[0].imagePath);
+
+                            let list = [];
+                            for (var i = 0; i < globalResults.length; i++) {
+                                var first = {
+                                    id: i,
+                                    size: 561276,
+                                    thumbnailUrl: globalResults[i].imagePath,
+                                    name: globalResults[i].fileName
+                                }
+
+                                list.push(first);
+                            }
+                            console.log("afwefwe: " + qq.supportedFeatures.imagePreviews === true);
+                            console.log("json object array: " + list[0].thumbnailUrl);
+
+                            uploader.addInitialFiles(list);
+                        } else {
+                            console.log("didn't work :(");
+                        }
+                    }
+                })
+            } else {
+                return false;
+            }
+        });
+
 
         // for (var p = 0; p < photoOfPest.length; p++) {
         //     $("#photoOfPestDiv").append($("<a target=\"_blank\" href='" + photoOfPest[p] + "'><img src='" + photoOfPest[p] + "' id='p" + p + "'></a>"));
@@ -466,16 +585,57 @@
             // $("#upload").ajaxSubmit(options);
             // Prevent form submission
             e.preventDefault();
+            alert("This button has actually been selected and this can't possibly be the issue. FIRST");
+
             $("#hide").click();
         });
 
         $('#detailedScouting').submit(function(e) {
             // Prevent form submission
             e.preventDefault();
-            //alert("Y");
-            $("#upload").ajaxSubmit(options);
-            // Prevent form submission
-            e.preventDefault();
+            // $.ajax({
+            //     url: '/upload',    // override for form's 'action' attribute
+            //     type: 'post',        // 'get' or 'post', override for form's 'method' attribute
+            //     dataType: 'json',        // 'xml', 'script', or 'json' (expected server response type)
+            //     clearForm: true,        // clear all form fields after successful submit
+            //     // beforeSubmit:  showRequest,  // pre-submit callback
+            //     success: showResponse  // post-submit callback
+            // })
+            alert("This button has actually been selected and this can't possibly be the issue.");
+            $.ajax({
+                type: "post",
+                url: "/generalForm",
+                dataType: 'json',
+                data: $("#general").serialize(),
+                success: function (result) {
+                    if (!result.error) {
+                        $.ajax({
+                            type: "post",
+                            url: "/detailedFormScouting",
+                            dataType: 'json',
+                            data: $("#detailedScouting").serialize(),
+                            success: function (result) {
+                                if (!result.error) {
+                                    document.getElementById("modal-footer").style.display = "none";
+
+                                    document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
+                                    document.getElementById("close").innerHTML = "<a href='/userhome'>&times</a>";
+
+                                    document.getElementById("header").innerHTML = "Congratulations, Your Edit is Successfully Complete !";
+                                    document.getElementById("body").innerHTML = "<br>Click X to return to the Home Page.<br>";
+
+                                    document.getElementById("modal").style.display = "block";
+                                } else {
+                                    alert(result.message);
+                                }
+                            }
+                        })
+                    } else {
+                        alert(result.message);
+                    }
+                }
+            })
+
         });
 
         $('#detailedTrap').submit(function(e) {
@@ -517,6 +677,7 @@
 
         $('#general').submit(function(e) {
             // Prevent form submission
+            alert("A");
             e.preventDefault();
             //alert("X");
             var entryType = document.getElementById("entryType").value;
@@ -532,6 +693,40 @@
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         });
+    });
+
+    var globalPaths;
+
+    var uploader = new qq.FineUploader({
+        element: document.getElementById("uploader"),
+        request: {
+            endpoint: '/upload'
+        },
+        deleteFile: {
+            enabled: true, // defaults to false
+            endpoint: '/deleteFiles'
+        },
+        callbacks: {
+            onComplete: function (id, name, responseJSON) {
+                alert(responseJSON.newuuid);
+                alert(id + "      " + name);
+                uploader.setUuid(id, responseJSON.newuuid);
+                // $.ajax({
+                //     url: '/submit',
+                //     type: 'POST',
+                //     dataType: 'json',
+                //     async: false,
+                //     success: function (product) {
+                //         if (!product.error) {
+                //             globalPaths = product;
+                //             console.log("results: " + globalPaths[0].Damage_photo);
+                //         } else {
+                //             console.log("you're gonna have a bad time");
+                //         }
+                //     }
+                // })
+            }
+        }
     });
 
     function createInputBox(lati, long) {
@@ -703,7 +898,7 @@
             //     mainCropSelect.append(mainCropOption);
             // }
             var title = [$("<h4>2 . Crop Damage: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Pest Stage: &nbsp;&nbsp;&nbsp;</h4><a href='javascript:void(0);' id='pestStage-select_all' onclick='selectAndUnselect()'>select all</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' id='pestStage-deselect_all' onclick='selectAndUnselect()'>deselect all</a>"), $("<br<br><h4>2 . Current Damage: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Crop Infested: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Control Undertaken: &nbsp;&nbsp;&nbsp;</h4><a href='javascript:void(0);' id='controlUndertaken-select_all' onclick='selectAndUnselect()'>select all</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' id='controlUndertaken-deselect_all' onclick='selectAndUnselect()'>deselect all</a>"), $("<h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>")];
-            var select = [$("<select class='clearGen' id='cropDamage' name='Crop_damage' required></select><br><br>"), $("<select multiple='multiple' class='clearGen' id='pestStage' name='Pest_stage' required></select>"), $("<select class='clearGen' id='currentDamage' name='Current_damage' required></select><br><br>"), $("<input class='clearGen inputNumber' id='cropInfested' name='Crop_infested' type='text' placeholder='Enter The Percentage of Crop Infested Here' required><br><br>"), $("<select multiple='multiple' class='clearGen' id='controlUndertaken' name='Control_undertaken' onchange='controlType(this)'></select>"), $("<input class='clearDetS' id='photoOfPest' type='file' name='Pest_photo' accept='image/*' multiple/><br><br>")];
+            var select = [$("<select class='clearGen' id='cropDamage' name='Crop_damage' required></select><br><br>"), $("<select multiple='multiple' class='clearGen' id='pestStage' name='Pest_stage' required></select>"), $("<select class='clearGen' id='currentDamage' name='Current_damage' required></select><br><br>"), $("<input class='clearGen inputNumber' id='cropInfested' name='Crop_infested' type='text' placeholder='Enter The Percentage of Crop Infested Here' required><br><br>"), $("<select multiple='multiple' class='clearGen' id='controlUndertaken' name='Control_undertaken' onchange='controlType(this)'></select>"), $("<div class='clearGen' id='uploaderPest'></div><br><br>")];
             //alert(title.length);
             for (var i = 0; i < title.length; i++) {
                 if (i < 3) {
@@ -741,7 +936,75 @@
             $("option:first", select[2]).val("");
             select[1].multiSelect();
             select[4].multiSelect();
+            $("#edit2").on("click", function () {
+                if (confirm("Is this button working?")) {
+
+                    $.ajax({
+                        url: '/edit2',
+                        type: 'GET',
+                        dataType: 'json',
+                        async: false,
+                        success: function (results) {
+                            if (!results.error) {
+                                globalResults = results;
+                                console.log("results: " + globalResults[0].imagePath);
+
+                                let list = [];
+                                for (var i = 0; i < globalResults.length; i++) {
+                                    var first = {
+                                        id: i,
+                                        size: 561276,
+                                        thumbnailUrl: globalResults[i].imagePath,
+                                        name: globalResults[i].fileName
+                                    }
+
+                                    list.push(first);
+                                }
+                                console.log("afwefwe: " + qq.supportedFeatures.imagePreviews === true);
+                                console.log("json object array: " + list[0].thumbnailUrl);
+
+                                uploaderPest.addInitialFiles(list);
+                            } else {
+                                console.log("didn't work :(");
+                            }
+                        }
+                    })
+                } else {
+                    return false;
+                }
+            });
         }
+        var uploaderPest = new qq.FineUploader({
+            element: document.getElementById("uploaderPest"),
+            request: {
+                endpoint: '/upload'
+            },
+            deleteFile: {
+                enabled: true, // defaults to false
+                endpoint: '/deleteFiles'
+            },
+            callbacks: {
+                onComplete: function (id, name, responseJSON) {
+                    alert(responseJSON.newuuid2);
+                    alert(id + "      " + name);
+                    uploaderPest.setUuid(id, responseJSON.newuuid2);
+                    // $.ajax({
+                    //     url: '/submit',
+                    //     type: 'POST',
+                    //     dataType: 'json',
+                    //     async: false,
+                    //     success: function (product) {
+                    //         if (!product.error) {
+                    //             globalPaths = product;
+                    //             console.log("results: " + globalPaths[0].Damage_photo);
+                    //         } else {
+                    //             console.log("you're gonna have a bad time");
+                    //         }
+                    //     }
+                    // })
+                }
+            }
+        });
     }
 
     function controlType(type) {
