@@ -99,6 +99,33 @@
                 width:10%;
             }
         }
+        /* for 480px or less */
+        @media screen and (max-width:480px) {
+            .btn{
+                padding: 5px 6px;
+                margin:5px;
+            }
+            imput{
+                width:35%;
+            }
+            .date {
+                width: 20%;
+                font-size: 12px;
+            }
+            #firstName {
+                width: 20%;
+                height: 20px;
+                margin-left: -10px;
+            }
+            #lastName {
+                width: 20%;
+                height: 20px;
+            }
+            .button {
+                font-size: 12px;
+                width: 15%;
+            }
+        }
         /* for 414px or less */
         @media screen and (max-width:414px) {
             .button {
@@ -144,59 +171,59 @@
                 font-size: 12px;
             }
         }
-            /* for 375px or less */
-            @media screen and (max-width:375px) {
-                #firstName{
-                    width:20%;
-                    height:20px;
-                    margin-left:-10px;
-                }
-                #lastName{
-                    width:20%;
-                    height:20px;
-                }
-                h1{
-                    font-size:25px;
-                }
+        /* for 375px or less */
+        @media screen and (max-width:375px) {
+            #firstName{
+                width:20%;
+                height:20px;
+                margin-left:-10px;
             }
-            /* for 320px or less */
-            @media screen and (max-width:320px) {
-                .button{
-                    font-size:100%;
-                    width:20%;
-                }
-                .floatingBox3{
-                    display: inline-table;
-                    width:350px;
-                }
-                select{
-                    width:35%;
-                }
-                input{
-                    width:35%;
-                }
-                .date{
-                    width:21%;
-                    font-size:10px;
-                }
-                .btn{
-                    font-size:12px;
-                    padding:5px 6px;
-                    width:80px;
-                }
-                #firstName{
-                    width:20%;
-                    height:20px;
-                    margin-left:-10px;
-                }
-                #lastName{
-                    width:20%;
-                    height:20px;
-                }
-                h1{
-                    font-size:25px;
-                }
+            #lastName{
+                width:20%;
+                height:20px;
             }
+            h1{
+                font-size:25px;
+            }
+        }
+        /* for 320px or less */
+        @media screen and (max-width:320px) {
+            .button{
+                font-size:100%;
+                width:20%;
+            }
+            .floatingBox3{
+                display: inline-table;
+                width:350px;
+            }
+            select{
+                width:35%;
+            }
+            input{
+                width:35%;
+            }
+            .date{
+                width:21%;
+                font-size:10px;
+            }
+            .btn{
+                font-size:12px;
+                padding:5px 6px;
+                width:80px;
+            }
+            #firstName{
+                width:20%;
+                height:20px;
+                margin-left:-10px;
+            }
+            #lastName{
+                width:20%;
+                height:20px;
+            }
+            h1{
+                font-size:25px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -284,8 +311,8 @@
                 <option value="Trap_serviced_date">3.Trap Serviced Date</option>
             </select>
         </h5>
-		<h5 class="floatingBox3" >Content:&nbsp;&nbsp;<input type="text" class="content"></h5><br>
-		<h5 class="floatingBox3">Category2:&nbsp;
+        <h5 class="floatingBox3" >Content:&nbsp;&nbsp;<input type="text" class="content"></h5><br>
+        <h5 class="floatingBox3">Category2:&nbsp;
             <select class="filter">
                 <option value="">Select A Field</option>
                 <option value="1Location_name">1.Location Name</option>
@@ -328,8 +355,8 @@
                 <option value="Trap_serviced_date">3.Trap Serviced Date</option>
             </select>
         </h5>
-		<h5 class="floatingBox3">Content:&nbsp;&nbsp;<input type="text" class="content"></h5><br>
-		<h5 class="floatingBox3">Category3:&nbsp;
+        <h5 class="floatingBox3">Content:&nbsp;&nbsp;<input type="text" class="content"></h5><br>
+        <h5 class="floatingBox3">Category3:&nbsp;
             <select class="filter">
                 <option value="">Select A Field</option>
                 <option value="1Location_name">1.Location Name</option>
@@ -372,17 +399,17 @@
                 <option value="Trap_serviced_date">3.Trap Serviced Date</option>
             </select>
         </h5>
-		<h5 class="floatingBox3">Content:&nbsp;&nbsp;<input type="text" class="content"></h5>
-	</div><br>
-	<div class="center">
-		<button id="submitButton" class="btn btn-primary btn-sm button" type="button" onclick="query()">Filter</button>
-		<button id="editButton" class="btn btn-primary btn-sm button" type="button">Edit</button>
-		<button id="deleteButton" class="btn btn-primary btn-sm button" type="button">Delete</button>
+        <h5 class="floatingBox3">Content:&nbsp;&nbsp;<input type="text" class="content"></h5>
+    </div><br>
+    <div class="center">
+        <button id="submitButton" class="btn btn-primary btn-sm button" type="button" onclick="query()">Filter</button>
+        <button id="editButton" class="btn btn-primary btn-sm button" type="button">Edit</button>
+        <button id="deleteButton" class="btn btn-primary btn-sm button" type="button">Delete</button>
     </div>
     <br>
     <div class="center">
         <h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
-	    <h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
+        <h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
         <h4 style="color: #9d9d9d"><strong>Scouting:</strong></h4>
         <div id="dvData">
             <table id="dataDisplay">
@@ -547,7 +574,7 @@
                 dateFormat: "Y-m-d",
                 time_24hr: true
             });
-            
+
             if (UserRole === "Admin") {
                 DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
                     "\t\t\t<li><a href=\"/userManagement\">User Management</a></li>\n" +
