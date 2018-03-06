@@ -251,7 +251,7 @@
                 </select><br><br>
 
                 <h4>1 . Cropping System: &nbsp;&nbsp;&nbsp;</h4>
-                <select class="clearGen" id='croppingSystem' name='Cropping_system' onchange='rotationInterCropSystem(this.value);' required>
+                <select class="clearGen" id='cropSystem' name='Cropping_system' onchange='rotationInterCropSystem(this.value);' required>
                     <option value=''>SELECT THE CROP SYSTEM</option>
                     <option>SEASONAL</option>
                     <option>ROTATION</option>
@@ -459,7 +459,7 @@
         $("[name='Fertilized_used'][value='<%= data.Fertilized_used %>']").prop("checked", true);
         $("#cropStage").val("<%= data.Crop_stage %>")
         $("#healthOfCrop").val("<%= data.General_health %>");
-        $("#croppingSystem").val("<%= data.Cropping_system %>");
+        $("#cropSystem").val("<%= data.Cropping_system %>");
         rotationInterCropSystem("<%= data.Cropping_system %>");
         $('#rotationIntercroppingCrop').multiSelect("select", "<%= data.Rotation_intercropping_crop %>".split("/"));
         var fieldSize = "<%= data.Field_size_ha %>".split(".");
@@ -497,15 +497,15 @@
                     success: function (results) {
                         if (!results.error) {
                             globalResults = results;
-                            console.log("results: " + globalResults[0].imagePath);
+                            console.log("results: " + globalResults[0].Damage_photo);
 
                             let list = [];
                             for (var i = 0; i < globalResults.length; i++) {
                                 var first = {
                                     id: i,
                                     size: 561276,
-                                    thumbnailUrl: globalResults[i].imagePath,
-                                    name: globalResults[i].fileName
+                                    thumbnailUrl: globalResults[i].Damage_photo,
+                                    name: globalResults[i].Damage_photo_name
                                 }
 
                                 list.push(first);
@@ -679,7 +679,7 @@
             // Prevent form submission
             alert("A");
             e.preventDefault();
-            //alert("X");
+            alert("X");
             var entryType = document.getElementById("entryType").value;
             if (entryType === "FIELD SCOUTING") {
                 document.getElementById("title").innerHTML = "Step 2/2: Detailed Form";
@@ -742,7 +742,7 @@
         }
 
         var latitudeTitle = $("#latitudeTitle");
-        var latitudeSelect = $("<select id='latitudeDirection' name='latitudeDirection' required>");
+        var latitudeSelect = $("<select id='latitudeDirection' name='Latitude_direction' required>");
         latitudeTitle.append(latitudeSelect);
         if (latitude[0] === "N" || !latitude[0]) {
             latitudeSelect.append($("<option>N</option><option>S</option>"));
@@ -752,7 +752,7 @@
         latitudeTitle.append($("</select>"));
 
         var longitudeTitle = $("#longitudeTitle");
-        var longitudeSelect = $("<select id='longitudeDirection' name='longitudeDirection' required>");
+        var longitudeSelect = $("<select id='longitudeDirection' name='Longitude_direction' required>");
         longitudeTitle.append(longitudeSelect);
         if (longitude[0] === "E" || !longitude[0]) {
             longitudeSelect.append($("<option>E</option><option>W</option>"));
@@ -761,8 +761,8 @@
         }
         longitudeTitle.append($("</select>"));
 
-        latitudeTitle.append($("<input id='latitudeDegree' name='latitudeDegree' type='number' value='" + latitude[1] + "' required>°" + " <input id='latitudeMinute' name='latitudeMinute' type='number' value='" + latitude[2] + "' required>'" + " <input id='latitudeSecond' name='latitudeSecond' type='number' value='" + Math.round(latitude[3] * 1000) / 1000 + "' required>''" + "<p></p>"));
-        longitudeTitle.append($("<input id='longitudeDegree' name='longitudeDegree' type='number' value='" + longitude[1] + "' required>°" + " <input id='longitudeMinute' name='longitudeMinute' type='number' value='" + longitude[2] + "' required>'" + " <input id='longitudeSecond' name='longitudeSecond' type='number' value='" + Math.round(longitude[3] * 1000) / 1000 + "' required>''" + "<p></p>"));
+        latitudeTitle.append($("<input id='latitudeDegree' name='Latitude_degree' type='number' value='" + latitude[1] + "' required>°" + " <input id='latitudeMinute' name='Latitude_minute' type='number' value='" + latitude[2] + "' required>'" + " <input id='latitudeSecond' name='Latitude_second' type='number' value='" + Math.round(latitude[3] * 1000) / 1000 + "' required>''" + "<p></p>"));
+        longitudeTitle.append($("<input id='longitudeDegree' name='Longitude_degree' type='number' value='" + longitude[1] + "' required>°" + " <input id='longitudeMinute' name='Longitude_minute' type='number' value='" + longitude[2] + "' required>'" + " <input id='longitudeSecond' name='Longitude_second' type='number' value='" + Math.round(longitude[3] * 1000) / 1000 + "' required>''" + "<p></p>"));
 
         $("#locationDiv").append($("<input type='button' onclick='refresh()' value='Click here to refresh the map'>"));
     }
@@ -881,7 +881,7 @@
 
     function present(status) {
         var damageStageDiv = $("#damageStage");
-        var cropInfestedDiv = $("#infested");
+        var cropInfestedDiv = $("#cropInfested");
         var controlTypeDiv = $("#controlType");
         var photoDiv = $("#photo");
         damageStageDiv.empty();
@@ -947,15 +947,15 @@
                         success: function (results) {
                             if (!results.error) {
                                 globalResults = results;
-                                console.log("results: " + globalResults[0].imagePath);
+                                console.log("results: " + globalResults[0].Pest_photo);
 
                                 let list = [];
                                 for (var i = 0; i < globalResults.length; i++) {
                                     var first = {
                                         id: i,
                                         size: 561276,
-                                        thumbnailUrl: globalResults[i].imagePath,
-                                        name: globalResults[i].fileName
+                                        thumbnailUrl: globalResults[i].Pest_photo,
+                                        name: globalResults[i].Pest_photo_name
                                     }
 
                                     list.push(first);
@@ -973,38 +973,38 @@
                     return false;
                 }
             });
-        }
-        var uploaderPest = new qq.FineUploader({
-            element: document.getElementById("uploaderPest"),
-            request: {
-                endpoint: '/upload'
-            },
-            deleteFile: {
-                enabled: true, // defaults to false
-                endpoint: '/deleteFiles'
-            },
-            callbacks: {
-                onComplete: function (id, name, responseJSON) {
-                    alert(responseJSON.newuuid2);
-                    alert(id + "      " + name);
-                    uploaderPest.setUuid(id, responseJSON.newuuid2);
-                    // $.ajax({
-                    //     url: '/submit',
-                    //     type: 'POST',
-                    //     dataType: 'json',
-                    //     async: false,
-                    //     success: function (product) {
-                    //         if (!product.error) {
-                    //             globalPaths = product;
-                    //             console.log("results: " + globalPaths[0].Damage_photo);
-                    //         } else {
-                    //             console.log("you're gonna have a bad time");
-                    //         }
-                    //     }
-                    // })
+            var uploaderPest = new qq.FineUploader({
+                element: document.getElementById("uploaderPest"),
+                request: {
+                    endpoint: '/upload'
+                },
+                deleteFile: {
+                    enabled: true, // defaults to false
+                    endpoint: '/deleteFiles'
+                },
+                callbacks: {
+                    onComplete: function (id, name, responseJSON) {
+                        alert(responseJSON.newuuid2);
+                        alert(id + "      " + name);
+                        uploaderPest.setUuid(id, responseJSON.newuuid2);
+                        // $.ajax({
+                        //     url: '/submit',
+                        //     type: 'POST',
+                        //     dataType: 'json',
+                        //     async: false,
+                        //     success: function (product) {
+                        //         if (!product.error) {
+                        //             globalPaths = product;
+                        //             console.log("results: " + globalPaths[0].Damage_photo);
+                        //         } else {
+                        //             console.log("you're gonna have a bad time");
+                        //         }
+                        //     }
+                        // })
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     function controlType(type) {
@@ -1149,7 +1149,7 @@
 
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function (event) {
-            if (event.target == document.getElementById("modal")) {
+            if (event.target === document.getElementById("modal")) {
                 document.getElementById("modal").style.display = "none";
             }
         };
@@ -1174,7 +1174,7 @@
         document.getElementById("modal").style.display = "block";
     }
 
-    function clearDetailed() {
+    function clearDetSailed() {
         document.getElementById("modal-footer").innerHTML = "";
 
         document.getElementById("modal-header").style.backgroundColor = "#f44242";
@@ -1209,7 +1209,7 @@
 
         clear.onclick = function () {
             document.getElementById("modal").style.display = "none";
-            $(".clearDet").val("");
+            $(".clearDetS").val("");
             $('input[type=radio]:checked').prop("checked", false);
             $(".FAW").css("display", "none");
         };

@@ -528,7 +528,7 @@
         $('#general').submit(function(e) {
             // Prevent form submission
             e.preventDefault();
-            //alert("X");
+            alert("X");
             var entryType = document.getElementById("entryType").value;
             if (entryType === "FIELD SCOUTING") {
                 document.getElementById("title").innerHTML = "Step 2/2: Detailed Form";
@@ -1024,8 +1024,8 @@
     }
 
     function goBack() {
-        if (confirm("Warning ! Are You Sure to Leave this Page ?") === true) {
-            window.location.replace('/userhome')
+        if (confirm("Are you sure you to leave this page? All the data will be cleared accordingly!!!")) {
+            window.location.replace('/userHome');
         }
     }
 

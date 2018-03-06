@@ -612,7 +612,7 @@ module.exports = function (app, passport) {
     });
 
     app.get('/editData', isLoggedIn, function(req, res) {
-        res.render('dataEdit.ejs', {
+        res.render('dataEdit2.ejs', {
             data: editData, // get the user out of session and pass to template
             message: req.flash('Data Entry Message')
         });

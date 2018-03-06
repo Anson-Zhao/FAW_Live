@@ -656,7 +656,7 @@ module.exports = function (app, passport) {
     app.delete("/deleteFiles/:uuid", onDeleteFile);
 
     app.get('/editData', isLoggedIn, function(req, res) {
-        console.log(editData.transactionID);
+        console.log("you better work: " + editData.transactionID);
         res.render('dataEdit.ejs', {
             user: req.user,
             data: editData, // get the user out of session and pass to template
@@ -896,7 +896,7 @@ module.exports = function (app, passport) {
     // Submit general form
     app.post('/generalForm', isLoggedIn, function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*");
-        //console.log(req.body);
+        console.log("submitting general: " + req.body);
 
         var result = Object.keys(req.body).map(function (key) {
             return [String(key), req.body[key]];
