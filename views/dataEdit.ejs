@@ -352,7 +352,7 @@
                     <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
                     <input type="button" id="edit" value="Edit"><br>
                     <div id="uploader"></div>
-                    <input type='button' id='edit2' value='Edit'>
+
                     <div id="photo"></div>
 
                     <div class="row">
@@ -677,9 +677,9 @@
 
         $('#general').submit(function(e) {
             // Prevent form submission
-            alert("A");
+            // alert("A");
             e.preventDefault();
-            alert("X");
+            // alert("X");
             var entryType = document.getElementById("entryType").value;
             if (entryType === "FIELD SCOUTING") {
                 document.getElementById("title").innerHTML = "Step 2/2: Detailed Form";
@@ -898,7 +898,7 @@
             //     mainCropSelect.append(mainCropOption);
             // }
             var title = [$("<h4>2 . Crop Damage: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Pest Stage: &nbsp;&nbsp;&nbsp;</h4><a href='javascript:void(0);' id='pestStage-select_all' onclick='selectAndUnselect()'>select all</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' id='pestStage-deselect_all' onclick='selectAndUnselect()'>deselect all</a>"), $("<br<br><h4>2 . Current Damage: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Crop Infested: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Control Undertaken: &nbsp;&nbsp;&nbsp;</h4><a href='javascript:void(0);' id='controlUndertaken-select_all' onclick='selectAndUnselect()'>select all</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' id='controlUndertaken-deselect_all' onclick='selectAndUnselect()'>deselect all</a>"), $("<h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>")];
-            var select = [$("<select class='clearGen' id='cropDamage' name='Crop_damage' required></select><br><br>"), $("<select multiple='multiple' class='clearGen' id='pestStage' name='Pest_stage' required></select>"), $("<select class='clearGen' id='currentDamage' name='Current_damage' required></select><br><br>"), $("<input class='clearGen inputNumber' id='cropInfested' name='Crop_infested' type='text' placeholder='Enter The Percentage of Crop Infested Here' required><br><br>"), $("<select multiple='multiple' class='clearGen' id='controlUndertaken' name='Control_undertaken' onchange='controlType(this)'></select>"), $("<div class='clearGen' id='uploaderPest'></div><br><br>")];
+            var select = [$("<select class='clearGen' id='cropDamage' name='Crop_damage' required></select><br><br>"), $("<select multiple='multiple' class='clearGen' id='pestStage' name='Pest_stage' required></select>"), $("<select class='clearGen' id='currentDamage' name='Current_damage' required></select><br><br>"), $("<input class='clearGen inputNumber' id='cropInfested' name='Crop_infested' type='text' placeholder='Enter The Percentage of Crop Infested Here' required><br><br>"), $("<select multiple='multiple' class='clearGen' id='controlUndertaken' name='Control_undertaken' onchange='controlType(this)'></select>"), $("<div class='clearGen' id='uploaderPest'></div><br><br>"), $("<input type='button' id='edit2' value='Edit'>")];
             //alert(title.length);
             for (var i = 0; i < title.length; i++) {
                 if (i < 3) {
