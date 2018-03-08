@@ -487,41 +487,36 @@
         var photoOfPest = "<%= data.Photo_of_Pest %>".split(";");
         var photoOfDamage = "<%= data.Photo_of_Damage %>".split(";");
         $("#edit").on("click", function () {
-            if (confirm("Is this button working?")) {
+            $.ajax({
+                url: '/edit',
+                type: 'GET',
+                dataType: 'json',
+                async: false,
+                success: function (results) {
+                    if (!results.error) {
+                        globalResults = results;
+                        console.log("results: " + globalResults[0].Damage_photo);
 
-                $.ajax({
-                    url: '/edit',
-                    type: 'GET',
-                    dataType: 'json',
-                    async: false,
-                    success: function (results) {
-                        if (!results.error) {
-                            globalResults = results;
-                            console.log("results: " + globalResults[0].Damage_photo);
-
-                            let list = [];
-                            for (var i = 0; i < globalResults.length; i++) {
-                                var first = {
-                                    id: i,
-                                    size: 561276,
-                                    thumbnailUrl: globalResults[i].Damage_photo,
-                                    name: globalResults[i].Damage_photo_name
-                                }
-
-                                list.push(first);
+                        let list = [];
+                        for (var i = 0; i < globalResults.length; i++) {
+                            var first = {
+                                id: i,
+                                size: 561276,
+                                thumbnailUrl: globalResults[i].Damage_photo,
+                                name: globalResults[i].Damage_photo_name
                             }
-                            console.log("afwefwe: " + qq.supportedFeatures.imagePreviews === true);
-                            console.log("json object array: " + list[0].thumbnailUrl);
 
-                            uploader.addInitialFiles(list);
-                        } else {
-                            console.log("didn't work :(");
+                            list.push(first);
                         }
+                        console.log("afwefwe: " + qq.supportedFeatures.imagePreviews === true);
+                        console.log("json object array: " + list[0].thumbnailUrl);
+
+                        uploader.addInitialFiles(list);
+                    } else {
+                        console.log("didn't work :(");
                     }
-                })
-            } else {
-                return false;
-            }
+                }
+            })
         });
 
 
