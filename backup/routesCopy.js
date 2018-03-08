@@ -694,7 +694,7 @@ function isLoggedIn(req, res, next) {
 // // Show form
 // app.get('/form', isLoggedIn, function (req, res) {
 //     // console.log("A01");
-//     res.render('form.ejs', {
+//     res.render('form_backup.ejs', {
 //         user: req.user, // get the user out of session and pass to template
 //         message: req.flash('Data Entry Message'),
 //         firstname: req.user.firstName,
@@ -706,7 +706,7 @@ function isLoggedIn(req, res, next) {
 // // Show general form
 // app.get('/generalForm', isLoggedIn, function (req, res) {
 //     // console.log("A01");
-//     res.render('form.ejs', {
+//     res.render('form_backup.ejs', {
 //         user: req.user, // get the user out of session and pass to template
 //         message: req.flash('Data Entry Message'),
 //         firstname: req.user.firstName,
