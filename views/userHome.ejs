@@ -5,7 +5,7 @@
 	<title>FAW/Locust Project - User Home</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -98,6 +98,33 @@
             }
             .btn-sm{
                 width:10%;
+            }
+        }
+        /* for 480px or less */
+        @media screen and (max-width:480px) {
+            .btn{
+                padding: 5px 6px;
+                margin:5px;
+            }
+            imput{
+                width:35%;
+            }
+            .date {
+                width: 20%;
+                font-size: 12px;
+            }
+            #firstName {
+                width: 20%;
+                height: 20px;
+                margin-left: -10px;
+            }
+            #lastName {
+                width: 20%;
+                height: 20px;
+            }
+            .button {
+                font-size: 12px;
+                width: 15%;
             }
         }
         /* for 414px or less */
@@ -405,12 +432,12 @@
                 <option value="Trap_serviced_date">3.Trap Serviced Date</option>
             </select>
         </h5>
-		<h5 class="floatingBox3">Content:&nbsp;&nbsp;<input type="text" class="content"></h5>
-	</div><br>
-	<div class="center">
-		<button id="submitButton" class="btn btn-primary btn-sm button" type="button" onclick="query()">Filter</button>
-		<button id="editButton" class="btn btn-primary btn-sm button" type="button">Edit</button>
-		<button id="deleteButton" class="btn btn-primary btn-sm button" type="button">Delete</button>
+        <h5 class="floatingBox3">Content:&nbsp;&nbsp;<input type="text" class="content"></h5>
+    </div><br>
+    <div class="center">
+        <button id="submitButton" class="btn btn-primary btn-sm button" type="button" onclick="query()">Filter</button>
+        <button id="editButton" class="btn btn-primary btn-sm button" type="button">Edit</button>
+        <button id="deleteButton" class="btn btn-primary btn-sm button" type="button">Delete</button>
     </div>
     <br>
     <div class="center">
@@ -580,7 +607,7 @@
                 dateFormat: "Y-m-d",
                 time_24hr: true
             });
-            
+
             if (UserRole === "Admin") {
                 DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
                     "\t\t\t<li><a href=\"/userManagement\">User Management</a></li>\n" +
