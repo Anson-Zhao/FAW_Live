@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="multi-select.css" media="screen" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="jquery.multi-select.js"></script>
+
+</head>
+<body>
+<h4>1 . Main Crop: &nbsp;&nbsp;&nbsp;</h4>
+<a href='#' id='select-all'>select all</a>
+<a href='#' id='deselect-all'>deselect all</a>
+<select multiple="multiple" id="my-select">
+    <option>ALFALFA</option>
+    <option>BARLEY</option>
+    <option>COTTON</option>
+    <option>FLOWERS</option>
+    <option>MAIZE</option>
+    <option>MILLET</option>
+    <option>PEANUT</option>
+    <option>RICE</option>
+    <option>SORGHUM</option>
+    <option>SOYBEAN</option>
+    <option>SUGARBEET</option>
+    <option>SUGARCANE</option>
+    <option>TEFF</option>
+    <option>TOBACCO</option>
+    <option>WEEDS</option>
+    <option>WHEAT</option>
+    <option>OTHER CEREALS</option>
+    <option>OTHER FRUITS</option>
+    <option>OTHER GRASSES</option>
+    <option>OTHER VEGETABLES</option>
+</select>
+<script>
+    $('#my-select').multiSelect();
+    $('#select-all').click(function(){
+        $('#my-select').multiSelect('select_all');
+        return false;
+    });
+    $('#deselect-all').click(function(){
+        $('#my-select').multiSelect('deselect_all');
+        return false;
+    });
+</script>
+</body>
+</html>

@@ -18,9 +18,9 @@ module.exports = {
     },
 
     'Session_db': 'session_DB',
-    'Login_db': 'FFAW',
+    'Login_db': 'FAWv4',
     'Login_table': 'Users',
-    'Upload_db': 'FFAW',
+    'Upload_db': 'FAWv4',
 
     'Server_Port': 9088,
 

@@ -1,10 +1,6 @@
 // set up ======================================================================
 // get all the tools we need
 var express  = require('express'),
-    fs = require("fs"),
-    rimraf = require("rimraf"),
-    mkdirp = require("mkdirp"),
-    multiparty = require('multiparty'),
     app = express(),
     path    = require('path');
 var session  = require('express-session');

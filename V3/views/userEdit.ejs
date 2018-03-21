@@ -1,0 +1,206 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html>
+<head>
+	<title>FAW/Locust Project</title>
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+	<script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+	<!--<script src="//unpkg.com/flatpickr"></script>-->
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="//cdn.jsdelivr.net/npm/flatpickr"></script>
+
+	<style>
+		.banner{
+			position:relative;
+			width: 100%;
+		}
+		table, th{
+			border: 1px solid black;
+			text-align:center;
+		}
+		body { padding-top:80px; word-wrap:break-word; }
+		.btn{
+			font-size:18px;
+			text-align:center;
+			width:80px;
+			padding:5px 5px;
+		}
+		/* for1024px or less */
+		@media screen and (max-width:1024px) {
+			.btn {
+				font-size: 20px;
+				text-align: center;
+				width: 90px;
+				padding: 5px 5px;
+			}
+		}
+			/* for768px or less */
+			@media screen and (max-width:768px) {
+				.btn {
+					font-size: 13px;
+					text-align: center;
+					width: 70px;
+					padding: 5px 5px;
+				}
+			}
+				/* for414px or less */
+				@media screen and (max-width:414px) {
+					.btn {
+						font-size: 13px;
+						text-align: center;
+						width: 70px;
+						padding: 5px 5px;
+					}
+				}
+					/* for375px or less */
+					@media screen and (max-width:375px) {
+						h1 {
+							font-size: 30px;
+						}
+
+						.btn {
+							font-size: 13px;
+							text-align: center;
+							width: 70px;
+							padding: 5px 5px;
+						}
+					}
+						/* for320px or less */
+						@media screen and (max-width:320px) {
+							h1 {
+								font-size: 25px;
+							}
+
+							.btn {
+								font-size: 13px;
+								text-align: center;
+								width: 70px;
+								padding: 5px 5px;
+							}
+						}
+	</style>
+
+</head>
+<body>
+<div class="container">
+	<div class="text-center">
+		<a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px" /></a>
+		<h1><span class="fa fa-anchor"></span> FAW/Locust - Edit User(s) </h1>
+		<h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
+	</div>
+
+	<div class="col-sm-6 col-sm-offset-3">
+
+		<!-- show any messages that come back with authentication -->
+        <% if (message.length > 0) { %>
+		<div class="alert alert-danger"><%= message %></div>
+        <% } %>
+
+		<form onsubmit="return checkForm()" id="editForm" action="/editUser" method="post">
+			<div class="form-group">
+				<label for="username">Username:</label>
+				<input type="text" id="username" class="form-control" name="Username" value="<%= userName %>" readonly>
+			</div>
+			<div class="form-group">
+				<label for="firstName">First Name:</label>
+				<input type="text" id="firstName" class="form-control" name="First_Name" value="<%= firstName %>">
+			</div>
+			<div class="form-group">
+				<label for="lastName">Last Name:</label>
+				<input type="text" id="lastName" class="form-control" name="Last_Name" value="<%= lastName %>">
+			</div><br>
+			<div class="form-group">
+				<h4 class="floating-Box">Reset Password</h4>&nbsp;&nbsp;&nbsp;<input type="checkbox" class="checkpass">
+				<div>
+					<label for="newpassword">New Password:</label>
+					<input type="password" id="newpassword" class="form-control" name="newPassword" maxlength="2000px">
+				</div>
+				<div>
+					<label for="Confirmpassword">Confirm New Password:</label>
+					<input type="password" id="Confirmpassword" class="form-control" name="confirmPassword" maxlength="2000px">
+				</div>
+			</div>
+			<div class="form-group">
+				<label>User Role</label><br>
+				<select id="UsErRoLe" name="User_Role" class="form-control">
+					<option class="admin" value="Admin">Admin</option>
+					<option class="regular" value="Regular">Regular</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label>Status</label>
+				<select id="StAtUs" name="Status" class="form-control">
+					<option class="active"  value="Active">Active</option>
+					<option class="suspended" value="Suspended">Suspended</option>
+					<option class="never_logged_in" value="Never Logged In">Never Logged In</option>
+				</select>
+			</div><br>
+
+			<button type="submit" class="btn btn-warning btn-lg"> Update </button>
+			<a href="/userManagement" class="btn floating-Box">Cancel</a>
+
+		</form>
+	</div>
+</div>
+<script>
+    var UserRole = "<%= userrole %>";
+    var UserStatus = "<%= status %>"
+
+    console.log("aefwefaw: "+ "<%= userrole %>");
+    $(document).ready(function(){
+
+        $("#UsErRoLe").val(UserRole);
+
+        $("#StAtUs").val(UserStatus);
+
+    });
+    function checkForm() {
+        var newP=document.getElementById("newpassword").value;
+        var confirmP =document.getElementById("Confirmpassword").value;
+        if ($(".checkpass").prop('checked')){
+
+            if(newP!=="" && confirmP!=="") {
+
+                if(newP === confirmP) {
+                    return true;
+                } else {
+                    alert("New password are not matched!");
+                    return false;
+                }
+            } else {
+                alert("All password fields are required");
+                return false;
+            }
+        }
+    }
+    $('#editForm').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: $(this).attr( 'action' ),
+            data: $(this).serialize(),
+            success: function(res) {
+                console.log(res);
+                if (!res.error) {
+                    window.location.replace(res.message)
+                } else {
+                    window.location.replace('/userManagement')                }
+            }
+        });
+
+        return false;
+    });
+
+
+</script>
+</body>
+</html>
