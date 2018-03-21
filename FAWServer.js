@@ -1,15 +1,15 @@
 // set up ======================================================================
 // get all the tools we need
-var express  = require('express'),
-    app = express(),
-    path    = require('path');
+var express  = require('express');
 var session  = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var config = require('./config/mainconf');
+var app      = express();
 var port     = process.env.PORT || config.Server_Port;
+var path    = require('path');
 var passport = require('passport');
 var flash    = require('connect-flash');
 

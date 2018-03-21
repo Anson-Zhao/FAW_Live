@@ -100,61 +100,76 @@ module.exports = function (app, passport) {
 
     app.post('/email', function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
-        async.waterfall([
-            function(done) {
-                crypto.randomBytes(20, function(err, buf) {
-                    token = buf.toString('hex');
-                    tokenExpTime();
-                    done(err, token, tokenExpire);
-                });
-            },
-            function (token, tokenExpire, done) {
-                // connection.query( "INSERT INTO Users ( resetPasswordExpires, resetPasswordToken ) VALUES (?,?) WHERE username = '" + req.body,username + "'; ")
-                myStat = "UPDATE Users SET resetPasswordToken = ?, resetPasswordExpires = ? WHERE username = '" + req.body.username + "' ";
-                myVal = [token, tokenExpire];
-                connection.query(myStat, myVal, function (err, rows) {
+        var statement = "SELECT * FROM Users WHERE username = '" + req.body.username + "';";
+        //console.log(statement);
 
-                    //newUser.id = rows.insertId;
+        connection.query(statement, function (err, results, fields) {
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "An unexpected error occurred !"});
+            } else if (results.length === 0) {
+                res.json({"error": true, "message": "Please verify your email address !"});
+            } else {
+                async.waterfall([
+                    function(done) {
+                        crypto.randomBytes(20, function(err, buf) {
+                            token = buf.toString('hex');
+                            tokenExpTime();
+                            done(err, token, tokenExpire);
+                        });
+                    },
+                    function (token, tokenExpire, done) {
+                        // connection.query( "INSERT INTO Users ( resetPasswordExpires, resetPasswordToken ) VALUES (?,?) WHERE username = '" + req.body,username + "'; ")
+                        myStat = "UPDATE Users SET resetPasswordToken = ?, resetPasswordExpires = ? WHERE username = '" + req.body.username + "' ";
+                        myVal = [token, tokenExpire];
+                        connection.query(myStat, myVal, function (err, rows) {
 
-                    if (err) {
-                        console.log(err);
-                        res.send("Token Insert Fail!");
-                        res.end();
-                    } else {
-                        done(err, token);
+                            //newUser.id = rows.insertId;
+
+                            if (err) {
+                                console.log(err);
+                                // res.send("Token Insert Fail!");
+                                // res.end();
+                                res.json({"error": true, "message": "Token Insert Fail !"});
+                            } else {
+                                done(err, token);
+                            }
+                        });
+                    },
+                    function(token, done, err) {
+                        // Message object
+                        var message = {
+                            from: 'FTAA <aaaa.zhao@g.feitianacademy.org>', // sender info
+                            to: req.body.username, // Comma separated list of recipients
+                            subject: 'Password Reset', // Subject of the message
+
+                            // plaintext body
+                            text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                            'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                            'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                            'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                        };
+
+                        smtpTrans.sendMail(message, function(error){
+                            if(error){
+                                console.log(error.message);
+                                // alert('Something went wrong! Please double check if your email is valid.');
+                                return;
+                            } else {
+                                // res.send('Message sent successfully! Please check your email inbox.');
+                                console.log('Message sent successfully!');
+                                // res.redirect('/login');
+                                res.json({"error": false, "message": "Message sent successfully !"});
+                                // alert('An e-mail has been sent to ' + req.body.username + ' with further instructions.');
+                            }
+                        });
                     }
-                });
-            },
-            function(token, done, err) {
-                // Message object
-                var message = {
-                    from: 'FTAA <aaaa.zhao@g.feitianacademy.org>', // sender info
-                    to: req.body.username, // Comma separated list of recipients
-                    subject: 'Password Reset', // Subject of the message
-
-                    // plaintext body
-                    text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-                    'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                    'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-                    'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-                };
-
-                smtpTrans.sendMail(message, function(error){
-                    if(error){
-                        console.log(error.message);
-                        // alert('Something went wrong! Please double check if your email is valid.');
-                        return;
-                    } else {
-                        res.send('Message sent successfully! Please check your email inbox.');
-                        console.log('Message sent successfully!');
-                        res.redirect('/login');
-                        // alert('An e-mail has been sent to ' + req.body.username + ' with further instructions.');
-                    }
+                ], function(err) {
+                        if (err) return next(err);
+                        // res.redirect('/forgot');
+                        res.json({"error": true, "message": "An unexpected error occurred !"});
                 });
             }
-        ], function(err) {
-                if (err) return next(err);
-                res.redirect('/forgot');
         });
     });
 
@@ -656,7 +671,7 @@ module.exports = function (app, passport) {
     app.delete("/deleteFiles/:uuid", onDeleteFile);
 
     app.get('/editData', isLoggedIn, function(req, res) {
-        console.log(editData.transactionID);
+        // console.log(editData.transactionID);
         res.render('dataEdit.ejs', {
             user: req.user,
             data: editData, // get the user out of session and pass to template
