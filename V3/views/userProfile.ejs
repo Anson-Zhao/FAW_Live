@@ -1,0 +1,257 @@
+<!-- views/profileBK.ejs -->
+<!doctype html>
+<html>
+<head>
+	<title>FAW/Locust Project - User Profile</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/Profile.css" type="text/css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
+    <link rel="stylesheet" href="../css/Title.css" type="text/css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!--<script src="//unpkg.com/flatpickr"></script>-->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <style>
+        .banner{
+            position:relative;
+            left:60px;
+            top:-35px;
+            width:80%;
+        }
+        body { padding-top:80px; word-wrap:break-word; }
+
+        .container1{
+            margin-left:100px;
+        }
+
+        .input {
+            width: 8%;
+        }
+        .change1{
+            width:30%;
+        }
+        @media only screen and (max-width: 320px){
+            .input{
+                font-size: 10px;
+                width: 22%;
+            }
+
+            .container1 {
+                margin-left: 10px;
+            }
+            #currentpassword,#newpassword,#Confirmpassword{
+                width:35%;
+            }
+            .change1{
+                font-size: 10px;
+                width:50%;
+            }
+            h5{
+                margin-left:1px;
+            }
+            #userrole{
+                margin-top:-20px;
+            }
+        }
+
+        @media screen and (max-width:375px) {
+            .container1 {
+                margin-left: 10px;
+            }
+            .input{
+                font-size: 14px;
+                width: 22%;
+            }
+            #userrole{
+                margin-top:-20px;
+            }
+            .change1{
+                font-size: 13px;
+                width:50%;
+            }
+            #currentpassword,#newpassword,#Confirmpassword{
+                width:40%;
+            }
+
+        }
+        @media screen and (max-width:414px) {
+            .container1 {
+                margin-left: 10px;
+            }
+            .input{
+                font-size: 15px;
+                width: 22%;
+            }
+            #userrole{
+                margin-top:-20px;
+            }
+            .change1{
+                font-size: 14px;
+                width:60%;
+            }
+            #currentpassword,#newpassword,#Confirmpassword{
+                width:40%;
+            }
+
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+        <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
+        <ul id="userMenu" class="dropdown-menu dropdown-menu-right">
+        </ul>
+
+    <div class="container1">
+        <br><br>
+        <form id="submit" onsubmit="return checkForm()" action="/userProfile" method="post">
+            <h4 class="floating-Box"><strong>User Name:&nbsp;</strong></h4>
+            <h5 class="floating-Box">First Name:&nbsp;
+                <input type="text" id="usernameF" name="usernameF"  value="<%= user.firstName %>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+            <h5 class="floating-Box">Last Name:&nbsp;
+            <input type="text" id="usernameL" name="usernameL" value="<%= user.lastName %>">
+            </h5>
+            <br><br>
+        <div>
+            <h4 id="userrole" class="floating-Box"><strong>User Role:&nbsp;&nbsp;</strong></h4><input class="input" type="text" style="background:WhiteSmoke;" value="<%= user.userrole%>" readonly>
+        </div><br>
+        <div>
+            <h4 class="floating-Box"><strong>Date created:&nbsp;&nbsp;</strong></h4><input class="change1" type="text" style="background:WhiteSmoke;" value="<%= user.dateCreated %>" readonly>
+        </div><br>
+        <div>
+            <h4 class="floating-Box"><strong>Last Modification:&nbsp;&nbsp;</strong></h4><input class="change1" type="text" style="background:WhiteSmoke;" value="<%= user.dateModified %>" readonly>
+        </div><br>
+        <div>
+            <h4 class="floating-Box"><strong>LoginName/Email:&nbsp;&nbsp;</strong></h4><input class="input" type="text" style="background:WhiteSmoke;" value="<%= user.username%>" readonly>
+        </div><br>
+        <div>
+            <h4 class="floating-Box"><strong>Last Modificated by:&nbsp;&nbsp;</strong></h4><input class="input" type="text" style="background:WhiteSmoke;" value="<%= user.username%>" readonly>
+        </div>
+
+            <br>
+           <h4><strong>Password Change</strong>:   </h4>
+
+        <div >
+           <h5>Current Password:
+            <input type="password" id="currentpassword" name="currentpassword" maxlength="2000px" style="margin-left:55px;">
+           </h5>
+        </div>
+        <div>
+            <h5>New Password:
+            <input type="password" id="newpassword" name="newpassword" maxlength="2000px" style="margin-left:74px;">
+            </h5>
+        </div>
+        <div>
+            <h5>Confirm New Password:
+            <input type="password" id="Confirmpassword" name="Confirmpassword" maxlength="2000px" style="margin-left:19px;">
+            </h5>
+        </div>
+
+        <button id="SS"  type="submit" class="btn btn-warning btn-sm"> Submit </button>
+        <a href="/userhome" class="btn btn-warning btn-sm">Cancel</a>
+        </form>
+    </div>
+</div>
+
+<script>
+
+    var UserRole = "<%= user.userrole %>";
+    var DropMenu;
+
+    $(document).ready(function(){
+        if (UserRole === "Admin") {
+            DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
+                "\t\t\t<li><a href=\"/userManagement\">User Management</a></li>\n" +
+                "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
+            $("#userMenu").empty();
+            $("#userMenu").append(DropMenu)
+        } else if ( UserRole === "Regular") {
+            DropMenu = "<li><a href=\"/userprofile\">Profile</a></li>\n" +
+                "\t\t\t<li><a href=\"/signout\">Sign Out</a></li>";
+            $("#userMenu").empty();
+            $("#userMenu").append(DropMenu)
+        }
+    });
+
+    function checkForm() {
+        var oldP=document.getElementById("currentpassword").value;
+        var newP=document.getElementById("newpassword").value;
+        var confirmP =document.getElementById("Confirmpassword").value;
+
+        if (newP != "") {
+            if(oldP != "" && confirmP != "") {
+                if(oldP != newP) {
+                    if(newP == confirmP) {
+                        alert ("V");
+                        return true;
+                    } else {
+                        alert("New password are not matched!");
+                        return false;
+                    }
+                } else {
+                    alert("Please try your new password different from old one!");
+                    return false;
+                }
+            } else {
+                alert("All password fields are required");
+                return false;
+            }
+        } else {return true}
+    }
+
+    function submit(e) {
+        e.preventDefault();
+        $.ajax({
+            type: "post",
+            url: "/detailedForm",
+            dataType: 'json',
+            data: $("#detailed").serialize(),
+            success: function (result) {
+                if (!result.error) {
+                    document.getElementById("modal-footer").style.display = "none";
+
+                    document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
+                    document.getElementById("close").innerHTML = "<a href='/userhome'>&times</a>";
+
+                    document.getElementById("header").innerHTML = "Congratulations, Your Data Entry is Successfully Complete !";
+                    document.getElementById("body").innerHTML = "<br>Click X to return to the Home Page.<br>";
+
+                    document.getElementById("modal").style.display = "block";
+                } else {
+                    alert(result.message);
+                }
+            }
+        })
+    }
+
+    $('#submit').submit(function(e) {
+        // Prevent form submission
+        e.preventDefault();
+
+        $.ajax({
+            type: "post",
+            url: "/userProfile",
+            dataType: 'json',
+            data: $(this).serialize(),
+            success: function (result) {
+                if (!result.error) {
+                    alert("SUCCESS");
+                    window.location.replace('/userHome')
+                } else {
+                    alert(result.message);
+                }
+            }
+        })
+    });
+</script>
+
+</body>
+</html>

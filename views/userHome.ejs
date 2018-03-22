@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>FAW/Locust Project - User Home</title>
+	<title>FAW/Locust Project - User Home</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
     <link rel="stylesheet" href="../css/Title.css" type="text/css">
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBX94wEDdQ52lCDhKAhcfR-flIw1NyLTMA"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
@@ -171,77 +172,109 @@
                 font-size: 12px;
             }
         }
-        /* for 375px or less */
-        @media screen and (max-width:375px) {
-            #firstName{
-                width:20%;
-                height:20px;
-                margin-left:-10px;
+            /* for 375px or less */
+            @media screen and (max-width:375px) {
+                #firstName{
+                    width:20%;
+                    height:20px;
+                    margin-left:-10px;
+                }
+                #lastName{
+                    width:20%;
+                    height:20px;
+                }
+                h1{
+                    font-size:25px;
+                }
             }
-            #lastName{
-                width:20%;
-                height:20px;
+            /* for 320px or less */
+            @media screen and (max-width:320px) {
+                .button{
+                    font-size:100%;
+                    width:20%;
+                }
+                .floatingBox3{
+                    display: inline-table;
+                    width:350px;
+                }
+                select{
+                    width:35%;
+                }
+                input{
+                    width:35%;
+                }
+                .date{
+                    width:21%;
+                    font-size:10px;
+                }
+                .btn{
+                    font-size:12px;
+                    padding:5px 6px;
+                    width:80px;
+                }
+                #firstName{
+                    width:20%;
+                    height:20px;
+                    margin-left:-10px;
+                }
+                #lastName{
+                    width:20%;
+                    height:20px;
+                }
+                h1{
+                    font-size:25px;
+                }
             }
-            h1{
-                font-size:25px;
-            }
+
+		.floatingBox3{
+			display: inline-table;
+			width:450px;
+		}
+
+        .x {
+            border: 1px solid #ddd; /* Gray border */
+            border-radius: 4px;  /* Rounded border */
+            padding: 5px; /* Some padding */
+            width: 125px; /* Set a small width */
+            height: auto;
         }
-        /* for 320px or less */
-        @media screen and (max-width:320px) {
-            .button{
-                font-size:100%;
-                width:20%;
-            }
-            .floatingBox3{
-                display: inline-table;
-                width:350px;
-            }
-            select{
-                width:35%;
-            }
-            input{
-                width:35%;
-            }
-            .date{
-                width:21%;
-                font-size:10px;
-            }
-            .btn{
-                font-size:12px;
-                padding:5px 6px;
-                width:80px;
-            }
-            #firstName{
-                width:20%;
-                height:20px;
-                margin-left:-10px;
-            }
-            #lastName{
-                width:20%;
-                height:20px;
-            }
-            h1{
-                font-size:25px;
-            }
+
+        .y {
+            border: 1px solid #ddd; /* Gray border */
+            border-radius: 4px;  /* Rounded border */
+            padding: 5px; /* Some padding */
+            height: 125px; /* Set a small width */
+            width: auto;
         }
-    </style>
+
+        .z {
+            border: 1px solid #ddd; /* Gray border */
+            border-radius: 4px;  /* Rounded border */
+            padding: 5px; /* Some padding */
+            height: 125px; /* Set a small width */
+            width: 125px;
+        }
+
+        /* Add a hover effect (blue shadow) */
+        .x:hover, .y:hover, .z:hover {
+            box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+        }
+	</style>
 </head>
 <body>
-<div class="container">
-    <a href="//aworldbridge.com">
-        <img class="banner" src="/pic/NewWBBanner.jpg" />
-    </a>
-    <br>
-    <br>
-    <div class="page-header text-center header">
-        <h1><span class="fa fa-anchor"></span> FAW Project -  User Home </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
-        <a href="/newEntry" class="btn btn-default btn-lg">New Entry</a>&nbsp;&nbsp;
-        <a href="/dataHistory" class="btn btn-default btn-lg">Data History</a>&nbsp;&nbsp;
-        <a href="/recovery" id="restoreButton" class="btn btn-default btn-lg" type="button">Recovery</a>&nbsp;&nbsp;
-        <div class="dropdown floating-Box">
-            <button class="btn btn-primary btn-lg" data-toggle="dropdown" id="Username"><%= user.firstName%>
-                <span class="caret"></span></button>
-            <ul id="userMenu" class="dropdown-menu">
+<div class="container center">
+    <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px"/></a>
+
+</div><br><br>
+<div class="page-header text-center header">
+    <h1><span class="fa fa-anchor"></span> FAW Project -  User Home </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
+    <a href="/newEntry" class="btn btn-default btn-lg">New Entry</a>&nbsp;&nbsp;
+    <a href="/dataHistory" class="btn btn-default btn-lg">Data History</a>&nbsp;&nbsp;
+    <a href="/recovery" id="restoreButton" class="btn btn-default btn-lg" type="button">Recovery</a>&nbsp;&nbsp;
+    <div class="dropdown floating-Box">
+        <button class="btn btn-primary btn-lg" data-toggle="dropdown" id="Username"><%= user.firstName%>
+            <span class="caret"></span></button>
+        <ul id="userMenu" class="dropdown-menu">
 
             </ul>
         </div>
@@ -271,22 +304,24 @@
         <h4><strong>Other Customized Filters</strong></h4>
         <h5 class="floatingBox3">Category1:&nbsp;<select class="filter">
                 <option value="">Select A Field</option>
+                <option value="1Entry_type">1.Entry Type</option>
                 <option value="1Location_name">1.Location Name</option>
                 <option value="1Latitude">1.Latitude</option>
                 <option value="1Longitude">1.Longitude</option>
+                <option value="1Training">1.Training</option>
                 <option value="1Main_crop">1.Main Crop</option>
                 <option value="1Main_crop_variety">1.Main Crop Variety</option>
                 <option value="1Irrigation">1.Irrigation</option>
                 <option value="1Fertilized_used">1.Fertilized Used</option>
                 <option value="1Crop_stage">1.Crop Stage</option>
                 <option value="1General_health">1.General Health</option>
-                <option value="1Cropping_system">1.Cropping System</option>
+                <option value="1Farming_system">1.Farming System</option>
                 <option value="1Rotation_intercropping_crop">1.Rotation Intercropping Crop</option>
-                <option value="1Field_size_ha">1.Field Size (ha)</option>
+                <option value="1Field_size">1.Field Size</option>
+                <option value="1Field_size_unit">1.Unit</option>
                 <option value="1Main_crop_planting_date">1.Main Crop Planting Date</option>
                 <option value="1Date_of_last_rain">1.Date of Last Rain</option>
                 <option value="1Rain_amount">1.Rain Amount</option>
-                <option value="1Entry_type">1.Entry Type</option>
                 <option value="2Pest_species">2.Pest Species</option>
                 <option value="2Present_absent">2.Present or Absent</option>
                 <option value="2Crop_damage">2.Crop Damage</option>
@@ -302,35 +337,41 @@
                 <option value="2Pesticide_litres">2.Pesticide Litres</option>
                 <option value="2Biopesticide_litres">2.Biopesticide Litres</option>
                 <option value="3Trap_ID">3.Trap ID</option>
+                <option value="3Trap_location">3.Trap Location</option>
+                <option value="3Number_of_traps">3.Number of Traps</option>
                 <option value="3FAW_confirmed">3.FAW Confirmed</option>
                 <option value="3FAW_suspected">3.FAW Suspected</option>
                 <option value="3Other_species">3.Other Species</option>
-                <option value="3Trap_replaced">3.Trap Replaced</option>
-                <option value="3Lure_replaced">3.Lure Replaced</option>
+                <option value="3Trap_type">3.Trap Type</option>
                 <option value="3Lure_name">3.Lure Name</option>
-                <option value="Trap_serviced_date">3.Trap Serviced Date</option>
+                <option value="3Trap_replaced">3.Trap Replaced</option>
+                <option value="3Date_trap_replaced">3.Date Trap Replaced</option>
+                <option value="3Lure_replaced">3.Lure Replaced</option>
+                <option value="3Date_lure_replaced">3.Date Lure Replaced</option>
             </select>
         </h5>
-        <h5 class="floatingBox3" >Content:&nbsp;&nbsp;<input type="text" class="content"></h5><br>
-        <h5 class="floatingBox3">Category2:&nbsp;
+		<h5 class="floatingBox3" >Content:&nbsp;&nbsp;<input type="text" class="content"></h5><br>
+		<h5 class="floatingBox3">Category2:&nbsp;
             <select class="filter">
                 <option value="">Select A Field</option>
+                <option value="1Entry_type">1.Entry Type</option>
                 <option value="1Location_name">1.Location Name</option>
                 <option value="1Latitude">1.Latitude</option>
                 <option value="1Longitude">1.Longitude</option>
+                <option value="1Training">1.Training</option>
                 <option value="1Main_crop">1.Main Crop</option>
                 <option value="1Main_crop_variety">1.Main Crop Variety</option>
                 <option value="1Irrigation">1.Irrigation</option>
                 <option value="1Fertilized_used">1.Fertilized Used</option>
                 <option value="1Crop_stage">1.Crop Stage</option>
                 <option value="1General_health">1.General Health</option>
-                <option value="1Cropping_system">1.Cropping System</option>
+                <option value="1Farming_system">1.Farming System</option>
                 <option value="1Rotation_intercropping_crop">1.Rotation Intercropping Crop</option>
-                <option value="1Field_size_ha">1.Field Size (ha)</option>
+                <option value="1Field_size">1.Field Size</option>
+                <option value="1Field_size_unit">1.Unit</option>
                 <option value="1Main_crop_planting_date">1.Main Crop Planting Date</option>
                 <option value="1Date_of_last_rain">1.Date of Last Rain</option>
                 <option value="1Rain_amount">1.Rain Amount</option>
-                <option value="1Entry_type">1.Entry Type</option>
                 <option value="2Pest_species">2.Pest Species</option>
                 <option value="2Present_absent">2.Present or Absent</option>
                 <option value="2Crop_damage">2.Crop Damage</option>
@@ -346,35 +387,41 @@
                 <option value="2Pesticide_litres">2.Pesticide Litres</option>
                 <option value="2Biopesticide_litres">2.Biopesticide Litres</option>
                 <option value="3Trap_ID">3.Trap ID</option>
+                <option value="3Trap_location">3.Trap Location</option>
+                <option value="3Number_of_traps">3.Number of Traps</option>
                 <option value="3FAW_confirmed">3.FAW Confirmed</option>
                 <option value="3FAW_suspected">3.FAW Suspected</option>
                 <option value="3Other_species">3.Other Species</option>
-                <option value="3Trap_replaced">3.Trap Replaced</option>
-                <option value="3Lure_replaced">3.Lure Replaced</option>
+                <option value="3Trap_type">3.Trap Type</option>
                 <option value="3Lure_name">3.Lure Name</option>
-                <option value="Trap_serviced_date">3.Trap Serviced Date</option>
+                <option value="3Trap_replaced">3.Trap Replaced</option>
+                <option value="3Date_trap_replaced">3.Date Trap Replaced</option>
+                <option value="3Lure_replaced">3.Lure Replaced</option>
+                <option value="3Date_lure_replaced">3.Date Lure Replaced</option>
             </select>
         </h5>
-        <h5 class="floatingBox3">Content:&nbsp;&nbsp;<input type="text" class="content"></h5><br>
-        <h5 class="floatingBox3">Category3:&nbsp;
+		<h5 class="floatingBox3">Content:&nbsp;&nbsp;<input type="text" class="content"></h5><br>
+		<h5 class="floatingBox3">Category3:&nbsp;
             <select class="filter">
                 <option value="">Select A Field</option>
+                <option value="1Entry_type">1.Entry Type</option>
                 <option value="1Location_name">1.Location Name</option>
                 <option value="1Latitude">1.Latitude</option>
                 <option value="1Longitude">1.Longitude</option>
+                <option value="1Training">1.Training</option>
                 <option value="1Main_crop">1.Main Crop</option>
                 <option value="1Main_crop_variety">1.Main Crop Variety</option>
                 <option value="1Irrigation">1.Irrigation</option>
                 <option value="1Fertilized_used">1.Fertilized Used</option>
                 <option value="1Crop_stage">1.Crop Stage</option>
                 <option value="1General_health">1.General Health</option>
-                <option value="1Cropping_system">1.Cropping System</option>
+                <option value="1Farming_system">1.Farming System</option>
                 <option value="1Rotation_intercropping_crop">1.Rotation Intercropping Crop</option>
-                <option value="1Field_size_ha">1.Field Size (ha)</option>
+                <option value="1Field_size">1.Field Size</option>
+                <option value="1Field_size_unit">1.Unit</option>
                 <option value="1Main_crop_planting_date">1.Main Crop Planting Date</option>
                 <option value="1Date_of_last_rain">1.Date of Last Rain</option>
                 <option value="1Rain_amount">1.Rain Amount</option>
-                <option value="1Entry_type">1.Entry Type</option>
                 <option value="2Pest_species">2.Pest Species</option>
                 <option value="2Present_absent">2.Present or Absent</option>
                 <option value="2Crop_damage">2.Crop Damage</option>
@@ -390,13 +437,17 @@
                 <option value="2Pesticide_litres">2.Pesticide Litres</option>
                 <option value="2Biopesticide_litres">2.Biopesticide Litres</option>
                 <option value="3Trap_ID">3.Trap ID</option>
+                <option value="3Trap_location">3.Trap Location</option>
+                <option value="3Number_of_traps">3.Number of Traps</option>
                 <option value="3FAW_confirmed">3.FAW Confirmed</option>
                 <option value="3FAW_suspected">3.FAW Suspected</option>
                 <option value="3Other_species">3.Other Species</option>
-                <option value="3Trap_replaced">3.Trap Replaced</option>
-                <option value="3Lure_replaced">3.Lure Replaced</option>
+                <option value="3Trap_type">3.Trap Type</option>
                 <option value="3Lure_name">3.Lure Name</option>
-                <option value="Trap_serviced_date">3.Trap Serviced Date</option>
+                <option value="3Trap_replaced">3.Trap Replaced</option>
+                <option value="3Date_trap_replaced">3.Date Trap Replaced</option>
+                <option value="3Lure_replaced">3.Lure Replaced</option>
+                <option value="3Date_lure_replaced">3.Date Lure Replaced</option>
             </select>
         </h5>
         <h5 class="floatingBox3">Content:&nbsp;&nbsp;<input type="text" class="content"></h5>
@@ -408,30 +459,28 @@
     </div>
     <br>
     <div class="center">
-        <h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
-        <h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
+	    <h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
         <h4 style="color: #9d9d9d"><strong>Scouting:</strong></h4>
         <div id="dvData">
-            <table id="dataDisplay">
+            <table id="dataDisplay" style="width:100%;">
                 <thead>
                 <tr>
-                    <th>UserName</th>
-                    <th>First_Name</th>
-                    <th>Last_Name</th>
                     <th>Transaction_ID</th>
                     <th>Date</th>
                     <th>Location_Name</th>
                     <th>Latitude</th>
                     <th>Longitude</th>
+                    <th>Training</th>
                     <th>Main_Crop</th>
                     <th>Main_Crop_Variety</th>
                     <th>Irrigation</th>
                     <th>Fertilized_Used</th>
                     <th>Crop_Stage</th>
                     <th>General_Health</th>
-                    <th>Cropping_System</th>
+                    <th>Farming_system</th>
                     <th>Rotation_Intercropping_Crop</th>
-                    <th>Field_Size_Ha</th>
+                    <th>Field_Size</th>
+                    <th>Field_Size_Unit</th>
                     <th>Main_crop_planting_date</th>
                     <th>Date_of_Last_Rain</th>
                     <th>Rain_Amount</th>
@@ -449,7 +498,9 @@
                     <th>Pesticide_Litres</th>
                     <th>Biopesticide_Litres</th>
                     <th>Damage_Photo</th>
+                    <th>Damage_Photo_Name</th>
                     <th>Pest_Photo</th>
+                    <th>Pest_Photo_Name</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -461,15 +512,17 @@
                     <th>Location_Name</th>
                     <th>Latitude</th>
                     <th>Longitude</th>
+                    <th>Training</th>
                     <th>Main_Crop</th>
                     <th>Main_Crop_Variety</th>
                     <th>Irrigation</th>
                     <th>Fertilized_Used</th>
                     <th>Crop_Stage</th>
                     <th>General_Health</th>
-                    <th>Cropping_System</th>
+                    <th>Farming_system</th>
                     <th>Rotation_Intercropping_Crop</th>
-                    <th>Field_Size_Ha</th>
+                    <th>Field_Size</th>
+                    <th>Field_Size_Unit</th>
                     <th>Main_crop_planting_date</th>
                     <th>Date_of_Last_Rain</th>
                     <th>Rain_Amount</th>
@@ -487,7 +540,9 @@
                     <th>Pesticide_Litres</th>
                     <th>Biopesticide_Litres</th>
                     <th>Damage_Photo</th>
+                    <th>Damage_Photo_Name</th>
                     <th>Pest_Photo</th>
+                    <th>Pest_Photo_Name</th>
                 </tr>
                 </tfoot>
             </table>
@@ -507,20 +562,25 @@
                     <th>Fertilized_Used</th>
                     <th>Crop_Stage</th>
                     <th>General_Health</th>
-                    <th>Cropping_System</th>
+                    <th>Farming_system</th>
                     <th>Rotation_Intercropping_Crop</th>
-                    <th>Field_Size_Ha</th>
+                    <th>Field_Size</th>
+                    <th>Field_Size_Unit</th>
                     <th>Main_crop_planting_date</th>
                     <th>Date_of_Last_Rain</th>
                     <th>Rain_Amount</th>
                     <th>Trap_ID</th>
+                    <th>Trap_Location</th>
+                    <th>Number_of_Traps</th>
                     <th>FAW_Confirmed</th>
                     <th>FAW_Suspected</th>
                     <th>Other_Species</th>
-                    <th>Trap_Replaced</th>
-                    <th>Lure_Replaced</th>
+                    <th>Trap_Type</th>
                     <th>Lure_Name</th>
-                    <th>Trap_Serviced_Date</th>
+                    <th>Trap_Replaced</th>
+                    <th>Date_Trap_Replaced</th>
+                    <th>Lure_Replaced</th>
+                    <th>Date_Lure_Replaced</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -539,25 +599,31 @@
                     <th>Fertilized_Used</th>
                     <th>Crop_Stage</th>
                     <th>General_Health</th>
-                    <th>Cropping_System</th>
+                    <th>Farming_system</th>
                     <th>Rotation_Intercropping_Crop</th>
-                    <th>Field_Size_Ha</th>
+                    <th>Field_Size</th>
+                    <th>Field_Size_Unit</th>
                     <th>Main_crop_planting_date</th>
                     <th>Date_of_Last_Rain</th>
                     <th>Rain_Amount</th>
                     <th>Trap_ID</th>
+                    <th>Trap_Location</th>
+                    <th>Number_of_Traps</th>
                     <th>FAW_Confirmed</th>
                     <th>FAW_Suspected</th>
                     <th>Other_Species</th>
-                    <th>Trap_Replaced</th>
-                    <th>Lure_Replaced</th>
+                    <th>Trap_Type</th>
                     <th>Lure_Name</th>
-                    <th>Trap_Serviced_Date</th>
+                    <th>Trap_Replaced</th>
+                    <th>Date_Trap_Replaced</th>
+                    <th>Lure_Replaced</th>
+                    <th>Date_Lure_Replaced</th>
                 </tr>
                 </tfoot>
             </table>
         </div>
     </div>
+    <div id="map" style="width:100%; height:400px;"></div>
 </div>
 <script type='text/javascript'>
     var scoutingRowSelected, trapRowSelected, DropMenu, queryString1, queryString2;
@@ -566,6 +632,8 @@
     var UserRole = "<%= user.userrole %>";
     var scoutingTransactionID = [];
     var trapTransactionID = [];
+    var markers = [];
+    var map;
 
     $(document).ready(function(){
 
@@ -599,6 +667,8 @@
             scoutingTransactionID = [];
 
             $(this).toggleClass('selected');    //toggle class for the rows selected
+            $(this).toggleClass('change');    //toggle class change color
+            changeColor();
 
             scoutingRowSelected = table.rows('.selected').data();    //Store all the data for selected rows'
 
@@ -616,6 +686,8 @@
             trapTransactionID = [];
 
             $(this).toggleClass('selected');    //toggle class for the rows selected
+            $(this).toggleClass('change');    //toggle class change color
+            changeColor();
 
             trapRowSelected = trapTable.rows('.selected').data();    //Store all the data for selected rows'
 
@@ -712,15 +784,17 @@
                                 resp[i].Location_name,
                                 resp[i].Latitude,
                                 resp[i].Longitude,
+                                resp[i].Training,
                                 resp[i].Main_crop,
                                 resp[i].Main_crop_variety,
                                 resp[i].Irrigation,
                                 resp[i].Fertilized_used,
                                 resp[i].Crop_stage,
                                 resp[i].General_health,
-                                resp[i].Cropping_system,
+                                resp[i].Farming_system,
                                 resp[i].Rotation_intercropping_crop,
-                                resp[i].Field_size_ha,
+                                resp[i].Field_size,
+                                resp[i].Field_size_unit,
                                 resp[i].Main_crop_planting_date,
                                 resp[i].Date_of_last_rain,
                                 resp[i].Rain_amount,
@@ -738,8 +812,12 @@
                                 resp[i].Pesticide_litres,
                                 resp[i].Biopesticide_litres,
                                 resp[i].Damage_photo,
-                                resp[i].Pest_photo
+                                resp[i].Damage_photo_name,
+                                resp[i].Pest_photo,
+                                resp[i].Pest_photo_name
                             ]).draw(false);
+                            drawImage(i + 1, 30, resp[i].Damage_photo, "damage");
+                            drawImage(i + 1, 31, resp[i].Pest_photo, "pest");
                         } else if (resp[i].Entry_type === "PHEROMONE TRAP") {
                             trapTable.row.add([
                                 resp[i].transactionID,
@@ -753,28 +831,112 @@
                                 resp[i].Fertilized_used,
                                 resp[i].Crop_stage,
                                 resp[i].General_health,
-                                resp[i].Cropping_system,
+                                resp[i].Farming_system,
                                 resp[i].Rotation_intercropping_crop,
-                                resp[i].Field_size_ha,
+                                resp[i].Field_size,
+                                resp[i].Field_size_unit,
                                 resp[i].Main_crop_planting_date,
                                 resp[i].Date_of_last_rain,
                                 resp[i].Rain_amount,
                                 resp[i].Trap_ID,
+                                resp[i].Trap_location,
+                                resp[i].Number_of_traps,
                                 resp[i].FAW_confirmed,
                                 resp[i].FAW_suspected,
                                 resp[i].Other_species,
-                                resp[i].Trap_replaced,
-                                resp[i].Lure_replaced,
+                                resp[i].Trap_status,
                                 resp[i].Lure_name,
-                                resp[i].Trap_serviced_date
+                                resp[i].Trap_replaced,
+                                resp[i].Date_trap_replaced,
+                                resp[i].Lure_replaced,
+                                resp[i].Date_lure_replaced
                             ]).draw(false);
                         }
+
+                        // array
+                        var latiDMS = resp[i].Latitude.split(" ");
+                        var longDMS = resp[i].Longitude.split(" ");
+                        // convert latitude & longitude from Degrees Minutes Seconds to Decimal Degree
+                        var latiDD = parseFloat(latiDMS[1].substring(0,latiDMS[1].length - 1)) + (parseFloat(latiDMS[2].substring(0,latiDMS[2].length - 1)) / 60) + (parseFloat(latiDMS[3].substring(0,latiDMS[3].length - 1)) / 3600);
+                        var longDD = parseFloat(longDMS[1].substring(0,longDMS[1].length - 1)) + (parseFloat(longDMS[2].substring(0,longDMS[2].length - 1)) / 60) + (parseFloat(longDMS[3].substring(0,longDMS[3].length - 1)) / 3600);
+                        // change to negative if S or W
+                        if (latiDMS[0] === "S") {
+                            latiDD = latiDD * -1;
+                        }
+                        if (longDMS[0] === "W") {
+                            longDD = longDD * -1;
+                        }
+
+                        var center = {lat: 0, lng: 0};
+                        map = new google.maps.Map(document.getElementById('map'), {
+                            zoom: 2,
+                            center: center,
+                            mapTypeId: 'hybrid'
+                        });
+
+                        var position = {lat: latiDD, lng: longDD};
+                        var marker = new google.maps.Marker({
+                            position: position,
+                            map: map
+                        });
+
+                        marker.DMS = resp[i].Latitude + "; " + resp[i].Longitude;
+                        markers.push(marker);
+                        markers[i].setMap(null);
                     }
                 } else {
                     alert(resp[0].errMsg);
                 }
             }
         });
+    }
+
+    function drawImage(rowNumber, cellNumber, paths, name) {
+        var string = "https://www.w3schools.com/w3css/img_lights.jpg;https://www.w3schools.com/howto/img_fjords.jpg;https://static.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg";
+        //var path = paths.split(";");
+        var path = string.split(";");
+
+        for (var i = 0; i < path.length; i++) {
+            //alert(i);
+            document.getElementById("dataDisplay").rows[rowNumber].cells[cellNumber].innerHTML += "<a target=\"_blank\" href='" + path[i] + "'><img onload='setSize(this.id)' id='" + name + "." + rowNumber + "." + i + "' src='" + path[i] + "'></a>";
+
+        }
+    }
+
+    function setSize(id) {
+        var picWidth = document.getElementById(id).naturalWidth;
+        var picHeight = document.getElementById(id).naturalHeight;
+        // alert(picWidth + "   " + picHeight);
+
+        if (picWidth > picHeight) {
+            document.getElementById(id).setAttribute("class", "x");
+        } else if (picWidth < picHeight) {
+            document.getElementById(id).setAttribute("class", "y");
+        } else if (picWidth === picHeight) {
+            document.getElementById(id).setAttribute("class", "z");
+        }
+
+        // alert(document.getElementById(name + "." + rowNumber + "." + i).width + "   " + document.getElementById(name + "." + rowNumber + "." + i).height);
+    }
+
+    function changeColor() {
+        var row = document.getElementsByClassName("change")[0].innerHTML.trim().split("</td>");
+
+        var latiLong = row[3].substring(4, row[3].length) + "; " + row[4].substring(4, row[4].length);
+
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i].DMS === latiLong) {
+                if (document.getElementsByClassName("change")[0].classList.contains("selected") && document.getElementsByClassName("change")[0].classList.contains("change")) {
+                    document.getElementsByClassName("change")[0].classList.remove("change");
+                    markers[i].setMap(map);
+                } else if (document.getElementsByClassName("change")[0].classList.contains("change")) {
+                    document.getElementsByClassName("change")[0].classList.remove("change");
+                    markers[i].setMap(null);
+                }
+                break
+            }
+        }
+        //alert(markers.length)
     }
 </script>
 </body>

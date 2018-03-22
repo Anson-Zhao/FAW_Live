@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/file-uploader/5.15.5/fine-uploader-gallery.css" rel="stylesheet">
     <!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
     <!--<link rel="stylesheet" href="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.min.css">-->
     <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBX94wEDdQ52lCDhKAhcfR-flIw1NyLTMA"></script>
@@ -21,6 +22,84 @@
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/file-uploader/5.15.5/fine-uploader.js"></script>
+
+    <script type="text/template" id="qq-template">
+        <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="Drop files here">
+            <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+                <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+            </div>
+            <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                <span class="qq-upload-drop-area-text-selector"></span>
+            </div>
+            <div class="qq-upload-button-selector qq-upload-button">
+                <div>Upload a file</div>
+            </div>
+            <span class="qq-drop-processing-selector qq-drop-processing">
+                            <span>Processing dropped files...</span>
+                            <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+                        </span>
+            <ul class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals">
+                <li>
+                    <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                    <div class="qq-progress-bar-container-selector qq-progress-bar-container">
+                        <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+                    </div>
+                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                    <div class="qq-thumbnail-wrapper">
+                        <img class="qq-thumbnail-selector" qq-max-size="120" qq-server-scale>
+                    </div>
+                    <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
+                    <button type="button" class="qq-upload-retry-selector qq-upload-retry">
+                        <span class="qq-btn qq-retry-icon" aria-label="Retry"></span>
+                        Retry
+                    </button>
+
+                    <div class="qq-file-info">
+                        <div class="qq-file-name">
+                            <span class="qq-upload-file-selector qq-upload-file"></span>
+                            <span class="qq-edit-filename-icon-selector qq-btn qq-edit-filename-icon" aria-label="Edit filename"></span>
+                        </div>
+                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                        <span class="qq-upload-size-selector qq-upload-size"></span>
+                        <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">
+                            <span class="qq-btn qq-delete-icon" aria-label="Delete"></span>
+                        </button>
+                        <button type="button" class="qq-btn qq-upload-pause-selector qq-upload-pause">
+                            <span class="qq-btn qq-pause-icon" aria-label="Pause"></span>
+                        </button>
+                        <button type="button" class="qq-btn qq-upload-continue-selector qq-upload-continue">
+                            <span class="qq-btn qq-continue-icon" aria-label="Continue"></span>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+
+            <dialog class="qq-alert-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">Close</button>
+                </div>
+            </dialog>
+
+            <dialog class="qq-confirm-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">No</button>
+                    <button type="button" class="qq-ok-button-selector">Yes</button>
+                </div>
+            </dialog>
+
+            <dialog class="qq-prompt-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <input type="text">
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">Cancel</button>
+                    <button type="button" class="qq-ok-button-selector">Ok</button>
+                </div>
+            </dialog>
+        </div>
+    </script>
     <!--<script src="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.js"></script>-->
     <style>
         body 		{ padding-top:80px; word-wrap:break-word; }
@@ -96,6 +175,13 @@
                 <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= data.transactionID %>" readonly><br><br>
                 <h4>Your Name: &nbsp;&nbsp;&nbsp;</h4><input id="firstName" type="text" value="<%= user.firstName %>" readonly><input id="lastName" type="text" value="<%= user.lastName %>" readonly><br><br>
                 <h4>1 . Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE1" name="Date" class="date" value="<%= data.Date %>" required><br><br>
+                <h4>What data do you want to collect (select at least one)? &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='entryType' name="Entry_type" required>
+                    <option value=''>SELECT THE TYPE</option>
+                    <option>FIELD SCOUTING</option>
+                    <option>PHEROMONE TRAP</option>
+                </select><br><br>
+                <h3>LOCATION</h3>
                 <h4>1 . Location Name: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="locationName" name="Location_Name" type="text" value="<%= data.Location_name %>" placeholder="Enter Location Here"><br><br>
                 <h4 id="GPSLocationTitle">E. GPS Location: &nbsp;&nbsp;&nbsp;</h4>
                 <h4 style="color:red" id="errorMessage"></h4>
@@ -123,6 +209,19 @@
                 <!--<option>DISTRICT2</option>-->
                 <!--<option>DISTRICT3</option>-->
                 <!--</select><br><br>-->
+                <h3>TRAINING</h3>
+                <h4>1 . Training of assistance received: &nbsp;&nbsp;&nbsp;</h4>
+                <button type='button' id='Training-select_all' onclick='selectAndUnselect()'>Select all</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='Training-deselect_all' onclick='selectAndUnselect()'>Deselect all</button>
+                <select multiple = 'multiple' class="clearGen" id='Training' name="Training" required>
+                    <option>COMMUNITY FOCAL PERSON</option>
+                    <option>EXTENSION SERVICE</option>
+                    <option>FARMER FIELD SCHOOL</option>
+                    <option>FAO</option>
+                    <option>NGO</option>
+                    <option>PRIVATE</option>
+                    <option>NONE</option>
+                </select><br><br>
+                <h3>CROP INFORMATION</h3>
                 <h4>1 . Main Crop: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='mainCrop' name="Main_crop" required>
                     <option value=''>SELECT THE MAIN CROP</option>
@@ -150,10 +249,12 @@
                 <h4>1 . Main Crop Variety: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="mainCropVariety" name="Main_crop_variety" type="text" value="<%= data.Main_crop_variety %>" placeholder="Enter Main Crop Variety Here"><br><br>
                 <h4>1 . Irrigation: &nbsp;&nbsp;&nbsp;</h4>
                 <input type="radio" name="Irrigation" value="Irrigated" required> IRRIGATED
-                <input type="radio" name="Irrigation" value="Rain-Fed" required> RAIN-FED <br><br>
+                <input type="radio" name="Irrigation" value="Rain-Fed" required> RAIN-FED
+                <input type="radio" name="Irrigation" value="Unknown" required> UNKNOWN <br><br>
                 <h4>1 . Fertilized Used: &nbsp;&nbsp;&nbsp;</h4>
                 <input type="radio" name="Fertilized_used" value="YES" required> YES
-                <input type="radio" name="Fertilized_used" value="NO" required> NO <br><br>
+                <input type="radio" name="Fertilized_used" value="NO" required> NO
+                <input type="radio" name="Fertilized_used" value="UNKNOWN" required> UNKNOWN <br><br>
                 <h4>1 . Crop Stage: &nbsp;&nbsp;&nbsp;</h4>
                 <select class="clearGen" id='cropStage' name="Crop_stage" required>
                     <option value=''>SELECT THE CROP STAGE</option>
@@ -171,34 +272,36 @@
                     <option>GOOD</option>
                 </select><br><br>
 
-                <h4>1 . Cropping System: &nbsp;&nbsp;&nbsp;</h4>
-                <select class="clearGen" id='croppingSystem' name='Cropping_system' onchange='rotationInterCropSystem(this.value);' required>
+                <h4>1 . Farming System: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='croppingSystem' name='Farming_system' onchange='rotationInterCropSystem(this.value);' required>
                     <option value=''>SELECT THE CROP SYSTEM</option>
                     <option>SEASONAL</option>
                     <option>ROTATION</option>
                     <option>INTERCROPPING</option>
+                    <option>PUSH-PULL</option>
+                    <option>UNKNOWN</option>
                 </select>
                 <div id="rotationIntercropping"></div>
-                <h4>1 . Field Size - ha (numerical XXXX.X): &nbsp;&nbsp;&nbsp;</h4>
+                <h4>1 . Field Size: &nbsp;&nbsp;&nbsp;</h4>
                 <h5 style="color:#9d9d9d;">Note: There is no need to enter the decimals, etc. Please enter the number ONLY.</h5>
-                <input class="clearGen" id="fieldSizeInteger" name="Field_size_ha_integer" type="number" min="0" max="999999" placeholder="0000" onkeyup="limit()" required>.
-                <input class="clearGen" id="fieldSizeDecimal" name="Field_size_ha_decimal" type="number" min="0" max="9" placeholder="0" onkeyup="limit()" required><br><br>
+                <input class="clearGen" id="fieldSizeInteger" name="Field_size_integer" type="number" min="0" max="999999" placeholder="0000" onkeyup="limit()" required>.
+                <input class="clearGen" id="fieldSizeDecimal" name="Field_size_decimal" type="number" min="0" max="9" placeholder="0" onkeyup="limit()" required><br><br>
+                <h4 id="unitTitle">Unit: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen floating-Box" id="fieldSizeUnit" name="Field_size_unit" required>
+                    <option value=''>SELECT THE FIELD SIZE UNIT</option>
+                    <option>ACRE (acre)</option>
+                    <option>HECTARE (ha)</option>
+                    <option>SQUARE METER (m2)</option>
+                    <option>SQUARE YARD (yd2)</option>
+                </select><br><br>
+
                 <h4>1 . Main Crop Planting Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE2" name="Main_crop_planting_date" class="date" value="<%= data.Main_crop_planting_date %>" required><br><br>
-                <h4>1 . Date of Last RainFall: &nbsp;&nbsp;&nbsp;</h4><input id="DATE3" name="Date_of_last_rain" class="date" value="<%= data.Date_of_last_rain %>"><br><br>
-                <h4>1 . Rain Amount: &nbsp;&nbsp;&nbsp;</h4>
-                <select class="clearGen" id='rainAmount' name="Rain_amount" required>
-                    <option value=''>SELECT THE RAIN AMOUNT</option>
-                    <option>TRACE</option>
-                    <option>LIGHT</option>
-                    <option>MODERATE</option>
-                    <option>HEAVY</option>
-                </select><br><br>
-                <h4>1 . Entry Type: &nbsp;&nbsp;&nbsp;</h4>
-                <select class="clearGen" id='entryType' name="Entry_type" required>
-                    <option value=''>SELECT THE TYPE</option>
-                    <option>FIELD SCOUTING</option>
-                    <option>PHEROMONE TRAP</option>
-                </select><br><br>
+                <h3>RAIN</h3>
+                <h4>1 . Date of Last RainFall: &nbsp;&nbsp;&nbsp;</h4><input id="DATE3" name="Date_of_last_rain" class="dateS" onclick="rainAmount(this)" value="<%= data.Date_of_last_rain %>" placeholder="ENTER DATE OF LAST RAINFALL"><br><br>
+                <div id="rainAmount">
+
+                </div>
+
                 <div class="row">
                     <div class="column">
                         <input id="continue" type="submit" value="Continue"/>
@@ -227,7 +330,7 @@
                     </select><br><br>
                 </div>
                 <div class="FAW">
-                    <h2>Pests</h2>
+                    <h2>PESTS</h2>
                     <div id="pests">
                         <h4>2 . Present / Absent: &nbsp;&nbsp;&nbsp;</h4>
                         <input type="radio" name="Present_absent" value="PRESENT" onclick="present(this.value)" required> PRESENT
@@ -235,7 +338,7 @@
                         <div id="damageStage">
 
                         </div>
-                        <h4>2 . Previous Damage: &nbsp;&nbsp;&nbsp;</h4>
+                        <h4>2 . Previous Damage level (on older leaves): &nbsp;&nbsp;&nbsp;</h4>
                         <select class="clearDetS" id='previousDamage' name='Previous_damage' required>
                             <option value=''>SELECT THE DAMAGE LEVEL</option>
                             <option>NONE</option>
@@ -253,13 +356,13 @@
                         </select><br><br>
                         <h4>2 . Dead larvae killed by natural enemies? &nbsp;&nbsp;&nbsp;</h4>
                         <input type="radio" name="Dead_larvae" value="YES" required> YES
-                        <input type="radio" name="Dead_larvae" value="NO" required> NO <br><br>
-                        <div id="infested">
+                        <input type="radio" name="Dead_larvae" value="NO" required> NO
+                        <input type="radio" name="Dead_larvae" value="UNKNOWN" required> UNKNOWN <br><br>
+                        <div id="cropInfested">
 
                         </div>
                     </div>
 
-                    <h2>Control</h2>
                     <div id="control">
                         <div id="controlType"></div>
                         <div id="pesticide"></div>
@@ -269,12 +372,11 @@
             </form>
             <form id="upload" enctype="multipart/form-data" method="post">
                 <div class="FAW">
-                    <h2>Resources</h2>
+                    <h2>RESOURCES</h2>
                     <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
-                    <input class="clearDetS" id="photoOfDamage" type="file" name="Damage_photo" accept="image/*" multiple/><br><br>
-                    <div id="photo">
+                    <div id="uploader"></div>
 
-                    </div>
+                    <div id="photo"></div>
 
                     <div class="row">
                         <div class="column">
@@ -297,29 +399,58 @@
         <div id="detailedFormTrap">
             <form id="detailedTrap" method = "post">
                 <h4>2 . Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= data.transactionID %>" readonly><br><br>
+                <h3>TRAPS INFORMATION</h3>
                 <h4>2 . Trap ID: &nbsp;&nbsp;&nbsp;</h4><input id="trapID" name="Trap_ID" type="text" value="<%= data.Trap_ID %>" required><br><br>
+                <h4>2 . Trap Location:</h4>
+                <select class="clearGen" id='trapLocation' name="Trap_location" required>
+                    <option value=''>SELECT THE TRAP LOCATION</option>
+                    <option>FIELD CENTER</option>
+                    <option>FIELD EDGE</option>
+                    <option>VILLAGE</option>
+                </select><br><br>
+                <h3>CATCHES</h3>
+                <h4>2 . Please indicate the number of moths/traps:</h4><input id="numberOfTraps" class="inputNumber" name="Number_of_traps" type="number" value="<%= data.Number_of_traps %>" placeholder="ENTER NUMBER OF MOTHS/TRAPS" required><br><br>
                 <h4>2 . FAW Confirmed: &nbsp;&nbsp;&nbsp;</h4><input id="FAWConfirmed" class="inputNumber" name="FAW_confirmed" type="number" value="<%= data.FAW_confirmed %>" required><br><br>
                 <h4>2 . FAW Suspected: &nbsp;&nbsp;&nbsp;</h4><input id="FAWSuspected" class="inputNumber" name="FAW_suspected" type="number" value="<%= data.FAW_suspected %>" required><br><br>
                 <h4>2 . Other Species: &nbsp;&nbsp;&nbsp;</h4><input id="otherSpecies" class="inputNumber" name="Other_species" type="number" value="<%= data.Other_species %>" required><br><br>
-                <h4>2 . Trap Replaced? &nbsp;&nbsp;&nbsp;</h4>
-                <input type="radio" name="Trap_replaced" value="YES" required> YES
-                <input type="radio" name="Trap_replaced" value="NO" required> NO <br><br>
-                <h4>2 . Lure Replaced? &nbsp;&nbsp;&nbsp;</h4>
-                <input type="radio" name="Lure_replaced" value="YES" required> YES
-                <input type="radio" name="Lure_replaced" value="NO" required> NO <br><br>
-                <h4>2 . Lure Name: &nbsp;&nbsp;&nbsp;</h4>
+                <h3>STATUS</h3>
+                <h4>2 . Trap Type:</h4>
+                <select class="clearGen" id='trapType' name="Trap_type" required>
+                    <option value=''>SELECT THE TRAP TYPE</option>
+                    <option>BUCKET</option>
+                    <option>STICKY DELTA</option>
+                </select><br><br>
+                <h4>2 . Lure Name:</h4>
                 <select class="clearGen" id='lureName' name="Lure_name" required>
-                    <option value=''>SELECT THE MAIN CROP</option>
+                    <option value=''>SELECT THE LURE NAME</option>
                     <option>CHEMTICA</option>
+                    <option>IPS</option>
+                    <option>PHEROBANK</option>
+                    <option>PHEROBIO</option>
+                    <option>PHEROCON TRÉCÉ</option>
+                    <option>PHERODIS</option>
                     <option>PHEROTECH</option>
                     <option>PSU SCENTRY</option>
-                    <option>RUSSELLPM</option>
+                    <option>RUSSELL IPM</option>
                     <option>SCENTRY</option>
                     <option>SCENTURION</option>
-                    <option>TRÉCÉ</option>
+                    <option>SPOFRU</option>
+                    <option>UNKNOWN</option>
                     <option>OTHER</option>
                 </select><br><br>
-                <h4>2 . Trap Serviced Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE4" name="Trap_serviced_date" class="date" value="<%= data.Trap_serviced_date %>" required><br><br>
+                <h4>2 . Trap Replaced? &nbsp;&nbsp;&nbsp;</h4>
+                <input type="radio" name="Trap_replaced" value="YES" onclick="trapReplaced(this).value" required> YES
+                <input type="radio" name="Trap_replaced" value="NO" onclick="trapReplaced(this.value)" required> NO <br><br>
+                <div id="dateTrapReplaced">
+
+                </div>
+                <h4>2 . Lure Replaced? &nbsp;&nbsp;&nbsp;</h4>
+                <input type="radio" name="Lure_replaced" value="YES" onclick="lureReplaced(this.value)" required> YES
+                <input type="radio" name="Lure_replaced" value="NO" onclick="lureReplaced(this.value)" required> NO <br><br>
+                <div id="dateLureReplaced">
+
+                </div>
+                <!--<h4>2 . Trap Serviced Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE4" name="Trap_serviced_date" class="date" value="<%= data.Trap_serviced_date %>" required><br><br>-->
 
                 <div class="row">
                     <div class="column">
@@ -342,7 +473,21 @@
 </div>
 <script>
 
+    var globalResults;
+
     $(function(){
+
+        $('#Training').multiSelect();
+
+        // flatpickr(".date", {
+        //     dateFormat: "Y-m-d",
+        //     time_24hr: true
+        // });
+        //
+        flatpickr(".dateS", {
+            dateFormat: "Y-m-d",
+            time_24hr: true
+        });
 
         var latitude = "<%= data.Latitude %>".split(" ");
         var longitude = "<%= data.Longitude %>".split(" ");
@@ -373,20 +518,21 @@
         $("#locationDiv").append($("<input id='refreshMap' type='button' onclick='refresh()' value='Click here to refresh the map'>"));
         $("#refreshMap").click();
 
+        $("#entryType").val("<%= data.Entry_type %>");
+        $("#Training").multiSelect("select", "<%= data.Training %>".split(","));
         $("#mainCrop").val("<%= data.Main_crop %>");
         $("[name='Irrigation'][value='<%= data.Irrigation %>']").prop("checked", true);
         $("[name='Fertilized_used'][value='<%= data.Fertilized_used %>']").prop("checked", true);
         $("#cropStage").val("<%= data.Crop_stage %>")
         $("#healthOfCrop").val("<%= data.General_health %>");
-        $("#croppingSystem").val("<%= data.Cropping_system %>");
-        rotationInterCropSystem("<%= data.Cropping_system %>");
+        $("#croppingSystem").val("<%= data.Farming_system %>");
+        rotationInterCropSystem("<%= data.Farming_system %>");
         $('#rotationIntercroppingCrop').multiSelect("select", "<%= data.Rotation_intercropping_crop %>".split("/"));
-        var fieldSize = "<%= data.Field_size_ha %>".split(".");
+        var fieldSize = "<%= data.Field_size %>".split(".");
         $("#fieldSizeInteger").val(fieldSize[0]);
         $("#fieldSizeDecimal").val(fieldSize[1]);
+        $("#fieldSizeUnit").val("<%= data.Field_size_unit %>");
         $("#rainAmount").val("<%= data.Rain_amount %>");
-        $("#entryType").val("<%= data.Entry_type %>");
-
 
         $("#pestSpecies").val("<%= data.Pest_species %>");
         $("[name='Present_absent'][value='<%= data.Present_absent %>']").prop("checked", true);
@@ -403,8 +549,40 @@
         $("#BiopesticideName").val("<%= data.Biopesticide_name %>");
         $("#PesticideLitres").val("<%= data.Pesticide_litres %>");
         $("#BiopesticideLitres").val("<%= data.Biopesticide_litres %>");
-        var photoOfPest = "<%= data.Photo_of_Pest %>".split(";");
-        var photoOfDamage = "<%= data.Photo_of_Damage %>".split(";");
+        <!--$("#uploader").val("<%= data.Damage_photo %>");-->
+        <!--var photoOfPest = "<%= data.Photo_of_Pest %>".split(";");-->
+        <!--var photoOfDamage = "<%= data.Photo_of_Damage %>".split(";");-->
+        $.ajax({
+            url: '/edit',
+            type: 'GET',
+            dataType: 'json',
+            async: false,
+            success: function (results) {
+                if (!results.error) {
+                    globalResults = results;
+                    console.log("results: " + globalResults[0].imagePath);
+
+                    let list = [];
+                    for (var i = 0; i < globalResults.length; i++) {
+                        var first = {
+                            id: i,
+                            size: 561276,
+                            thumbnailUrl: globalResults[i].imagePath,
+                            name: globalResults[i].fileName
+                        }
+
+                        list.push(first);
+                    }
+                    console.log("afwefwe: " + qq.supportedFeatures.imagePreviews === true);
+                    console.log("json object array: " + list[0].thumbnailUrl);
+
+                    uploader.addInitialFiles(list);
+                } else {
+                    console.log("didn't work :(");
+                }
+            }
+        });
+
 
         // for (var p = 0; p < photoOfPest.length; p++) {
         //     $("#photoOfPestDiv").append($("<a target=\"_blank\" href='" + photoOfPest[p] + "'><img src='" + photoOfPest[p] + "' id='p" + p + "'></a>"));
@@ -436,6 +614,7 @@
         // }
 
 
+        $("#trapLocation").val("<%= data.Trap_location %>");
         $("[name='Trap_replaced'][value='<%= data.Trap_replaced %>']").prop("checked", true);
         $("[name='Lure_replaced'][value='<%= data.Lure_replaced %>']").prop("checked", true);
         $("#lureName").val("<%= data.Lure_name %>");
@@ -466,16 +645,57 @@
             // $("#upload").ajaxSubmit(options);
             // Prevent form submission
             e.preventDefault();
+            //alert("This button has actually been selected and this can't possibly be the issue. FIRST");
+
             $("#hide").click();
         });
 
         $('#detailedScouting').submit(function(e) {
             // Prevent form submission
             e.preventDefault();
-            alert("Y");
-            $("#upload").ajaxSubmit(options);
-            // Prevent form submission
-            e.preventDefault();
+            // $.ajax({
+            //     url: '/upload',    // override for form's 'action' attribute
+            //     type: 'post',        // 'get' or 'post', override for form's 'method' attribute
+            //     dataType: 'json',        // 'xml', 'script', or 'json' (expected server response type)
+            //     clearForm: true,        // clear all form fields after successful submit
+            //     // beforeSubmit:  showRequest,  // pre-submit callback
+            //     success: showResponse  // post-submit callback
+            // })
+            //alert("This button has actually been selected and this can't possibly be the issue.");
+            $.ajax({
+                type: "post",
+                url: "/generalForm",
+                dataType: 'json',
+                data: $("#general").serialize(),
+                success: function (result) {
+                    if (!result.error) {
+                        $.ajax({
+                            type: "post",
+                            url: "/detailedFormScouting",
+                            dataType: 'json',
+                            data: $("#detailedScouting").serialize(),
+                            success: function (result) {
+                                if (!result.error) {
+                                    document.getElementById("modal-footer").style.display = "none";
+
+                                    document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
+                                    document.getElementById("close").innerHTML = "<a href='/userhome'>&times</a>";
+
+                                    document.getElementById("header").innerHTML = "Congratulations, Your Edit is Successfully Complete !";
+                                    document.getElementById("body").innerHTML = "<br>Click X to return to the Home Page.<br>";
+
+                                    document.getElementById("modal").style.display = "block";
+                                } else {
+                                    alert(result.message);
+                                }
+                            }
+                        })
+                    } else {
+                        alert(result.message);
+                    }
+                }
+            })
+
         });
 
         $('#detailedTrap').submit(function(e) {
@@ -517,6 +737,7 @@
 
         $('#general').submit(function(e) {
             // Prevent form submission
+            //alert("A");
             e.preventDefault();
             //alert("X");
             var entryType = document.getElementById("entryType").value;
@@ -532,6 +753,40 @@
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         });
+    });
+
+    var globalPaths;
+
+    var uploader = new qq.FineUploader({
+        element: document.getElementById("uploader"),
+        request: {
+            endpoint: '/upload'
+        },
+        deleteFile: {
+            enabled: true, // defaults to false
+            endpoint: '/deleteFiles'
+        },
+        callbacks: {
+            onComplete: function (id, name, responseJSON) {
+                alert(responseJSON.newuuid);
+                alert(id + "      " + name);
+                uploader.setUuid(id, responseJSON.newuuid);
+                // $.ajax({
+                //     url: '/submit',
+                //     type: 'POST',
+                //     dataType: 'json',
+                //     async: false,
+                //     success: function (product) {
+                //         if (!product.error) {
+                //             globalPaths = product;
+                //             console.log("results: " + globalPaths[0].Damage_photo);
+                //         } else {
+                //             console.log("you're gonna have a bad time");
+                //         }
+                //     }
+                // })
+            }
+        }
     });
 
     function createInputBox(lati, long) {
@@ -666,6 +921,17 @@
         }
     }
 
+    function rainAmount(value) {
+        var rainAmountDiv = $("#rainAmount");
+        rainAmountDiv.empty();
+        if (!!$("#DATE3")) {
+            var title = $("<h4>1 . Rain Amount: &nbsp;&nbsp;&nbsp;</h4>");
+            var select = $("<select class='clearGen' id='rainAmount' name='Rain_amount'> <option value=''>SELECT THE RAIN AMOUNT</option> <option>TRACE</option> <option>LIGHT</option> <option>MODERATE</option> <option>HEAVY</option> <option>UNKNOWN</option> </select><br><br>");
+            rainAmountDiv.append(title);
+            rainAmountDiv.append(select);
+        }
+    }
+
     function pestSelect() {
         var pestSpecies = document.getElementById("pestSpecies").value;
         if (!pestSpecies) {
@@ -682,6 +948,58 @@
 //            document.getElementsByClassName("FAW")[1].style.display = "none";
             alert("To be Developed")
         }
+    }
+
+    function trapReplaced(status) {
+        var dateTrapReplacedDiv = $("#dateTrapReplaced");
+        dateTrapReplacedDiv.empty();
+        if (status.value === "YES") {
+            dateTrapReplacedDiv.show();
+            var title = $("<h4>2 . Date Trap Replaced: &nbsp;&nbsp;&nbsp;</h4>");
+            var date =  $("<input id='DATE4' name='Date_trap_last_replaced' class='date2' value=''><br><br>");
+
+            dateTrapReplacedDiv.append(title);
+            dateTrapReplacedDiv.append(date);
+        }
+
+        flatpickr(".date2", {
+            dateFormat: "Y-m-d",
+            time_24hr: true
+        });
+
+        var today = new Date();
+        var todayDate = today.getFullYear()+'-'+('0' + (today.getMonth()+1)).slice(-2)+'-'+('0' + today.getDate()).slice(-2);
+        var todayDateV = document.getElementsByClassName("date2");
+        for (var i = 0; i < todayDateV.length; i++) {
+            todayDateV[i].value = todayDate;
+        }
+
+
+    }
+
+    function lureReplaced(status) {
+        var dateLureReplacedDiv = $("#dateLureReplaced");
+        dateLureReplacedDiv.empty();
+        if (status.value === "YES") {
+            var title = $("<h4>2 . Date Lure Replaced: &nbsp;&nbsp;&nbsp;</h4>");
+            var date =  $("<input id='DATE5' name='Date_lure_last_replaced' class='date3' value=''><br><br>");
+
+            dateLureReplacedDiv.append(title);
+            dateLureReplacedDiv.append(date);
+        }
+
+        flatpickr(".date3", {
+            dateFormat: "Y-m-d",
+            time_24hr: true
+        });
+
+        var today = new Date();
+        var todayDate = today.getFullYear()+'-'+('0' + (today.getMonth()+1)).slice(-2)+'-'+('0' + today.getDate()).slice(-2);
+        var todayDateV = document.getElementsByClassName("date3");
+        for (var i = 0; i < todayDateV.length; i++) {
+            todayDateV[i].value = todayDate;
+        }
+
     }
 
     function present(status) {
@@ -703,8 +1021,10 @@
             //     mainCropSelect.append(mainCropOption);
             // }
             var title = [$("<h4>2 . Crop Damage: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Pest Stage: &nbsp;&nbsp;&nbsp;</h4><a href='javascript:void(0);' id='pestStage-select_all' onclick='selectAndUnselect()'>select all</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' id='pestStage-deselect_all' onclick='selectAndUnselect()'>deselect all</a>"), $("<br<br><h4>2 . Current Damage: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Crop Infested: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Control Undertaken: &nbsp;&nbsp;&nbsp;</h4><a href='javascript:void(0);' id='controlUndertaken-select_all' onclick='selectAndUnselect()'>select all</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' id='controlUndertaken-deselect_all' onclick='selectAndUnselect()'>deselect all</a>"), $("<h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>")];
-            var select = [$("<select class='clearGen' id='cropDamage' name='Crop_damage' required></select><br><br>"), $("<select multiple='multiple' class='clearGen' id='pestStage' name='Pest_stage' required></select>"), $("<select class='clearGen' id='currentDamage' name='Current_damage' required></select><br><br>"), $("<input class='clearGen inputNumber' id='cropInfested' name='Crop_infested' type='text' placeholder='Enter The Percentage of Crop Infested Here' required><br><br>"), $("<select multiple='multiple' class='clearGen' id='controlUndertaken' name='Control_undertaken' onchange='controlType(this)'></select>"), $("<input class='clearDetS' id='photoOfPest' type='file' name='Pest_photo' accept='image/*' multiple/><br><br>")];
-            //alert(title.length);
+            var select = [$("<select class='clearGen' id='cropDamage' name='Crop_damage' required></select><br><br>"), $("<select multiple='multiple' class='clearGen' id='pestStage' name='Pest_stage' required></select>"), $("<select class='clearGen' id='currentDamage' name='Current_damage' required></select><br><br>"), $("<input class='clearGen inputNumber' id='cropInfested' name='Crop_infested' type='text' placeholder='Enter The Percentage of Crop Infested Here' required><br><br>"), $("<select multiple='multiple' class='clearGen' id='controlUndertaken' name='Control_undertaken' onchange='controlType(this)'></select>"), $("<div class='clearGen' id='uploaderPest'></div><br><br>")];
+
+            controlTypeDiv.append($("<h3>CONTROL</h3>"));
+
             for (var i = 0; i < title.length; i++) {
                 if (i < 3) {
                     damageStageDiv.append(title[i]);
@@ -741,6 +1061,67 @@
             $("option:first", select[2]).val("");
             select[1].multiSelect();
             select[4].multiSelect();
+            $.ajax({
+                url: '/edit2',
+                type: 'GET',
+                dataType: 'json',
+                async: false,
+                success: function (results) {
+                    if (!results.error) {
+                        globalResults = results;
+                        console.log("results: " + globalResults[0].imagePath);
+
+                        let list = [];
+                        for (var i = 0; i < globalResults.length; i++) {
+                            var first = {
+                                id: i,
+                                size: 561276,
+                                thumbnailUrl: globalResults[i].imagePath,
+                                name: globalResults[i].fileName
+                            }
+
+                            list.push(first);
+                        }
+                        console.log("afwefwe: " + qq.supportedFeatures.imagePreviews === true);
+                        console.log("json object array: " + list[0].thumbnailUrl);
+
+                        uploaderPest.addInitialFiles(list);
+                    } else {
+                        console.log("didn't work :(");
+                    }
+                }
+            });
+            var uploaderPest = new qq.FineUploader({
+                element: document.getElementById("uploaderPest"),
+                request: {
+                    endpoint: '/upload'
+                },
+                deleteFile: {
+                    enabled: true, // defaults to false
+                    endpoint: '/deleteFiles'
+                },
+                callbacks: {
+                    onComplete: function (id, name, responseJSON) {
+                        alert(responseJSON.newuuid2);
+                        alert(id + "      " + name);
+                        uploaderPest.setUuid(id, responseJSON.newuuid2);
+                        // $.ajax({
+                        //     url: '/submit',
+                        //     type: 'POST',
+                        //     dataType: 'json',
+                        //     async: false,
+                        //     success: function (product) {
+                        //         if (!product.error) {
+                        //             globalPaths = product;
+                        //             console.log("results: " + globalPaths[0].Damage_photo);
+                        //         } else {
+                        //             console.log("you're gonna have a bad time");
+                        //         }
+                        //     }
+                        // })
+                    }
+                }
+            });
         }
     }
 

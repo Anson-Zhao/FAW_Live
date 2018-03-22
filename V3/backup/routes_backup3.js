@@ -6,35 +6,43 @@ var connection = mysql.createConnection(config.commondb_connection);
 var uploadPath = config.Upload_Path;
 var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt-nodejs');
-var fs = require('fs');
-
 var nodemailer = require('nodemailer');
 var async = require('async');
 var crypto = require('crypto');
-var smtpTransport = require('nodemailer-smtp-transport');
+var fs = require("fs"),
+    rimraf = require("rimraf"),
+    mkdirp = require("mkdirp"),
+    multiparty = require('multiparty');
 
+var fileInputName = process.env.FILE_INPUT_NAME || "qqfile",
+    maxFileSize = process.env.MAX_FILE_SIZE || 0; // in bytes, 0 for unlimited
 
-var sendmail = require('sendmail')();
-
-var mailer = require('express-mailer');
 
 var filePathName = "";
-var filePath, transactionID, statementGeneral, statementDetailed, myStat, myVal, myErrMsg, errStatus;
-var today, date, time2, dateTime;
+var filePath, transactionID, myStat, myVal, myErrMsg, token, errStatus;
+var today, date2, date3, time2, time3, dateTime, tokenExpire;
 
-var storage = multer.diskStorage({
-    destination: function (req, file, callback) {
-        callback(null, uploadPath);
-    },
-    filename: function (req, file, callback) {
-        //console.log(file.fieldname + " " + file.originalname);
-        filePathName += file.fieldname + '-' + file.originalname + ";";
-        //console.log(filePathName);
-        callback(null, file.fieldname + '-' + file.originalname);
+// var storage = multer.diskStorage({
+//     destination: function (req, file, callback) {
+//         callback(null, uploadPath);
+//     },
+//     filename: function (req, file, callback) {
+//         //console.log(file.fieldname + " " + file.originalname);
+//         filePathName += file.fieldname + '-' + file.originalname + ";";
+//         //console.log(filePathName);
+//         callback(null, file.fieldname + '-' + file.originalname);
+//     }
+// });
+//
+// var fileUpload = multer({storage: storage}).any();
+
+var smtpTrans = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'aaaa.zhao@g.feitianacademy.org',
+        pass: "12344321"
     }
 });
-
-var fileUpload = multer({storage: storage}).any();
 
 connection.query('USE ' + config.Login_db); // Locate Login DB
 
@@ -85,134 +93,18 @@ module.exports = function (app, passport) {
         updateDBNredir(myStat, myVal, myErrMsg, "login.ejs", "/userhome", res);
     });
 
-    // var fs = require('fs');
-    // var express = require('express');
-    // var app = express.createServer();
-    //
-    // app.use(express.static(__dirname));
-    // app.use(require(session)()); // for sessions
-
-
-    // app.post('/forgot', express.bodyParser(), function(req, res) {
-    //     var email = req.body.email;
-    //
-    //     var callback = {
-    //         error: function(err) {
-    //             res.end('Error sending message: ' + err);
-    //         },
-    //         success: function(success) {
-    //             res.end('Check your inbox for a password reset message.');
-    //         }
-    //     };
-    //     var reset = forgot(email, callback);
-    //
-    //     reset.on('request', function(req_, res_) {
-    //         req_.session.reset = {
-    //             email: email,
-    //             id: reset.id
-    //         };
-    //         fs.createReadStream(__dirname + '/forgot.html').pipe(res_);
-    //     });
-    // });
-    //
-    // app.post('/reset', express.bodyParser(), function(req, res) {
-    //     if (!req.session.reset) return res.end('reset token not set');
-    //
-    //     var password = req.body.password;
-    //     var confirm = req.body.confirm;
-    //     if (password !== confirm) return res.end('passwords do not match');
-    //
-    //     // update the user db here
-    //
-    //     forgot.expire(req.session.reset.id);
-    //     delete req.session.reset;
-    //     res.end('password reset');
-    // });
-    //
-    // app.listen(8080);
-    // console.log('Listening on :8080');
-
-    // passport.use(new LocalStrategy(function(username, password, done) {
-    //     User.findOne({ username: username }, function(err, user) {
-    //         if (err) return done(err);
-    //         if (!user) return done(null, false, { message: 'Incorrect username.' });
-    //         user.comparePassword(password, function(err, isMatch) {
-    //             if (isMatch) {
-    //                 return done(null, user);
-    //             } else {
-    //                 return done(null, false, { message: 'Incorrect password.' });
-    //             }
-    //         });
-    //     });
-    // }));
-    //
-    // passport.serializeUser(function(user, done) {
-    //     done(null, user.id);
-    // });
-    //
-    // passport.deserializeUser(function(id, done) {
-    //     User.findById(id, function(err, user) {
-    //         done(err, user);
-    //     });
-    // });
-    //
-    // var userSchema = new mongoose.Schema({
-    //     username: { type: String, required: true, unique: true },
-    //     email: { type: String, required: true, unique: true },
-    //     password: { type: String, required: true },
-    //     resetPasswordToken: String,
-    //     resetPasswordExpires: Date
-    // });
-    //
-    // userSchema.pre('save', function(next) {
-    //     var user = this;
-    //     var SALT_FACTOR = 5;
-    //
-    //     if (!user.isModified('password')) return next();
-    //
-    //     bcrypt.genSalt(SALT_FACTOR, function(err, salt) {
-    //         if (err) return next(err);
-    //
-    //         bcrypt.hash(user.password, salt, null, function(err, hash) {
-    //             if (err) return next(err);
-    //             user.password = hash;
-    //             next();
-    //         });
-    //     });
-    // });
-    //
-    // userSchema.methods.comparePassword = function(candidatePassword, cb) {
-    //     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-    //         if (err) return cb(err);
-    //         cb(null, isMatch);
-    //     });
-    // };
-    //
-    // var User = mongoose.model('User', userSchema);
-    //
-    // mongoose.connect('localhost');
-
-    var token;
-
     app.get('/forgot', function (req, res) {
         res.render('forgotPassword.ejs', {message: req.flash('forgotPassMessage')});
 
     });
-
-
-    today = new Date();
-    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate() + 1);
-    time2 = (today.getHours() + 1) + ":" + today.getMinutes() + ":" + today.getSeconds();
-    var tokenExpire = date + ' ' + time2;
 
     app.post('/email', function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
         async.waterfall([
             function(done) {
                 crypto.randomBytes(20, function(err, buf) {
-
-
                     token = buf.toString('hex');
+                    tokenExpTime();
                     done(err, token, tokenExpire);
                 });
             },
@@ -224,7 +116,6 @@ module.exports = function (app, passport) {
 
                     //newUser.id = rows.insertId;
 
-
                     if (err) {
                         console.log(err);
                         res.send("Token Insert Fail!");
@@ -235,52 +126,11 @@ module.exports = function (app, passport) {
                 });
             },
             function(token, done, err) {
-                // var transporter = nodemailer.createTransport(
-                //     {
-                //         host: 'smtp.mail.yahoo.com',
-                //         // secure: true, // use SSL
-                //         port: 465,
-                //         auth: {
-                //             user: 'julial.z@yahoo.com',
-                //             pass: '!yahoo-MAIL!'
-                //         }
-                //         // logger: false,
-                //         // debug: false // include SMTP traffic in the logs
-                //     },
-                //     {
-                //         from: 'julial.z@yahoo.com'
-                //     }
-                // );
-
-                // mailer.extend(app, {
-                //     from: 'aaaa.zhao@g.feitianacademy.org',
-                //     host: 'smtp.gmail.com', // hostname
-                //     secureConnection: true, // use SSL
-                //     port: 465, // port for secure SMTP
-                //     transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts
-                //     auth: {
-                //         user: 'aaaa.zhao@g.feitianacademy.org',
-                //         pass: '12344321'
-                //     }
-                smtpTrans = nodemailer.createTransport({
-                    service: 'Gmail',
-                    auth: {
-                        user: 'aaaa.zhao@g.feitianacademy.org',
-                        pass: "12344321"
-                    }
-                });
-                var transport = smtpTrans;
-// Message object
+                // Message object
                 var message = {
-
-                    // sender info
-                    from: 'Zihao wang <zihao.wang@g.feitianacademy.org>',
-
-                    // Comma separated list of recipients
-                    to: req.body.username,
-
-                    // Subject of the message
-                    subject: 'Password Reset', //
+                    from: 'FTAA <aaaa.zhao@g.feitianacademy.org>', // sender info
+                    to: req.body.username, // Comma separated list of recipients
+                    subject: 'Password Reset', // Subject of the message
 
                     // plaintext body
                     text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
@@ -289,227 +139,94 @@ module.exports = function (app, passport) {
                     'If you did not request this, please ignore this email and your password will remain unchanged.\n'
                 };
 
-                transport.sendMail(message, function(error){
+                smtpTrans.sendMail(message, function(error){
                     if(error){
-                        console.log('Error occured');
                         console.log(error.message);
                         // alert('Something went wrong! Please double check if your email is valid.');
                         return;
+                    } else {
+                        res.send('Message sent successfully! Please check your email inbox.');
+                        console.log('Message sent successfully!');
+                        res.redirect('/login');
+                        // alert('An e-mail has been sent to ' + req.body.username + ' with further instructions.');
                     }
-                    console.log('Message sent successfully!');
-                    res.redirect('/login');
-                    // alert('An e-mail has been sent to ' + req.body.username + ' with further instructions.');
                 });
-
-                //
-                // smtpTransport.sendMail(mailOptions, function(err) {
-                //     console.log("aefawe: " + req.headers.host);
-                //     if (err) {
-                //         console.log(err);
-                //         res.send('Something went wrong! Please double check if your email is valid.');
-                //     } else {
-                //         res.send('info', 'An e-mail has been sent to ' + req.body.username + ' with further instructions.');
-                //         console.log("last3");
-                //     }
-                // });
-                // }, function (req, res) {
-                //     console.log("token value: " + token);
-                //     res.render('email.ejs', {
-                //         user: req.user.username, // get the user out of session and pass to template
-                //         reqhost: req.headers.host,
-                //         token: token
-                //     });
-                // });
-
-                //     app.mailer.send('email', {
-                //         from: 'aaaa.zhao@g.feitianacademy.org',
-                //         to: 'req.body.username',
-                //         subject: 'Password Reset',
-                //         template: 'email',
-                //         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-                //         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                //         'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-                //         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-                //     }, function (err) {
-                //         console.log("aefawe: " + req.headers.host);
-                //         if (err) {
-                //             console.log(err);
-                //             res.send('Something went wrong! Please double check if your email is valid.');
-                //         } else {
-                //             res.send('info', 'An e-mail has been sent to ' + req.body.username + ' with further instructions.');
-                //             console.log("last3");
-                //         }
-                //     });
-                // }
-
-                //     var mailOptions = {
-                //         to: req.body.username,
-                //         subject: 'Password Reset',
-                //         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-                //         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                //         'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-                //         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-                //     };
-                //
-                //     transporter.sendMail(mailOptions, function (err) {
-                //         req.flash('info', 'An e-mail has been sent to ' + req.body.username + ' with further instructions.');
-                //         console.log("last3");
-                //
-                //         done(err);
-                //     });
-                // },
-                // function(err) {
-                //     if (err) return next(err);
-                //     res.redirect('/forgot');
-                // }
             }
         ], function(err) {
                 if (err) return next(err);
                 res.redirect('/forgot');
-            });
+        });
     });
-    //
-    // app.post('/forgot', function(req, res, next) {
-    //
-    //     async.waterfall([
-    //         function(done) {
-    //             crypto.randomBytes(20, function(err, buf) {
-    //                 var token = buf.toString('hex');
-    //                 done(err, token);
-    //             });
-    //         },
-    //         function(token, done) {
-    //             connection.query("SELECT * FROM Users WHERE username = ?", [req.body.username], function (err, user) {
-    //                 if (!user[0]) {
-    //                     req.flash('error', 'No account with that email address exists.');
-    //                     return res.redirect('/forgot');
-    //                 } else {
-    //
-    //
-    //                     user.resetPasswordToken = token;
-    //                     user.resetPasswordExpires = dateTime + 3600000; // 1 hour
-    //
-    //                     // used to serialize the user for the session
-    //                     passport.serializeUser(function (user, done) {
-    //                         done(null, user.id);
-    //                     });
-    //
-    //                     // used to deserialize the user
-    //                     passport.deserializeUser(function (id, done) {
-    //                         connection.query("SELECT * FROM Users WHERE id = ? ", [id], function (err, rows) {
-    //                             done(err, rows[0]);
-    //                         });
-    //                     });
-    //
-    //
-    //                 }
-    //
-    //                 // user.save(function(err) {
-    //                 //     done(err, token, user);
-    //                 // });
-    //             });
-    //         }
-    //         // },
-    //         // function(token, user, done) {
-    //         //     var smtpTransport = nodemailer.createTransport('SMTP', {
-    //         //         service: 'Gmail',
-    //         //         auth: {
-    //         //             user: 'aaaa.zhao@g.feitianacademy.org',
-    //         //             pass: '12344321'
-    //         //         }
-    //         //     });
-    //         //     var mailOptions = {
-    //         //         to: user.username,
-    //         //         from: 'aaaa.zhao@g.feitianacademy.org',
-    //         //         subject: 'Node.js Password Reset',
-    //         //         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-    //         //         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-    //         //         'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-    //         //         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-    //         //     };
-    //         //     smtpTransport.sendMail(mailOptions, function(err) {
-    //         //         req.flash('info', 'An e-mail has been sent to ' + user.username + ' with further instructions.');
-    //         //         done(err, 'done');
-    //         //     });
-    //         // }
-    //     ], function(err) {
-    //         if (err) return next(err);
-    //         res.redirect('/forgot');
-    //     });
-    // });
 
     app.get('/reset/:token', function(req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
 
-        connection.query( "SELECT * FROM Users WHERE resetPasswordToken = ? AND resetPasswordExpires = ?", { resetPasswordToken: req.params.token }, function(err, user) {
+        myStat = "SELECT * FROM Users WHERE resetPasswordToken = '" + req.params.token + "'";
 
-        if (dateNtime() > tokenExpire) {
+        connection.query(myStat, function(err, user) {
+            dateNtime();
 
-        }
-
-
-            console.log("Time and f date: " + tokenExpire);
-            console.log("username: " + user);
-            if (!user) {
-                req.flash('error', 'Password reset token is invalid or has expired.');
-                return res.redirect('/login');
+            if (!user || dateTime > user[0].resetPasswordExpires) {
+                res.send('Password reset token is invalid or has expired. Please contact Administrator.');
+            } else {
+                res.render('reset.ejs', { user: user[0]});
             }
-            res.render('reset.ejs', {
-                user: req.user
-            });
         });
     });
 
     app.post('/reset/:token', function(req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+
         async.waterfall([
             function(done) {
-                connection.query( "SELECT * FROM Users WHERE resetPasswordToken = ? AND resetPasswordExpires = ? AND username = ?", { resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: dateTime }, username: req.body.username  }, function(err, user) {
+
+                myStat = "SELECT * FROM Users WHERE resetPasswordToken = '" + req.params.token + "'";
+
+                connection.query(myStat, function(err, user) {
+                    var userInfo = JSON.stringify(user, null, "\t");
+
                     if (!user) {
-                        req.flash('error', 'Password reset token is invalid or has expired.');
-                        return res.redirect('back');
-                    }
+                        res.send('Password reset token is invalid or has expired. Please contact Administrator.');
+                    } else {
+                        var newPass = {
+                            Newpassword: bcrypt.hashSync(req.body.newpassword, null, null),
+                            ConfirmPassword: bcrypt.hashSync(req.body.Confirmpassword, null, null)
+                        };
 
-                    req.user.password = req.body.password;
-                    req.user.resetPasswordToken = undefined;
-                    req.user.resetPasswordExpires = undefined;
+                        var passReset = "UPDATE Users SET password = '" + newPass.Newpassword + "' WHERE username = '" + req.body.username + "'";
 
-                    user.save(function(err) {
-                        req.logIn(user, function(err) {
-                            done(err, user);
+                        connection.query(passReset, function (err, rows) {
+                            if (err) {
+                                console.log(err);
+                                res.send("New Password Insert Fail!");
+                            } else {
+                                done()
+                            }
                         });
-                    });
-                });
-            },
-            function(user, done) {
-                smtpTrans = nodemailer.createTransport({
-                    service: 'Gmail',
-                    auth: {
-                        user: 'aaaa.zhao@g.feitianacademy.org',
-                        pass: '12344321'
                     }
-                });
 
-                var transport = smtpTrans;
+                });
+            }, function(user, done, err) {
 
                 var message = {
-                    to: req.user.username,
-
-                    from: 'Zihao wang <aaaa.zhao@g.feitianacademy.org>',
-
+                    from: 'FTAA <aaaa.zhao@g.feitianacademy.org>',
+                    to: req.body.username,
                     subject: 'Your password has been changed',
-
                     text: 'Hello,\n\n' +
-                    'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+                    'This is a confirmation that the password for your account, ' + changeMail(req.body.username) + ' has just been changed.\n'
                 };
 
-                transport.sendMail(message, function(err){
-                    req.flash('success', 'Success! Your password has been changed.');
-                    done(err);
+                smtpTrans.sendMail(message, function (error) {
+                    if(error){
+                        console.log(error.message);
+                        // alert('Something went wrong! Please double check if your email is valid.');
+                        return;
+                    } else {
+                        res.redirect('/login');
+                    }
                 });
             }
-        ], function(err) {
-            res.redirect('/login');
-        });
+        ]);
     });
 
 
@@ -565,6 +282,8 @@ module.exports = function (app, passport) {
             }
         });
     });
+
+    // app.post("/uploads", isLoggedIn, onUpload);
 
     // =====================================
     // USER MANAGEMENT =====================
@@ -638,7 +357,7 @@ module.exports = function (app, passport) {
     app.get('/filterUser', isLoggedIn, function (req, res) {
         myStat = "SELECT * FROM Users";
 
-        var myQueryObj = [
+        var myQuery = [
             {
                 fieldVal: req.query.dateCreatedFrom,
                 dbCol: "dateCreated",
@@ -683,7 +402,63 @@ module.exports = function (app, passport) {
             }
         ];
 
-        QueryStat(myQueryObj, myStat, res)
+        // QueryStat(myQueryObj, myStat, res)
+
+        function userQuery() {
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            // console.log("Query Statement: " + queryStat);
+
+            connection.query(myStat, function (err, results, fields) {
+
+                var status = [{errStatus: ""}];
+
+                if (err) {
+                    console.log(err);
+                    status[0].errStatus = "fail";
+                    res.send(status);
+                    res.end();
+                } else if (results.length === 0) {
+                    status[0].errStatus = "no data entry";
+                    res.send(status);
+                    res.end();
+                } else {
+                    var JSONresult = JSON.stringify(results, null, "\t");
+                    console.log(JSONresult);
+                    res.send(JSONresult);
+                    res.end();
+                }
+            });
+        }
+
+        var j = 0;
+
+        for (var i = 0; i < myQuery.length; i++) {
+            // console.log("i = " + i);
+            // console.log("field Value: " + !!myQuery[i].fieldVal);
+            if (i === myQuery.length - 1) {
+                if (!!myQuery[i].fieldVal) {
+                    if (j === 0) {
+                        myStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        j = 1;
+                        userQuery()
+                    } else {
+                        myStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        userQuery()
+                    }
+                } else {
+                    userQuery()
+                }
+            } else {
+                if (!!myQuery[i].fieldVal) {
+                    if (j === 0) {
+                        myStat += " WHERE " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                        j = 1;
+                    } else {
+                        myStat += " AND " + myQuery[i].dbCol + myQuery[i].op + myQuery[i].fieldVal + "'";
+                    }
+                }
+            }
+        }
     });
 
     // Retrieve user data from user management page
@@ -804,16 +579,62 @@ module.exports = function (app, passport) {
     });
 
     // edit on homepage
+    var editTransactionID;
     var editData;
     app.get('/sendEditData', isLoggedIn, function(req, res) {
-        editData = req.query;
-        res.json({"error": false, "message": "/editData"});
+        editTransactionID = req.query.transactionIDStr;
+        console.log(editTransactionID);
+
+        var scoutingStat = "SELECT Users.firstName, Users.lastName, General_Form.*, Detailed_Scouting.* FROM Transaction INNER JOIN Users ON Users.username = Transaction.Cr_UN INNER JOIN General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN Detailed_Scouting ON Detailed_Scouting.transactionID = Transaction.transactionID WHERE Transaction.transactionID = '" + editTransactionID +"';";
+        var trapStat = "SELECT Users.firstName, Users.lastName, General_Form.*, Detailed_Trap.* FROM Transaction INNER JOIN Users ON Users.username = Transaction.Cr_UN INNER JOIN General_Form ON General_Form.transactionID = Transaction.transactionID INNER JOIN Detailed_Trap ON Detailed_Trap.transactionID = Transaction.transactionID WHERE Transaction.transactionID = '" + editTransactionID + "';";
+
+        connection.query(scoutingStat + trapStat, function (err, results, fields) {
+
+            if (err) {
+                console.log(err);
+                res.json({"error": true, "message": "Fail"});
+            } else {
+                console.log(results);
+                if (results[0].length > 0) {
+                    editData = results[0][0];
+                    res.json({"error": false, "message": "/editData"});
+                } else if (results[1].length > 0) {
+                    editData = results[1][0];
+                    res.json({"error": false, "message": "/editData"});
+                } else {
+                    res.json({"error": true, "message": "Fail"});
+                }
+            }
+        });
     });
+    app.get('/edit', isLoggedIn, function (req, res) {
+        // res.render("test.ejs");
+        // console.log("11");
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+
+        var myStat = "SELECT Damage_photo, Damage_photo_name FROM Detailed_Scouting WHERE transactionID = '" + editTransactionID +"';";
+        console.log("This is for editing photos ONLY >:( " + editTransactionID);
+
+        var filePath0;
+        connection.query(myStat, function (err, results) {
+            console.log("query statement : " + myStat);
+
+            if (!results[0].imagePath) {
+                console.log("Error");
+            } else {
+                filePath0 = results[0];
+                var JSONresult = JSON.stringify(results, null, "\t");
+                console.log(JSONresult);
+                res.send(JSONresult);
+                res.end()
+            }
+        });
+    });
+    app.delete("/deleteFiles/:uuid", onDeleteFile);
 
     app.get('/editData', isLoggedIn, function(req, res) {
-        transactionID = editData.Transaction_ID;
-        console.log ("/editData TransactionID: " + transactionID);
-        res.render('dataEdit.ejs', {
+        console.log(editData.transactionID);
+        res.render('dataEdit2.ejs', {
             user: req.user,
             data: editData, // get the user out of session and pass to template
             message: req.flash('Data Entry Message')
@@ -997,29 +818,62 @@ module.exports = function (app, passport) {
     // });
 
     // Upload photos
-    app.post('/upload', fileUpload, function (req,res) {
-        //console.log(req.headers.origin);
-        res.setHeader("Access-Control-Allow-Origin", "*");
+    app.post('/upload', onUpload);
+// , function (req,res) {
+//     //console.log(req.headers.origin);
+//     res.setHeader("Access-Control-Allow-Origin", "*");
+//
+//     fileUpload(req, res, function (err) {
+//         if (err) {
+//             console.log(err);
+//             res.json({"error": true, "message": "Fail"});
+//             filePathName = "";
+//             //res.send("Error uploading file.");
+//         } else {
+//             console.log("Success:" + filePathName);
+//             filePath = filePathName;
+//             res.json({"error": false, "message": filePathName});
+//             filePathName = "";
+//         }
+//     });
+    app.post("/submit", isLoggedIn, function (req, res) {
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
 
-        fileUpload(req, res, function (err) {
+        var newImage = {
+            Damage_photo: "https://aworldbridgelabs.com/uploadfiles/" + responseDataUuid,
+            Damage_photo_name: responseDataUuid
+        };
+        console.log("path: " + responseDataUuid);
+        console.log("names: " + responseDataUuid);
+
+
+        var myStat = "INSERT INTO Detailed_Scouting (Damage_photo, Damage_photo_name) VALUES (?,?)";
+        var myVal = [newImage.Damage_photo, newImage.Damage_photo_name];
+        console.log("query statement : " + myStat);
+        console.log("values: " + myVal);
+
+        connection.query(myStat, myVal, function (err, results) {
             if (err) {
+                console.log("query statement T^T: " + myStat);
+                console.log("values T^T: " + myVal);
                 console.log(err);
-                res.json({"error": true, "message": "Fail"});
-                filePathName = "";
-                //res.send("Error uploading file.");
+                res.send("Unfortunately, there has been an error!");
+                res.end();
             } else {
-                console.log("Success:" + filePathName);
-                filePath = filePathName;
-                res.json({"error": false, "message": filePathName});
-                filePathName = "";
+                console.log("query statement yay: " + myStat);
+                console.log("values yay: " + myVal);
+                console.log("All a big success!");
+                res.send("All a big success!");
+                res.end();
             }
+
         });
     });
 
     // Submit general form
     app.post('/generalForm', isLoggedIn, function (req, res) {
         res.setHeader("Access-Control-Allow-Origin", "*");
-        console.log(req.body);
+        //console.log(req.body);
 
         var result = Object.keys(req.body).map(function (key) {
             return [String(key), req.body[key]];
@@ -1040,6 +894,11 @@ module.exports = function (app, passport) {
                 // one decimal place = divide by 10
                 value += '"' + (parseFloat(result[i][1]) + (result[i + 1][1] / 10)) + '"' + ", ";
                 i = i + 1;
+            } else if (result[i][0] === "Rotation_intercropping_crop") {
+                name += result[i][0] + ", ";
+                var str = result[i][1].toString();
+                str = str.replace(/,/g, "/");
+                value += '"' + str + '"' + ", ";
             } else {
                 // normal
                 if (result[i][1] !== "") {
@@ -1079,26 +938,33 @@ module.exports = function (app, passport) {
         var value = "";
 
         for (var i = 0; i < result.length; i++) {
-            name += result[i][0] + ", ";
-            value += '"' + result[i][1] + '"' + ", ";
+            if (result[i][0] === "Pest_stage" || result[i][0] === "Control_undertaken") {
+                name += result[i][0] + ", ";
+                var str = result[i][1].toString();
+                str = str.replace(/,/g, "/");
+                value += '"' + str + '"' + ", ";
+            } else {
+                name += result[i][0] + ", ";
+                value += '"' + result[i][1] + '"' + ", ";
+            }
         }
         name = name.substring(0, name.length - 2);
         value = value.substring(0, value.length - 2);
 
-        var path = filePath.split(";");
-        console.log(path);
+        var path = responseDataUuid.split(";");
+        //console.log(path);
         var damage = "";
         var pest = "";
 
         for (var i = 0; i < path.length - 1; i++) {
-            console.log("A");
+            //console.log("A");
             if (path[i].substring(0,12) === "Damage_photo") {
                 damage += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
             } else if (path[i].substring(0,10) === "Pest_photo") {
                 pest += "https://aworldbridgelabs.com/uploadfiles/" + path[i] + ";";
             }
         }
-        console.log(pest + "  " + damage);
+        //console.log(pest + "  " + damage);
         damage = damage.substring(0, damage.length - 1);
         pest = pest.substring(0, pest.length - 1);
 
@@ -1158,7 +1024,7 @@ module.exports = function (app, passport) {
         // value += ", '" + damage + "', '" + pest + "'";
 
         var deleteStatement = "DELETE FROM Detailed_Trap WHERE transactionID = '" + req.body.transactionID + "'; ";
-        var insertStatement = "INSERT INTO Detailed_trap (" + name + ") VALUES (" + value + ");";
+        var insertStatement = "INSERT INTO Detailed_Trap (" + name + ") VALUES (" + value + ");";
         console.log(insertStatement);
 
         connection.query(deleteStatement + insertStatement, function (err, results, fields) {
@@ -1203,47 +1069,60 @@ function isLoggedIn(req, res, next) {
 
 function dateNtime() {
     today = new Date();
-    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    date2 = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    dateTime = date + ' ' + time2;
+    dateTime = date2 + ' ' + time2;
+}
+
+function tokenExpTime() {
+    today = new Date();
+    date3 = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate()+1);
+    time3 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    tokenExpire = date3 + ' ' + time3;
 }
 
 function del_recov(StatusUpd, ErrMsg, targetURL, req, res) {
 
     transactionID = req.query.transactionIDStr.split(",");
-    statementGeneral = "UPDATE General_Form SET Status_del = '" + StatusUpd + "'";
-    statementDetailed = "UPDATE Detailed_Scouting SET Status_del = '" + StatusUpd + "'";
+    console.log(transactionID);
+    var statementGeneral = "UPDATE General_Form SET Status_del = '" + StatusUpd + "'";
+    var statementDetailedS = "UPDATE Detailed_Scouting SET Status_del = '" + StatusUpd + "'";
+    var statementDetailedT = "UPDATE Detailed_Trap SET Status_del = '" + StatusUpd + "'";
 
     for (var i = 0; i < transactionID.length; i++) {
         if (i === 0) {
             statementGeneral += " WHERE transactionID = '" + transactionID[i] + "'";
-            statementDetailed += " WHERE transactionID = '" + transactionID[i] + "'";
+            statementDetailedS += " WHERE transactionID = '" + transactionID[i] + "'";
+            statementDetailedT += " WHERE transactionID = '" + transactionID[i] + "'";
 
             if (i === transactionID.length - 1) {
                 statementGeneral += ";";
-                statementDetailed += ";";
-                myStat = statementGeneral + statementDetailed;
+                statementDetailedS += ";";
+                statementDetailedT += ";";
+                myStat = statementGeneral + statementDetailedS + statementDetailedT;
                 updateDBNres(myStat, "", ErrMsg, targetURL, res);
             }
         } else {
             statementGeneral += " OR transactionID = '" + transactionID[i] + "'";
-            statementDetailed += " OR transactionID = '" + transactionID[i] + "'";
+            statementDetailedS += " OR transactionID = '" + transactionID[i] + "'";
+            statementDetailedT += " OR transactionID = '" + transactionID[i] + "'";
 
             if (i === transactionID.length - 1) {
                 statementGeneral += ";";
-                statementDetailed += ";";
-                myStat = statementGeneral + statementDetailed;
+                statementDetailedS += ";";
+                statementDetailedT += ";";
+                myStat = statementGeneral + statementDetailedS + statementDetailedT;
                 updateDBNres(myStat, "", ErrMsg, targetURL, res);
             }
         }
-    }}
+    }
+}
 
 function updateDBNres(SQLstatement, Value, ErrMsg, targetURL, res) {
     res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
     //console.log("Query Statement: " + SQLstatement);
 
     connection.query(SQLstatement, Value, function (err, rows) {
-
         if (err) {
             console.log(err);
             res.json({"error": true, "message": ErrMsg});
@@ -1296,12 +1175,12 @@ function QueryStat(myObj, scoutingStat, trapStat, res) {
 
             if (i === myObj.length - 1) {
                 var sqlStatement = scoutingStat + "; " + trapStat;
-                dataList(sqlStatement,res);
+                dataList(sqlStatement, res);
             }
         } else {
             if (i === myObj.length - 1) {
                 var sqlStatement = scoutingStat + "; " + trapStat;
-                dataList(sqlStatement,res);
+                dataList(sqlStatement, res);
             }
         }
 
@@ -1353,10 +1232,11 @@ function QueryStat(myObj, scoutingStat, trapStat, res) {
     }
 }
 
-function dataList(SQLstatement, res) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    //console.log(SQLstatement);
-    connection.query(SQLstatement, function (err, results, fields) {
+function dataList(sqlStatement, res) {
+    console.log(sqlStatement);
+
+    res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+    connection.query(sqlStatement, function (err, results, fields) {
 
         errStatus = [{errMsg: ""}];
 
@@ -1372,11 +1252,275 @@ function dataList(SQLstatement, res) {
         } else {
             var result = results[0].concat(results[1]);
             var JSONresult = JSON.stringify(result, null, "\t");
-            console.log(JSONresult);
+            // console.log(JSONresult);
             res.send(JSONresult);
             res.end();
         }
     });
 }
 
+function changeMail(str) {
+    var spliti = str.split("@");
+    var letter1 = spliti[0].substring(0, 1);
+    var letter2 = spliti[0].substring(spliti[0].length - 1, spliti[0].length);
+    var newFirst = letter1;
+    for(i = 0; i < spliti[0].length - 2; i++) {
+        newFirst += "*";
+    }
+    newFirst += letter2;
 
+    var letter3 = spliti[1].substring(0, 1);
+    var extension = letter3;
+    for(i = 0; i < spliti[1].split(".")[0].length - 1; i++) {
+        extension += "*";
+    }
+    extension += "." + spliti[1].split(".")[1];
+    var result = newFirst + "@" + extension;
+
+    return result;
+}
+function onUpload(req, res, next) {
+    var form = new multiparty.Form();
+
+    form.parse(req, function(err, fields, files) {
+        console.log(fields);
+        console.log("A");
+        var partIndex = fields.qqpartindex;
+
+        // text/plain is required to ensure support for IE9 and older
+        res.set("Content-Type", "text/plain");
+
+        if (partIndex == null) {
+            onSimpleUpload(fields, files[fileInputName][0], res);
+        }
+        else {
+            onChunkedUpload(fields, files[fileInputName][0], res);
+        }
+    });
+    console.log("the other: " + responseDataUuid);
+
+    // return next();
+}
+
+var responseDataUuid = "",
+    responseDataName = "";
+function onSimpleUpload(fields, file, res) {
+    var d = new Date(),
+        uuid = d.getUTCFullYear() + "-" + ('0' + (d.getUTCMonth() + 1)).slice(-2) + "-" + ('0' + d.getUTCDate()).slice(-2) + "T" + ('0' + d.getUTCHours()).slice(-2) + ":" + ('0' + d.getUTCMinutes()).slice(-2) + ":" + ('0' + d.getUTCSeconds()).slice(-2) + "Z",
+        responseData = {
+            success: false,
+            newuuid: uuid + "_" + fields.qqfilename
+        };
+
+    responseDataUuid = responseData.newuuid;
+
+    file.name = fields.qqfilename;
+    responseDataName = file.name;
+
+    console.log("forth hokage: " + responseDataUuid);
+    console.log("fifth harmony: " + responseDataName);
+
+    if (isValid(file.size)) {
+        moveUploadedFile(file, uuid, function() {
+                responseData.success = true;
+                res.send(responseData);
+            },
+            function() {
+                responseData.error = "Problem copying the file!";
+                res.send(responseData);
+            });
+    }
+    else {
+        failWithTooBigFile(responseData, res);
+    }
+}
+
+function onChunkedUpload(fields, file, res) {
+    console.log("Z");
+    var size = parseInt(fields.qqtotalfilesize),
+        uuid = fields.qquuid,
+        index = fields.qqpartindex,
+        totalParts = parseInt(fields.qqtotalparts),
+        responseData = {
+            success: false
+        };
+
+    file.name = fields.qqfilename;
+
+    if (isValid(size)) {
+        storeChunk(file, uuid, index, totalParts, function() {
+                if (index < totalParts - 1) {
+                    responseData.success = true;
+                    res.send(responseData);
+                }
+                else {
+                    combineChunks(file, uuid, function() {
+                            responseData.success = true;
+                            res.send(responseData);
+                        },
+                        function() {
+                            responseData.error = "Problem conbining the chunks!";
+                            res.send(responseData);
+                        });
+                }
+            },
+            function(reset) {
+                responseData.error = "Problem storing the chunk!";
+                res.send(responseData);
+            });
+    }
+    else {
+        failWithTooBigFile(responseData, res);
+    }
+}
+
+function failWithTooBigFile(responseData, res) {
+    responseData.error = "Too big!";
+    responseData.preventRetry = true;
+    res.send(responseData);
+}
+
+function onDeleteFile(req, res) {
+    console.log("A");
+    var uuid = req.params.uuid,
+        dirToDelete = "var/www/faw/current/uploadfiles/" + uuid;
+    console.log(uuid);
+    rimraf(dirToDelete, function(error) {
+        if (error) {
+            console.error("Problem deleting file! " + error);
+            res.status(500);
+        }
+
+        res.send();
+    });
+}
+
+function isValid(size) {
+    return maxFileSize === 0 || size < maxFileSize;
+}
+
+function moveFile(destinationDir, sourceFile, destinationFile, success, failure) {
+    console.log(destinationDir);
+    mkdirp(destinationDir, function(error) {
+        var sourceStream, destStream;
+
+        if (error) {
+            console.error("Problem creating directory " + destinationDir + ": " + error);
+            failure();
+        }
+        else {
+            sourceStream = fs.createReadStream(sourceFile);
+            destStream = fs.createWriteStream(destinationFile);
+
+            sourceStream
+                .on("error", function(error) {
+                    console.error("Problem copying file: " + error.stack);
+                    destStream.end();
+                    failure();
+                })
+                .on("end", function(){
+                    destStream.end();
+                    success();
+                })
+                .pipe(destStream);
+
+            // res.setHeader("Access-Control-Allow-Origin", "*"); // Allow cross domain header
+            //
+            // var newImage = {
+            //     imagePath: req.body.imagePath,
+            //     status: req.body.status
+            // };
+            //
+            // var myStat = "INSERT INTO Julia.FineUploader";
+            //
+            // var filePath0;
+            // connection.query(myStat, function (err, results) {
+            //     console.log("query statement : " + myStat);
+            //
+            //     if (!results[0].imagePath) {
+            //         console.log("Error");
+            //     } else {
+            //         filePath0 = results[0];
+            //         var JSONresult = JSON.stringify(results, null, "\t");
+            //         console.log(JSONresult);
+            //         res.send(JSONresult);
+            //         res.end()
+            //     }
+            //
+            // });
+        }
+    });
+}
+
+function moveUploadedFile(file, uuid, success, failure) {
+    console.log("this is: " + uuid);
+    // var destinationDir = uploadedFilesPath + uuid + "/",
+    var destinationDir = "var/www/faw/current/uploadfiles/",
+        fileDestination = destinationDir + uuid + "_" + file.name;
+
+    moveFile(destinationDir, file.path, fileDestination, success, failure);
+}
+
+function storeChunk(file, uuid, index, numChunks, success, failure) {
+    var destinationDir = uploadedFilesPath + uuid + "/" + chunkDirName + "/",
+        chunkFilename = getChunkFilename(index, numChunks),
+        fileDestination = destinationDir + chunkFilename;
+
+    moveFile(destinationDir, file.path, fileDestination, success, failure);
+}
+
+function combineChunks(file, uuid, success, failure) {
+    var chunksDir = uploadedFilesPath + uuid + "/" + chunkDirName + "/",
+        destinationDir = uploadedFilesPath + uuid + "/",
+        fileDestination = destinationDir + file.name;
+
+
+    fs.readdir(chunksDir, function(err, fileNames) {
+        var destFileStream;
+
+        if (err) {
+            console.error("Problem listing chunks! " + err);
+            failure();
+        }
+        else {
+            fileNames.sort();
+            destFileStream = fs.createWriteStream(fileDestination, {flags: "a"});
+
+            appendToStream(destFileStream, chunksDir, fileNames, 0, function() {
+                    rimraf(chunksDir, function(rimrafError) {
+                        if (rimrafError) {
+                            console.log("Problem deleting chunks dir! " + rimrafError);
+                        }
+                    });
+                    success();
+                },
+                failure);
+        }
+    });
+}
+
+function appendToStream(destStream, srcDir, srcFilesnames, index, success, failure) {
+    if (index < srcFilesnames.length) {
+        fs.createReadStream(srcDir + srcFilesnames[index])
+            .on("end", function() {
+                appendToStream(destStream, srcDir, srcFilesnames, index + 1, success, failure);
+            })
+            .on("error", function(error) {
+                console.error("Problem appending chunk! " + error);
+                destStream.end();
+                failure();
+            })
+            .pipe(destStream, {end: false});
+    }
+    else {
+        destStream.end();
+        success();
+    }
+}
+
+function getChunkFilename(index, count) {
+    var digits = new String(count).length,
+        zeros = new Array(digits + 1).join("0");
+
+    return (zeros + index).slice(-digits);
+}

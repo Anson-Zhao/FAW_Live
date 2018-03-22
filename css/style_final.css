@@ -99,6 +99,11 @@ input[type='radio']{
     margin-left: 0;
 }
 
+#fieldSizeUnit {
+    margin-left: 48px;
+    width: 85%;
+}
+
 #amountOfPesticideDecimal {
     color: #5A5A5A;
     font: inherit;
@@ -163,6 +168,11 @@ input[type='text'], select, .inputNumber {
     font: inherit;
 }
 
+#unitTitle {
+    position:relative;
+    left:48px;
+}
+
 #latitudeTitle{
     position:relative;
     right:48px;
@@ -190,6 +200,10 @@ input[type='text'], select, .inputNumber {
 }
 .floatingBox {
     float:left;
+}
+
+.floating-Box{
+    display: inline;
 }
 
 #container {

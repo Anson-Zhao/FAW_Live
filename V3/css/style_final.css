@@ -1,0 +1,304 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
+
+
+
+
+html {
+    font-family: 'Montserrat', Arial, sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+#stageTitle::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+#stageTitle::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+h5 {
+    color: #e9e9e9;
+}
+
+select {
+    text-transform: none;
+}
+
+#photoOfPestImage, #photoOfDamageImage{
+    border-style: solid;
+    color: #5A5A5A;
+    font: inherit;
+    margin-top: 10px;
+    margin-left: 30px;
+    max-height: 300px;
+    max-width: 950px;
+    width: auto;
+    display: none;
+}
+
+input[type='submit']:hover{
+    background-color: #a7cb9f;
+    color: #ffffff;
+}
+
+input[type="button"]:disabled {
+    background: #dd7777;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+
+}
+
+input[type='text']:disabled::placeholder {
+    color: #dd7777;
+    font: inherit;
+
+}
+
+input[type='file']{
+    font-size: inherit;
+    background-color: #ffffff;
+    border-radius: 4px;
+    color: #5A5A5A;
+    margin-top: 10px;
+    margin-bottom: 30px;
+
+}
+
+input[type='submit'], #continue, #previous, .cancel, .clear {
+    padding: 10px;
+    background-color: #daf3ca;
+    border-radius: 10px;
+    color: #507d6a;
+    font: inherit;
+    margin-top: 10px;
+    margin-left: 80%;
+}
+
+input[type='number']{
+    color: #5A5A5A;
+    font: inherit;
+}
+
+input[type='date']{
+    color: #5A5A5A;
+    font: inherit;
+}
+
+input[type='radio']{
+    color: #5A5A5A;
+    font: inherit;
+}
+
+#fieldSizeDecimal {
+
+    color: #5A5A5A;
+    font: inherit;
+    margin-left: 0;
+}
+
+#amountOfPesticideDecimal {
+    color: #5A5A5A;
+    font: inherit;
+    margin-left: 0;
+}
+
+input[type='number']{
+    color: #5A5A5A;
+    font: inherit;
+}
+
+input[type='text'], select, .inputNumber {
+    color: #5A5A5A;
+    font: inherit;
+    margin-top: 0px;
+    background: none;
+    border: none;
+    border-bottom: solid 2px #474544;
+    font-size: 1.000em;
+    font-weight: 400;
+    letter-spacing: 1px;
+    padding: 0 0 0.875em 0;
+    text-transform: uppercase;
+    position: center;
+    width: 100%;
+}
+
+#mainCropTitle {
+    font: inherit;
+}
+
+#mainCropTitle2 {
+    font: inherit;
+}
+
+#cropSystemTitle {
+    font: inherit;
+}
+
+#pestSpeciesTitle {
+    font: inherit;
+}
+
+#cropDamageTitle {
+    font: inherit;
+}
+
+#stageTitle {
+    color: #5A5A5A;
+    font: inherit;
+    background-color: #dddddd;
+    border-bottom: none;
+    background: none;
+
+}
+
+#controlTitle {
+    font: inherit;
+}
+
+#ifPesticideTitle {
+    font: inherit;
+}
+
+#latitudeTitle{
+    position:relative;
+    right:48px;
+}
+#latitudeDirection{
+    padding: 0 0 1px 5px;
+    width:8%;
+}
+
+#latitudeDegree,#latitudeMinute,#latitudeSecond{
+    margin-left: 20px;
+    width:18%;
+}
+#longitudeTitle{
+    position:relative;
+    right:48px;
+}
+#longitudeDirection{
+    padding: 0 0 1px 5px;
+    width:8%;
+}
+#longitudeDegree,#longitudeMinute,#longitudeSecond{
+    margin-left: 20px;
+    width:18%;
+}
+.floatingBox {
+    float:left;
+}
+
+#container {
+    border: solid 3px #474544;
+    max-width: 80%;
+    margin: 60px auto;
+    position: relative;
+    padding: 50px;
+}
+
+#title {
+    color: #474544;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 7px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 60px;
+}
+
+select {
+    background: url('https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-arrow-down-32.png') no-repeat right;
+    outline: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+
+.banner {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+#modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 45%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+/* The Close Button */
+#close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#close:hover,
+#close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#modal-header {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+#modal-body {padding: 2px 16px;}
+
+#modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+#map {
+    width: 100%;
+    height: 400px;
+}
+
+input[type='text']::placeholder {
+    color: #c6c6c6;
+
+}

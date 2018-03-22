@@ -1,0 +1,1216 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>FAW/Locust Project -  Data Edit</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/style_final.css" type="text/css">
+    <link rel="stylesheet" href="/css/multi-select.css" media="screen" type="text/css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/file-uploader/5.15.5/fine-uploader-gallery.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
+    <!--<link rel="stylesheet" href="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.min.css">-->
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBX94wEDdQ52lCDhKAhcfR-flIw1NyLTMA"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/scripts/jquery.form.min.js"></script>
+    <script src="/scripts/jquery.multi-select.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/file-uploader/5.15.5/fine-uploader.js"></script>
+
+    <script type="text/template" id="qq-template">
+        <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="Drop files here">
+            <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+                <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+            </div>
+            <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                <span class="qq-upload-drop-area-text-selector"></span>
+            </div>
+            <div class="qq-upload-button-selector qq-upload-button">
+                <div>Upload a file</div>
+            </div>
+            <span class="qq-drop-processing-selector qq-drop-processing">
+                            <span>Processing dropped files...</span>
+                            <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+                        </span>
+            <ul class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals">
+                <li>
+                    <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                    <div class="qq-progress-bar-container-selector qq-progress-bar-container">
+                        <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+                    </div>
+                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                    <div class="qq-thumbnail-wrapper">
+                        <img class="qq-thumbnail-selector" qq-max-size="120" qq-server-scale>
+                    </div>
+                    <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
+                    <button type="button" class="qq-upload-retry-selector qq-upload-retry">
+                        <span class="qq-btn qq-retry-icon" aria-label="Retry"></span>
+                        Retry
+                    </button>
+
+                    <div class="qq-file-info">
+                        <div class="qq-file-name">
+                            <span class="qq-upload-file-selector qq-upload-file"></span>
+                            <span class="qq-edit-filename-icon-selector qq-btn qq-edit-filename-icon" aria-label="Edit filename"></span>
+                        </div>
+                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                        <span class="qq-upload-size-selector qq-upload-size"></span>
+                        <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">
+                            <span class="qq-btn qq-delete-icon" aria-label="Delete"></span>
+                        </button>
+                        <button type="button" class="qq-btn qq-upload-pause-selector qq-upload-pause">
+                            <span class="qq-btn qq-pause-icon" aria-label="Pause"></span>
+                        </button>
+                        <button type="button" class="qq-btn qq-upload-continue-selector qq-upload-continue">
+                            <span class="qq-btn qq-continue-icon" aria-label="Continue"></span>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+
+            <dialog class="qq-alert-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">Close</button>
+                </div>
+            </dialog>
+
+            <dialog class="qq-confirm-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">No</button>
+                    <button type="button" class="qq-ok-button-selector">Yes</button>
+                </div>
+            </dialog>
+
+            <dialog class="qq-prompt-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <input type="text">
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">Cancel</button>
+                    <button type="button" class="qq-ok-button-selector">Ok</button>
+                </div>
+            </dialog>
+        </div>
+    </script>
+    <!--<script src="//unpkg.com/flatpickr@4.1.1/dist/flatpickr.js"></script>-->
+    <style>
+        body 		{ padding-top:80px; word-wrap:break-word; }
+        #detailedFormScouting { display: none; }
+        #detailedFormTrap { display: none; }
+        #hide { display: none; }
+        .FAW        { display: none; }
+        #stay, #cancel {  position: relative;  width: 20%;  left: 20%;  }
+        #leave, #clear {  position: relative;  width: 20%;  left: 60%;  }
+        .banner{
+            position:relative;
+            left:140px;
+            width:75%;
+        }
+        .column {
+            float:right;
+            position:relative;
+            right:80px;
+            width:11%;
+        }
+        @media only screen and (max-width:320px){
+            h1 {
+                font-size: 27px;
+            }
+            .column{
+                padding:10px 40px;
+            }
+        }
+        @media only screen and (min-width:330px) and (max-width: 375px){
+            h1 {
+                font-size: 32px;
+            }
+            .column{
+                padding:10px 40px;
+            }
+
+        }
+        @media only screen and (min-width:380px) and (max-width: 414px){
+            h1 {
+                font-size: 35px;
+            }
+            .column{
+                padding:10px 40px;
+            }
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg"/></a>
+    <div id="modal" class="modal">
+        <!-- Modal content -->
+        <div id="modal-content">
+            <div id="modal-header">
+                <span id="close"></span>
+                <h2 id="header"></h2>
+            </div>
+            <div id="modal-body">
+                <p id="body"></p>
+            </div>
+            <div id="modal-footer">
+            </div>
+        </div>
+    </div>
+
+    <h1 id="title">Step 1/2: General Form</h1>
+
+    <div id="container">
+        <div id="generalForm">
+            <form id = "general" method = "post">
+
+                <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= data.transactionID %>" readonly><br><br>
+                <h4>Your Name: &nbsp;&nbsp;&nbsp;</h4><input id="firstName" type="text" value="<%= user.firstName %>" readonly><input id="lastName" type="text" value="<%= user.lastName %>" readonly><br><br>
+                <h4>1 . Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE1" name="Date" class="date" value="<%= data.Date %>" required><br><br>
+                <h4>1 . Location Name: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="locationName" name="Location_Name" type="text" value="<%= data.Location_name %>" placeholder="Enter Location Here"><br><br>
+                <h4 id="GPSLocationTitle">E. GPS Location: &nbsp;&nbsp;&nbsp;</h4>
+                <h4 style="color:red" id="errorMessage"></h4>
+                <h5 style="color:#9d9d9d;" id="locationNote"></h5>
+                <div id="locationDiv"></div>
+                <div id="map"></div><br>
+                <!--<h4>1F. Country: &nbsp;&nbsp;&nbsp;</h4>-->
+                <!--<select class="clearGen" id='country' name='country' required>-->
+                <!--<option>SELECT THE COUNTRY</option>-->
+                <!--<option>COUNTRYA</option>-->
+                <!--<option>COUNTRYB</option>-->
+                <!--<option>COUNTRYC</option>-->
+                <!--</select><br><br>-->
+                <!--<h4>1G. Province: &nbsp;&nbsp;&nbsp;</h4>-->
+                <!--<select class="clearGen" id='province' name='province' required>-->
+                <!--<option value=''>SELECT THE PROVINCE</option>-->
+                <!--<option>PROVINCEA</option>-->
+                <!--<option>PROVINCEB</option>-->
+                <!--<option>PROVINCEC</option>-->
+                <!--</select><br><br>-->
+                <!--<h4>1H. District: &nbsp;&nbsp;&nbsp;</h4>-->
+                <!--<select class="clearGen" id='district' name='district' required>-->
+                <!--<option value=''>SELECT THE DISTRICT</option>-->
+                <!--<option>DISTRICT1</option>-->
+                <!--<option>DISTRICT2</option>-->
+                <!--<option>DISTRICT3</option>-->
+                <!--</select><br><br>-->
+                <h4>1 . Main Crop: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='mainCrop' name="Main_crop" required>
+                    <option value=''>SELECT THE MAIN CROP</option>
+                    <option>ALFALFA</option>
+                    <option>BARLEY</option>
+                    <option>COTTON</option>
+                    <option>FLOWERS</option>
+                    <option>MAIZE</option>
+                    <option>MILLET</option>
+                    <option>PEANUT</option>
+                    <option>RICE</option>
+                    <option>SORGHUM</option>
+                    <option>SOYBEAN</option>
+                    <option>SUGARBEET</option>
+                    <option>SUGARCANE</option>
+                    <option>TEFF</option>
+                    <option>TOBACCO</option>
+                    <option>WEEDS</option>
+                    <option>WHEAT</option>
+                    <option>OTHER CEREALS</option>
+                    <option>OTHER FRUITS</option>
+                    <option>OTHER GRASSES</option>
+                    <option>OTHER VEGETABLES</option>
+                </select><br><br>
+                <h4>1 . Main Crop Variety: &nbsp;&nbsp;&nbsp;</h4><input class="clearGen" id="mainCropVariety" name="Main_crop_variety" type="text" value="<%= data.Main_crop_variety %>" placeholder="Enter Main Crop Variety Here"><br><br>
+                <h4>1 . Irrigation: &nbsp;&nbsp;&nbsp;</h4>
+                <input type="radio" name="Irrigation" value="Irrigated" required> IRRIGATED
+                <input type="radio" name="Irrigation" value="Rain-Fed" required> RAIN-FED <br><br>
+                <h4>1 . Fertilized Used: &nbsp;&nbsp;&nbsp;</h4>
+                <input type="radio" name="Fertilized_used" value="YES" required> YES
+                <input type="radio" name="Fertilized_used" value="NO" required> NO <br><br>
+                <h4>1 . Crop Stage: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='cropStage' name="Crop_stage" required>
+                    <option value=''>SELECT THE CROP STAGE</option>
+                    <option>SOWING</option>
+                    <option>SEEDING</option>
+                    <option>VEGETATIVE</option>
+                    <option>REPRODUCTIVE</option>
+                    <option>MATURITY</option>
+                </select><br><br>
+                <h4>1 . General Health of Crop: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='healthOfCrop' name='General_health' required>
+                    <option value=''>SELECT THE GENERAL HEALTH LEVEL</option>
+                    <option>POOR</option>
+                    <option>MEDIUM</option>
+                    <option>GOOD</option>
+                </select><br><br>
+
+                <h4>1 . Cropping System: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='cropSystem' name='Cropping_system' onchange='rotationInterCropSystem(this.value);' required>
+                    <option value=''>SELECT THE CROP SYSTEM</option>
+                    <option>SEASONAL</option>
+                    <option>ROTATION</option>
+                    <option>INTERCROPPING</option>
+                </select>
+                <div id="rotationIntercropping"></div>
+                <h4>1 . Field Size - ha (numerical XXXX.X): &nbsp;&nbsp;&nbsp;</h4>
+                <h5 style="color:#9d9d9d;">Note: There is no need to enter the decimals, etc. Please enter the number ONLY.</h5>
+                <input class="clearGen" id="fieldSizeInteger" name="Field_size_ha_integer" type="number" min="0" max="999999" placeholder="0000" onkeyup="limit()" required>.
+                <input class="clearGen" id="fieldSizeDecimal" name="Field_size_ha_decimal" type="number" min="0" max="9" placeholder="0" onkeyup="limit()" required><br><br>
+                <h4>1 . Main Crop Planting Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE2" name="Main_crop_planting_date" class="date" value="<%= data.Main_crop_planting_date %>" required><br><br>
+                <h4>1 . Date of Last RainFall: &nbsp;&nbsp;&nbsp;</h4><input id="DATE3" name="Date_of_last_rain" class="date" value="<%= data.Date_of_last_rain %>"><br><br>
+                <h4>1 . Rain Amount: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='rainAmount' name="Rain_amount" required>
+                    <option value=''>SELECT THE RAIN AMOUNT</option>
+                    <option>TRACE</option>
+                    <option>LIGHT</option>
+                    <option>MODERATE</option>
+                    <option>HEAVY</option>
+                </select><br><br>
+                <h4>1 . Entry Type: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='entryType' name="Entry_type" required>
+                    <option value=''>SELECT THE TYPE</option>
+                    <option>FIELD SCOUTING</option>
+                    <option>PHEROMONE TRAP</option>
+                </select><br><br>
+                <div class="row">
+                    <div class="column">
+                        <input id="continue" type="submit" value="Continue"/>
+                    </div>
+                    <div class="column">
+                        <input class="cancel" type="button" onclick="goBack()" value=" Cancel  "/>
+                    </div>
+
+                    <div class="column">
+                        <input  class="clear" type="button" onclick="clearGeneral()" value="   Clear   "/>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="detailedFormScouting">
+            <form id="detailedScouting" method = "post">
+                <div>
+                    <h4>Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= data.transactionID %>" readonly><br><br>
+                    <h4>2 . Pest Species: &nbsp;&nbsp;&nbsp;</h4>
+                    <select class="clearDetS" id='pestSpecies' name='Pest_species' onchange="pestSelect()" required>
+                        <option value=''>SELECT THE TYPE OF THE PEST</option>
+                        <option>FAW</option>
+                        <option>AAW</option>
+                        <option>BORER</option>
+                    </select><br><br>
+                </div>
+                <div class="FAW">
+                    <h2>Pests</h2>
+                    <div id="pests">
+                        <h4>2 . Present / Absent: &nbsp;&nbsp;&nbsp;</h4>
+                        <input type="radio" name="Present_absent" value="PRESENT" onclick="present(this.value)" required> PRESENT
+                        <input type="radio" name="Present_absent" value="ABSENT" onclick="present(this.value)" required> ABSENT <br><br>
+                        <div id="damageStage">
+
+                        </div>
+                        <h4>2 . Previous Damage: &nbsp;&nbsp;&nbsp;</h4>
+                        <select class="clearDetS" id='previousDamage' name='Previous_damage' required>
+                            <option value=''>SELECT THE DAMAGE LEVEL</option>
+                            <option>NONE</option>
+                            <option>LOW</option>
+                            <option>MODERATE</option>
+                            <option>HIGH</option>
+                        </select><br><br>
+                        <h4>2 . Natural Enemies Present? &nbsp;&nbsp;&nbsp;</h4>
+                        <select class="clearDetS" id='naturalEnemies' name='Natural_enemies' required>
+                            <option value=''>SELECT THE NATURAL ENEMIES</option>
+                            <option>NONE</option>
+                            <option>PARASITOIDES</option>
+                            <option>PATHOGENS</option>
+                            <option>PREDATORS</option>
+                        </select><br><br>
+                        <h4>2 . Dead larvae killed by natural enemies? &nbsp;&nbsp;&nbsp;</h4>
+                        <input type="radio" name="Dead_larvae" value="YES" required> YES
+                        <input type="radio" name="Dead_larvae" value="NO" required> NO <br><br>
+                        <div id="infested">
+
+                        </div>
+                    </div>
+
+                    <h2>Control</h2>
+                    <div id="control">
+                        <div id="controlType"></div>
+                        <div id="pesticide"></div>
+                    </div>
+                    <input id="hide" type="submit">
+                </div>
+            </form>
+            <form id="upload" enctype="multipart/form-data" method="post">
+                <div class="FAW">
+                    <h2>Resources</h2>
+                    <h4>Photos maize at all stages of damage: &nbsp;&nbsp;&nbsp;</h4>
+                    <input type="button" id="edit" value="Edit"><br>
+                    <div id="uploader"></div>
+
+                    <div id="photo"></div>
+
+                    <div class="row">
+                        <div class="column">
+                            <input id="submit" type="submit" value="Complete">
+                        </div>
+                        <div class="column">
+                            <input id="previous" type="button" onclick="previousForm()" value=" Previous ">
+                        </div>
+                        <div class="column">
+                            <input class="cancel" type="button" onclick="goBack()" value="  Cancel   ">
+                        </div>
+                        <div class="column">
+                            <input class="clear" type="button" onclick="clearDetSailed()" value="    Clear    ">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="detailedFormTrap">
+            <form id="detailedTrap" method = "post">
+                <h4>2 . Transaction ID: &nbsp;&nbsp;&nbsp;</h4><input id="transactionID" name="transactionID" type="text" value="<%= data.transactionID %>" readonly><br><br>
+                <h4>2 . Trap ID: &nbsp;&nbsp;&nbsp;</h4><input id="trapID" name="Trap_ID" type="text" value="<%= data.Trap_ID %>" required><br><br>
+                <h4>2 . FAW Confirmed: &nbsp;&nbsp;&nbsp;</h4><input id="FAWConfirmed" class="inputNumber" name="FAW_confirmed" type="number" value="<%= data.FAW_confirmed %>" required><br><br>
+                <h4>2 . FAW Suspected: &nbsp;&nbsp;&nbsp;</h4><input id="FAWSuspected" class="inputNumber" name="FAW_suspected" type="number" value="<%= data.FAW_suspected %>" required><br><br>
+                <h4>2 . Other Species: &nbsp;&nbsp;&nbsp;</h4><input id="otherSpecies" class="inputNumber" name="Other_species" type="number" value="<%= data.Other_species %>" required><br><br>
+                <h4>2 . Trap Replaced? &nbsp;&nbsp;&nbsp;</h4>
+                <input type="radio" name="Trap_replaced" value="YES" required> YES
+                <input type="radio" name="Trap_replaced" value="NO" required> NO <br><br>
+                <h4>2 . Lure Replaced? &nbsp;&nbsp;&nbsp;</h4>
+                <input type="radio" name="Lure_replaced" value="YES" required> YES
+                <input type="radio" name="Lure_replaced" value="NO" required> NO <br><br>
+                <h4>2 . Lure Name: &nbsp;&nbsp;&nbsp;</h4>
+                <select class="clearGen" id='lureName' name="Lure_name" required>
+                    <option value=''>SELECT THE MAIN CROP</option>
+                    <option>CHEMTICA</option>
+                    <option>PHEROTECH</option>
+                    <option>PSU SCENTRY</option>
+                    <option>RUSSELLPM</option>
+                    <option>SCENTRY</option>
+                    <option>SCENTURION</option>
+                    <option>TRÉCÉ</option>
+                    <option>OTHER</option>
+                </select><br><br>
+                <h4>2 . Trap Serviced Date: &nbsp;&nbsp;&nbsp;</h4><input id="DATE4" name="Trap_serviced_date" class="date" value="<%= data.Trap_serviced_date %>" required><br><br>
+
+                <div class="row">
+                    <div class="column">
+                        <input id="submitTrap" type="submit" value="Complete">
+                    </div>
+                    <div class="column">
+                        <input id="previous" type="button" onclick="previousForm()" value=" Previous ">
+                    </div>
+                    <div class="column">
+                        <input class="cancel" type="button" onclick="goBack()" value="  Cancel   ">
+                    </div>
+                    <div class="column">
+                        <input class="clear" type="button" value="    Clear    ">
+                        <!--<input class="clear" type="button" onclick="clearDetSailed()" value="    Clear    ">-->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+
+    var globalResults;
+
+    $(function(){
+
+        var latitude = "<%= data.Latitude %>".split(" ");
+        var longitude = "<%= data.Longitude %>".split(" ");
+
+        $("#locationDiv").append($("<h4 id='latitudeTitle'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Latitude: </h4><h4 id='longitudeTitle'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Longitude: </h4>"));
+        var latitudeTitle = $("#latitudeTitle");
+        var latitudeSelect = $("<select id='latitudeDirection' name='Latitude_direction' required>");
+        latitudeTitle.append(latitudeSelect);
+        if (latitude[0] === "N" || !latitude[0]) {
+            latitudeSelect.append($("<option>N</option><option>S</option>"));
+        } else if (latitude[0] === "S") {
+            latitudeSelect.append($("<option>S</option><option>N</option>"));
+        }
+        latitudeTitle.append($("</select>"));
+
+        var longitudeTitle = $("#longitudeTitle");
+        var longitudeSelect = $("<select id='longitudeDirection' name='Longitude_direction' required>");
+        longitudeTitle.append(longitudeSelect);
+        if (longitude[0] === "E" || !longitude[0]) {
+            longitudeSelect.append($("<option>E</option><option>W</option>"));
+        } else if (longitude[0] === "W") {
+            longitudeSelect.append($("<option>W</option><option>E</option>"));
+        }
+        longitudeTitle.append($("</select>"));
+
+        latitudeTitle.append($("<input id='latitudeDegree' name='latitudeDegree' type='number' value='" + latitude[1].substring(0,latitude[1].length - 1) + "' required>°" + " <input id='latitudeMinute' name='latitudeMinute' type='number' value='" + latitude[2].substring(0,latitude[2].length - 5) + "' required>'" + " <input id='latitudeSecond' name='latitudeSecond' type='number' value='" + latitude[3].substring(0,latitude[3].length - 10) + "' required>''" + "<p></p>"));
+        longitudeTitle.append($("<input id='longitudeDegree' name='longitudeDegree' type='number' value='" + longitude[1].substring(0,longitude[1].length - 1) + "' required>°" + " <input id='longitudeMinute' name='longitudeMinute' type='number' value='" + longitude[2].substring(0,longitude[2].length - 5) + "' required>'" + " <input id='longitudeSecond' name='longitudeSecond' type='number' value='" + longitude[3].substring(0,longitude[3].length - 10) + "' required>''" + "<p></p>"));
+        $("#locationDiv").append($("<input id='refreshMap' type='button' onclick='refresh()' value='Click here to refresh the map'>"));
+        $("#refreshMap").click();
+
+        $("#mainCrop").val("<%= data.Main_crop %>");
+        $("[name='Irrigation'][value='<%= data.Irrigation %>']").prop("checked", true);
+        $("[name='Fertilized_used'][value='<%= data.Fertilized_used %>']").prop("checked", true);
+        $("#cropStage").val("<%= data.Crop_stage %>")
+        $("#healthOfCrop").val("<%= data.General_health %>");
+        $("#cropSystem").val("<%= data.Cropping_system %>");
+        rotationInterCropSystem("<%= data.Cropping_system %>");
+        $('#rotationIntercroppingCrop').multiSelect("select", "<%= data.Rotation_intercropping_crop %>".split("/"));
+        var fieldSize = "<%= data.Field_size_ha %>".split(".");
+        $("#fieldSizeInteger").val(fieldSize[0]);
+        $("#fieldSizeDecimal").val(fieldSize[1]);
+        $("#rainAmount").val("<%= data.Rain_amount %>");
+        $("#entryType").val("<%= data.Entry_type %>");
+
+
+        $("#pestSpecies").val("<%= data.Pest_species %>");
+        $("[name='Present_absent'][value='<%= data.Present_absent %>']").prop("checked", true);
+        $("#previousDamage").val("<%= data.Previous_damage %>");
+        $("#naturalEnemies").val("<%= data.Natural_enemies %>");
+        $("[name='Dead_larvae'][value='<%= data.Dead_larvae %>']").prop("checked", true);
+        present("<%= data.Present_absent %>");
+        $("#cropDamage").val("<%= data.Crop_damage %>");
+        $('#pestStage').multiSelect("select", "<%= data.Pest_stage %>".split("/"));
+        $("#currentDamage").val("<%= data.Current_damage %>");
+        $("#cropInfested").val("<%= data.Crop_infested %>");
+        $('#controlUndertaken').multiSelect("select", "<%= data.Control_undertaken %>".split("/"));
+        $("#PesticideName").val("<%= data.Pesticide_name %>");
+        $("#BiopesticideName").val("<%= data.Biopesticide_name %>");
+        $("#PesticideLitres").val("<%= data.Pesticide_litres %>");
+        $("#BiopesticideLitres").val("<%= data.Biopesticide_litres %>");
+        var photoOfPest = "<%= data.Photo_of_Pest %>".split(";");
+        var photoOfDamage = "<%= data.Photo_of_Damage %>".split(";");
+        $("#edit").on("click", function () {
+            $.ajax({
+                url: '/edit',
+                type: 'GET',
+                dataType: 'json',
+                async: false,
+                success: function (results) {
+                    if (!results.error) {
+                        globalResults = results;
+                        console.log("results: " + globalResults[0].Damage_photo);
+
+                        let list = [];
+                        for (var i = 0; i < globalResults.length; i++) {
+                            var first = {
+                                id: i,
+                                size: 561276,
+                                thumbnailUrl: globalResults[i].Damage_photo,
+                                name: globalResults[i].Damage_photo_name
+                            }
+
+                            list.push(first);
+                        }
+                        console.log("afwefwe: " + qq.supportedFeatures.imagePreviews === true);
+                        console.log("json object array: " + list[0].thumbnailUrl);
+
+                        uploader.addInitialFiles(list);
+                    } else {
+                        console.log("didn't work :(");
+                    }
+                }
+            })
+        });
+
+
+        // for (var p = 0; p < photoOfPest.length; p++) {
+        //     $("#photoOfPestDiv").append($("<a target=\"_blank\" href='" + photoOfPest[p] + "'><img src='" + photoOfPest[p] + "' id='p" + p + "'></a>"));
+        //
+        //     var popWidth = document.getElementById("p" + p).naturalWidth;
+        //     var popHeight = document.getElementById("p" + p).naturalHeight;
+        //
+        //     if (popWidth > popHeight) {
+        //         document.getElementById("p" + p).setAttribute("class", "x");
+        //     } else if (popWidth < popHeight) {
+        //         document.getElementById("p" + p).setAttribute("class", "y");
+        //     } else if (popWidth === popHeight) {
+        //         document.getElementById("p" + p).setAttribute("class", "z");
+        //     }
+        // }
+        //
+        // for (var d = 0; d < photoOfDamage.length; d++) {
+        //     $("#photoOfDamageDiv").append($("<a target=\"_blank\" href='" + photoOfDamage[d] + "'><img src='" + photoOfDamage[d] + "' id='d" + d + "'></a>"));
+        //
+        //     var podWidth = document.getElementById("d" + d).naturalWidth;
+        //     var podHeight = document.getElementById("d" + d).naturalHeight;
+        //     if (podWidth > podHeight) {
+        //         document.getElementById("d" + d).setAttribute("class", "x");
+        //     } else if (podWidth < podHeight) {
+        //         document.getElementById("d" + d).setAttribute("class", "y");
+        //     } else if (podWidth === podHeight) {
+        //         document.getElementById("d" + d).setAttribute("class", "z");
+        //     }
+        // }
+
+
+        $("[name='Trap_replaced'][value='<%= data.Trap_replaced %>']").prop("checked", true);
+        $("[name='Lure_replaced'][value='<%= data.Lure_replaced %>']").prop("checked", true);
+        $("#lureName").val("<%= data.Lure_name %>");
+
+        pestSelect();
+
+        flatpickr(".date", {
+            dateFormat: "Y-m-d",
+            time_24hr: true
+        });
+
+        var options = {
+            url: '/upload',    // override for form's 'action' attribute
+            type: 'post',        // 'get' or 'post', override for form's 'method' attribute
+            dataType: 'json',        // 'xml', 'script', or 'json' (expected server response type)
+            clearForm: true,        // clear all form fields after successful submit
+            // beforeSubmit:  showRequest,  // pre-submit callback
+            success:       showResponse  // post-submit callback
+
+            //target:        '#output2',   // target element(s) to be updated with server response
+            // other available options:
+            //resetForm: true        // reset the form after successful submit
+            // $.ajax options can be used here too, for example:
+            //timeout:   3000
+        };
+
+        $('#upload').submit(function(e) {
+            // $("#upload").ajaxSubmit(options);
+            // Prevent form submission
+            e.preventDefault();
+            alert("This button has actually been selected and this can't possibly be the issue. FIRST");
+
+            $("#hide").click();
+        });
+
+        $('#detailedScouting').submit(function(e) {
+            // Prevent form submission
+            e.preventDefault();
+            // $.ajax({
+            //     url: '/upload',    // override for form's 'action' attribute
+            //     type: 'post',        // 'get' or 'post', override for form's 'method' attribute
+            //     dataType: 'json',        // 'xml', 'script', or 'json' (expected server response type)
+            //     clearForm: true,        // clear all form fields after successful submit
+            //     // beforeSubmit:  showRequest,  // pre-submit callback
+            //     success: showResponse  // post-submit callback
+            // })
+            alert("This button has actually been selected and this can't possibly be the issue.");
+            $.ajax({
+                type: "post",
+                url: "/generalForm",
+                dataType: 'json',
+                data: $("#general").serialize(),
+                success: function (result) {
+                    if (!result.error) {
+                        $.ajax({
+                            type: "post",
+                            url: "/detailedFormScouting",
+                            dataType: 'json',
+                            data: $("#detailedScouting").serialize(),
+                            success: function (result) {
+                                if (!result.error) {
+                                    document.getElementById("modal-footer").style.display = "none";
+
+                                    document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
+                                    document.getElementById("close").innerHTML = "<a href='/userhome'>&times</a>";
+
+                                    document.getElementById("header").innerHTML = "Congratulations, Your Edit is Successfully Complete !";
+                                    document.getElementById("body").innerHTML = "<br>Click X to return to the Home Page.<br>";
+
+                                    document.getElementById("modal").style.display = "block";
+                                } else {
+                                    alert(result.message);
+                                }
+                            }
+                        })
+                    } else {
+                        alert(result.message);
+                    }
+                }
+            })
+
+        });
+
+        $('#detailedTrap').submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: "post",
+                url: "/generalForm",
+                dataType: 'json',
+                data: $("#general").serialize(),
+                success: function (result) {
+                    if (!result.error) {
+                        $.ajax({
+                            type: "post",
+                            url: "/detailedFormTrap",
+                            dataType: 'json',
+                            data: $("#detailedTrap").serialize(),
+                            success: function (result) {
+                                if (!result.error) {
+                                    document.getElementById("modal-footer").style.display = "none";
+
+                                    document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
+                                    document.getElementById("close").innerHTML = "<a href='/userhome'>&times</a>";
+
+                                    document.getElementById("header").innerHTML = "Congratulations, Your Edit is Successfully Complete !";
+                                    document.getElementById("body").innerHTML = "<br>Click X to return to the Home Page.<br>";
+
+                                    document.getElementById("modal").style.display = "block";
+                                } else {
+                                    alert(result.message);
+                                }
+                            }
+                        })
+                    } else {
+                        alert(result.message);
+                    }
+                }
+            })
+        });
+
+        $('#general').submit(function(e) {
+            // Prevent form submission
+            // alert("A");
+            e.preventDefault();
+            // alert("X");
+            var entryType = document.getElementById("entryType").value;
+            if (entryType === "FIELD SCOUTING") {
+                document.getElementById("title").innerHTML = "Step 2/2: Detailed Form";
+                document.getElementById("generalForm").style.display = "none";
+                document.getElementById("detailedFormScouting").style.display = "block";
+            } else if (entryType === "PHEROMONE TRAP") {
+                document.getElementById("title").innerHTML = "Step 2/2: Detailed Form";
+                document.getElementById("generalForm").style.display = "none";
+                document.getElementById("detailedFormTrap").style.display = "block";
+            }
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        });
+    });
+
+    var globalPaths;
+
+    var uploader = new qq.FineUploader({
+        element: document.getElementById("uploader"),
+        request: {
+            endpoint: '/upload'
+        },
+        deleteFile: {
+            enabled: true, // defaults to false
+            endpoint: '/deleteFiles'
+        },
+        callbacks: {
+            onComplete: function (id, name, responseJSON) {
+                alert(responseJSON.newuuid);
+                alert(id + "      " + name);
+                uploader.setUuid(id, responseJSON.newuuid);
+                // $.ajax({
+                //     url: '/submit',
+                //     type: 'POST',
+                //     dataType: 'json',
+                //     async: false,
+                //     success: function (product) {
+                //         if (!product.error) {
+                //             globalPaths = product;
+                //             console.log("results: " + globalPaths[0].Damage_photo);
+                //         } else {
+                //             console.log("you're gonna have a bad time");
+                //         }
+                //     }
+                // })
+            }
+        }
+    });
+
+    function createInputBox(lati, long) {
+        // [0] = direction; [1] = degrees; [2] = minutes; [3] = seconds
+        var latitude = [];
+        var longitude = [];
+        if (lati && long) {
+            document.getElementById("locationNote").innerHTML = "Note: Please Verify Latitude/Longitude and Change if is Incorrect !";
+            latitude = lati.split(" ");
+            longitude = long.split(" ");
+        } else {
+            document.getElementById("locationNote").innerHTML = "Note: Please Manually Enter Latitude/Longitude !";
+        }
+
+        var latitudeTitle = $("#latitudeTitle");
+        var latitudeSelect = $("<select id='latitudeDirection' name='Latitude_direction' required>");
+        latitudeTitle.append(latitudeSelect);
+        if (latitude[0] === "N" || !latitude[0]) {
+            latitudeSelect.append($("<option>N</option><option>S</option>"));
+        } else if (latitude[0] === "S") {
+            latitudeSelect.append($("<option>S</option><option>N</option>"));
+        }
+        latitudeTitle.append($("</select>"));
+
+        var longitudeTitle = $("#longitudeTitle");
+        var longitudeSelect = $("<select id='longitudeDirection' name='Longitude_direction' required>");
+        longitudeTitle.append(longitudeSelect);
+        if (longitude[0] === "E" || !longitude[0]) {
+            longitudeSelect.append($("<option>E</option><option>W</option>"));
+        } else if (longitude[0] === "W") {
+            longitudeSelect.append($("<option>W</option><option>E</option>"));
+        }
+        longitudeTitle.append($("</select>"));
+
+        latitudeTitle.append($("<input id='latitudeDegree' name='Latitude_degree' type='number' value='" + latitude[1] + "' required>°" + " <input id='latitudeMinute' name='Latitude_minute' type='number' value='" + latitude[2] + "' required>'" + " <input id='latitudeSecond' name='Latitude_second' type='number' value='" + Math.round(latitude[3] * 1000) / 1000 + "' required>''" + "<p></p>"));
+        longitudeTitle.append($("<input id='longitudeDegree' name='Longitude_degree' type='number' value='" + longitude[1] + "' required>°" + " <input id='longitudeMinute' name='Longitude_minute' type='number' value='" + longitude[2] + "' required>'" + " <input id='longitudeSecond' name='Longitude_second' type='number' value='" + Math.round(longitude[3] * 1000) / 1000 + "' required>''" + "<p></p>"));
+
+        $("#locationDiv").append($("<input type='button' onclick='refresh()' value='Click here to refresh the map'>"));
+    }
+
+    function refresh() {
+        var latiDirection = document.getElementById("latitudeDirection").value;
+        var longDirection = document.getElementById("longitudeDirection").value;
+        var latiDegree = document.getElementById("latitudeDegree").value;
+        var longDegree = document.getElementById("longitudeDegree").value;
+        var latiMinute = document.getElementById("latitudeMinute").value;
+        var longMinute = document.getElementById("longitudeMinute").value;
+        var latiSecond = document.getElementById("latitudeSecond").value;
+        var longSecond = document.getElementById("longitudeSecond").value;
+
+        if (latiDirection && longDirection && latiDegree && longDegree && latiMinute && longMinute && latiSecond && longSecond) {
+            // convert latitude & longitude from Degrees Minutes Seconds to Decimal Degree
+            var latiDD = parseFloat(latiDegree) + (parseFloat(latiMinute) / 60) + (parseFloat(latiSecond) / 3600);
+            var longDD = parseFloat(longDegree) + (parseFloat(longMinute) / 60) + (parseFloat(longSecond) / 3600);
+            // change to negative if S or W
+            if (latiDirection === "S") {
+                latiDD = latiDD * -1;
+            }
+            if (longDirection === "W") {
+                longDD = longDD * -1;
+            }
+
+            var newPosition = {lat: latiDD, lng: longDD};
+            document.getElementById("map").innerHTML = "";
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 4,
+                center:  newPosition,
+                mapTypeId: 'hybrid'
+            });
+
+            var marker = new google.maps.Marker({
+                position:  newPosition,
+                map: map
+            });
+        } else {
+
+        }
+    }
+
+    function rotationInterCropSystem(value) {
+        $("#rotationIntercropping").empty();
+        if (value === "ROTATION" || value === "INTERCROPPING") {
+            //var mainCropList = ["ALFALFA", "BARLEY", "COTTON", "FLOWERS", "MAIZE", "MILLET", "PEANUT", "RICE", "SORGHUM", "SOYBEAN", "SUGARBEET", "SUGARCANE", "TEFF", "TOBACCO", "WEEDS", "WHEAT", "OTHER CEREALS", "OTHER FRUITS", "OTHER GRASSES", "OTHER VEGETABLES"];
+            var mainCropList = document.getElementById("mainCrop").options;
+            var mainCropDiv = $("#rotationIntercropping");
+            mainCropDiv.append($("<h4>1 . Rotation/Intercropping Crop: &nbsp;&nbsp;&nbsp;</h4><button type='button' id='rotationIntercroppingCrop-select_all' onclick='selectAndUnselect()'>select all</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' id='rotationIntercroppingCrop-deselect_all' onclick='selectAndUnselect()'>deselect all</button>"));
+            var mainCropSelect = $("<select multiple='multiple' class='clearGen' id='rotationIntercroppingCrop' name='Rotation_intercropping_crop'>");
+            mainCropDiv.append(mainCropSelect);
+            for (var i = 1; i < mainCropList.length; i++) {
+                var mainCropOption = $("<option>" + mainCropList[i].value + "</option>");
+                mainCropSelect.append(mainCropOption);
+            }
+            mainCropDiv.append($("</select>"));
+            $('#rotationIntercroppingCrop').multiSelect();
+            //var value = "<%= data.Rotation_intercropping_crop %>".split(",");
+
+        }
+    }
+
+    function selectAndUnselect(e) {
+        var activeElementId = document.activeElement.id;
+        var id = activeElementId.split("-")[0];
+        var action = activeElementId.split("-")[1];
+        $("#" + id).multiSelect(action);
+        //return false;
+    }
+
+    function limit() {
+        var key = event.which || event.keyCode;
+        var activeElementId = document.activeElement.id;
+        if (activeElementId === "fieldSizeInteger") {
+            var four_digit = document.getElementById("fieldSizeInteger").value;
+
+            if (key === 190) {
+                //alert(document.getElementById("fieldSizeInteger").value);
+                document.getElementById("fieldSizeInteger").value = four_digit + "00000";
+
+                document.getElementById("fieldSizeDecimal").focus();
+            }
+
+            if (document.getElementById("fieldSizeInteger").value.length > 4) {
+                //alert(four_digit + " " + four_digit.length);
+
+                document.getElementById("fieldSizeInteger").value = four_digit.substring(0, 4);
+            }
+        } else if (activeElementId === "fieldSizeDecimal") {
+            var one_digit = document.getElementById("fieldSizeDecimal").value;
+
+            if (one_digit.length > 1) {
+                document.getElementById("fieldSizeDecimal").value = one_digit.substring(0, 1);
+            }
+        }
+    }
+
+    function pestSelect() {
+        var pestSpecies = document.getElementById("pestSpecies").value;
+        if (!pestSpecies) {
+            $(".FAW").css("display", "none");
+//            document.getElementsByClassName("FAW")[0].style.display = "none";
+//            document.getElementsByClassName("FAW")[1].style.display = "none";
+        } else if (pestSpecies === "FAW") {
+            $(".FAW").css("display", "block");
+//            document.getElementsByClassName("FAW")[0].style.display = "block";
+//            document.getElementsByClassName("FAW")[1].style.display = "block";
+        } else {
+            $(".FAW").css("display", "none");
+//            document.getElementsByClassName("FAW")[0].style.display = "none";
+//            document.getElementsByClassName("FAW")[1].style.display = "none";
+            alert("To be Developed")
+        }
+    }
+
+    function present(status) {
+        var damageStageDiv = $("#damageStage");
+        var cropInfestedDiv = $("#cropInfested");
+        var controlTypeDiv = $("#controlType");
+        var photoDiv = $("#photo");
+        damageStageDiv.empty();
+        cropInfestedDiv.empty();
+        controlTypeDiv.empty();
+        photoDiv.empty();
+
+        if (status === "PRESENT") {
+            // damageStageDiv.append($("<h4>1 . Crop Damage: &nbsp;&nbsp;&nbsp;</h4>"));
+            // var mainCropSelect = $("<select class='clearGen' id='rotationIntercroppingCrop' name='rota_inter_crop'></select>");
+            // damageStageDiv.append(mainCropSelect);
+            // for (var i = 1; i < mainCropList.length; i++) {
+            //     var mainCropOption = $("<option>" + mainCropList[i].value + "</option>");
+            //     mainCropSelect.append(mainCropOption);
+            // }
+            var title = [$("<h4>2 . Crop Damage: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Pest Stage: &nbsp;&nbsp;&nbsp;</h4><a href='javascript:void(0);' id='pestStage-select_all' onclick='selectAndUnselect()'>select all</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' id='pestStage-deselect_all' onclick='selectAndUnselect()'>deselect all</a>"), $("<br<br><h4>2 . Current Damage: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Crop Infested: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4>2 . Control Undertaken: &nbsp;&nbsp;&nbsp;</h4><a href='javascript:void(0);' id='controlUndertaken-select_all' onclick='selectAndUnselect()'>select all</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' id='controlUndertaken-deselect_all' onclick='selectAndUnselect()'>deselect all</a>"), $("<h4>Photos of pest at different stages: &nbsp;&nbsp;&nbsp;</h4>")];
+            var select = [$("<select class='clearGen' id='cropDamage' name='Crop_damage' required></select><br><br>"), $("<select multiple='multiple' class='clearGen' id='pestStage' name='Pest_stage' required></select>"), $("<select class='clearGen' id='currentDamage' name='Current_damage' required></select><br><br>"), $("<input class='clearGen inputNumber' id='cropInfested' name='Crop_infested' type='text' placeholder='Enter The Percentage of Crop Infested Here' required><br><br>"), $("<select multiple='multiple' class='clearGen' id='controlUndertaken' name='Control_undertaken' onchange='controlType(this)'></select>"), $("<div class='clearGen' id='uploaderPest'></div><br><br>"), $("<input type='button' id='edit2' value='Edit'>")];
+            //alert(title.length);
+            for (var i = 0; i < title.length; i++) {
+                if (i < 3) {
+                    damageStageDiv.append(title[i]);
+                    damageStageDiv.append(select[i]);
+                } else if (i === 3) {
+                    cropInfestedDiv.append(title[i]);
+                    cropInfestedDiv.append(select[i]);
+                } else if (i === 4) {
+                    controlTypeDiv.append(title[i]);
+                    controlTypeDiv.append(select[i]);
+                } else if (i === 5) {
+                    photoDiv.append(title[i]);
+                    photoDiv.append(select[i]);
+                }
+            }
+
+            var damageOptions = document.getElementById("previousDamage").options;
+            damageOptions[0].value = "SELECT THE DAMAGE LEVEL";
+            //alert(damageOptions.length);
+            var stageOptions = ["EGGS", "LARVAE", "PUPAE", "ADULTS"];
+            var controlTypeOptions = ["NONE", "BIOPESTICIDE", "CHEMICAL PESTICIDE", "EGG-SQUASHING", "HAND-PICKING", "MECHANICAL", "CULTURAL", "BIOCONTROL"];
+            for (var i = 0; i < controlTypeOptions.length; i++) {
+                select[4].append($("<option>" + controlTypeOptions[i] + "</option>"));
+                if (i < 4) {
+                    select[0].append($("<option>" + damageOptions[i].value + "</option>"));
+                    select[1].append($("<option>" + stageOptions[i] + "</option>"));
+                    select[2].append($("<option>" + damageOptions[i].value + "</option>"));
+                } else if (i === 4) {
+                    select[0].append($("<option>" + damageOptions[i].value + "</option>"));
+                    select[2].append($("<option>" + damageOptions[i].value + "</option>"));
+                }
+            }
+            $("option:first", select[0]).val("");
+            $("option:first", select[2]).val("");
+            select[1].multiSelect();
+            select[4].multiSelect();
+            $("#edit2").on("click", function () {
+                if (confirm("Is this button working?")) {
+
+                    $.ajax({
+                        url: '/edit2',
+                        type: 'GET',
+                        dataType: 'json',
+                        async: false,
+                        success: function (results) {
+                            if (!results.error) {
+                                globalResults = results;
+                                console.log("results: " + globalResults[0].Pest_photo);
+
+                                let list = [];
+                                for (var i = 0; i < globalResults.length; i++) {
+                                    var first = {
+                                        id: i,
+                                        size: 561276,
+                                        thumbnailUrl: globalResults[i].Pest_photo,
+                                        name: globalResults[i].Pest_photo_name
+                                    }
+
+                                    list.push(first);
+                                }
+                                console.log("afwefwe: " + qq.supportedFeatures.imagePreviews === true);
+                                console.log("json object array: " + list[0].thumbnailUrl);
+
+                                uploaderPest.addInitialFiles(list);
+                            } else {
+                                console.log("didn't work :(");
+                            }
+                        }
+                    })
+                } else {
+                    return false;
+                }
+            });
+            var uploaderPest = new qq.FineUploader({
+                element: document.getElementById("uploaderPest"),
+                request: {
+                    endpoint: '/upload'
+                },
+                deleteFile: {
+                    enabled: true, // defaults to false
+                    endpoint: '/deleteFiles'
+                },
+                callbacks: {
+                    onComplete: function (id, name, responseJSON) {
+                        alert(responseJSON.newuuid2);
+                        alert(id + "      " + name);
+                        uploaderPest.setUuid(id, responseJSON.newuuid2);
+                        // $.ajax({
+                        //     url: '/submit',
+                        //     type: 'POST',
+                        //     dataType: 'json',
+                        //     async: false,
+                        //     success: function (product) {
+                        //         if (!product.error) {
+                        //             globalPaths = product;
+                        //             console.log("results: " + globalPaths[0].Damage_photo);
+                        //         } else {
+                        //             console.log("you're gonna have a bad time");
+                        //         }
+                        //     }
+                        // })
+                    }
+                }
+            });
+        }
+    }
+
+    function controlType(type) {
+        //alert("A");
+        var pesticideDiv = $("#pesticide");
+        pesticideDiv.empty();
+        var controlType = $(type).val();
+        var pesticide = false;
+        var biopesticide = false;
+
+        for (var i = 0; i < controlType.length; i++) {
+            if (controlType[i] === "CHEMICAL PESTICIDE") {
+                pesticide = true;
+                var pesticideOptions = ["SELECT THE PESTICIDE'S NAME", "ALPHA-CYPERMETHRIN", "CHLORPYRIFOS", "LUFENURON", "MALATHION", "OTHER"];
+                //empty("Pesticide");
+                append("Pesticide", pesticideOptions);
+            } else if (controlType[i] === "BIOPESTICIDE") {
+                biopesticide = true;
+                var biopesticideOptions = ["SELECT THE BIOPESTICIDE'S NAME", "BEAUVERIA", "BT", "METARHIZIUM", "NPV", "SPINOSAD", "OTHER"];
+                //empty("Biopesticide");
+                append("Biopesticide", biopesticideOptions);
+            }
+        }
+
+        function append(type, options) {
+            var title = [$("<br><br><h4 id='" + type + "NameTitle'>2 . " + type + " Name: &nbsp;&nbsp;&nbsp;</h4>"), $("<h4 id='" + type + "LitresTitle'>2 . Amount of " + type + " Used (litres): &nbsp;&nbsp;&nbsp;</h4>")];
+            var select = [$("<select class='clearGen' id='" + type + "Name' name='" + type + "_name'></select><br><br>"), $("<input type='number' class='clearGen inputNumber' id='" + type + "Litres' name='" + type + "_litres'><br><br>")];
+            for (var i = 0; i < title.length; i++) {
+                pesticideDiv.append(title[i]);
+                pesticideDiv.append(select[i]);
+            }
+
+            for (var i = 0; i < options.length; i++) {
+                select[0].append($("<option>" + options[i] + "</option>"))
+            }
+            $("option:first", select[0]).val("");
+        }
+    }
+
+    function previousForm() {
+        document.getElementById("title").innerHTML = "Step 1/2: General Form";
+        document.getElementById("detailedFormScouting").style.display = "none";
+        document.getElementById("detailedFormTrap").style.display = "none";
+        document.getElementById("generalForm").style.display = "block";
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+
+    function showRequest(formData, jqForm, options) {
+        var queryString = $.param(formData);
+        var isValid = true;
+        var i = 0;
+        $('[required]').each(function() {
+            if ($(this).val() === '') {
+//                alert($(this).val());
+                isValid = false;
+            }
+        });
+
+        $('input[type=radio]:checked').each(function() {
+            i = i + 1;
+        });
+//        alert(isValid);
+//        alert(i);
+
+        if (isValid && i === 3) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function showResponse(responseText, statusText, xhr, $form) {
+        if (!responseText.error) {
+//            alert(responseText.message);
+            $.ajax({
+                type: "post",
+                url: "/generalForm",
+                dataType: 'json',
+                data: $("#general").serialize(),
+                success: function (result) {
+                    if (!result.error) {
+                        $.ajax({
+                            type: "post",
+                            url: "/detailedFormScouting",
+                            dataType: 'json',
+                            data: $("#detailedScouting").serialize(),
+                            success: function (result) {
+                                if (!result.error) {
+                                    document.getElementById("modal-footer").style.display = "none";
+
+                                    document.getElementById("modal-header").style.backgroundColor = "#5cb85c";
+                                    document.getElementById("close").innerHTML = "<a href='/userhome'>&times</a>";
+
+                                    document.getElementById("header").innerHTML = "Congratulations, Your Edit is Successfully Complete !";
+                                    document.getElementById("body").innerHTML = "<br>Click X to return to the Home Page.<br>";
+
+                                    document.getElementById("modal").style.display = "block";
+                                } else {
+                                    alert(result.message);
+                                }
+                            }
+                        })
+                    } else {
+                        alert(result.message);
+                    }
+                }
+            })
+        } else {
+            // error
+            alert(responseText.message);
+        }
+    }
+
+    function goBack() {
+        if (confirm("Are you sure you to leave this page? All the data will be cleared accordingly!!!")) {
+            window.location.replace('/userHome');
+        }
+    }
+
+    function clearGeneral() {
+        document.getElementById("modal-footer").innerHTML = "";
+
+        document.getElementById("modal-header").style.backgroundColor = "#f44242";
+        document.getElementById("modal-footer").style.backgroundColor = "#f44242";
+        document.getElementById("close").innerHTML = "&times";
+
+        document.getElementById("header").innerHTML = "Warning ! Are You Sure to Clear this Page ?";
+        document.getElementById("body").innerHTML = "To Clear this page, press '<strong>Clear</strong>'.<br><br> To Cancel this action, press '<strong>Cancel</strong>' or <strong>close the dialog box</strong>.<br>";
+        var footer = $("#modal-footer");
+        footer.append($("<h3 id='clear'>Clear</h3><h3 id='cancel'>Cancel</h3>"));
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementById("close");
+        var cancel = document.getElementById("cancel");
+        var clear = document.getElementById("clear");
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            document.getElementById("modal").style.display = "none";
+        };
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target === document.getElementById("modal")) {
+                document.getElementById("modal").style.display = "none";
+            }
+        };
+
+        cancel.onclick = function () {
+            document.getElementById("modal").style.display = "none";
+        };
+
+        clear.onclick = function () {
+            document.getElementById("modal").style.display = "none";
+            $(".clearGen").val("");
+            $("#mainCrop").remove();
+            $("#otherMainCrop").remove();
+            var today = new Date();
+            var todayDate = today.getFullYear()+'-'+('0' + (today.getMonth()+1)).slice(-2)+'-'+('0' + today.getDate()).slice(-2);
+            var todayDateV = document.getElementsByClassName("date");
+            for (var i = 0; i < todayDateV.length; i++) {
+                todayDateV[i].value = todayDate;
+            }
+        };
+
+        document.getElementById("modal").style.display = "block";
+    }
+
+    function clearDetSailed() {
+        document.getElementById("modal-footer").innerHTML = "";
+
+        document.getElementById("modal-header").style.backgroundColor = "#f44242";
+        document.getElementById("modal-footer").style.backgroundColor = "#f44242";
+        document.getElementById("close").innerHTML = "&times";
+
+        document.getElementById("header").innerHTML = "Warning ! Are You Sure to Clear this Page ?";
+        document.getElementById("body").innerHTML = "To Clear this page, press '<strong>Clear</strong>'.<br><br> To Cancel this action, press '<strong>Cancel</strong>' or <strong>close the dialog box</strong>.<br>";
+        var footer = $("#modal-footer");
+        footer.append($("<h3 id='clear'>Clear</h3><h3 id='cancel'>Cancel</h3>"));
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementById("close");
+        var cancel = document.getElementById("cancel");
+        var clear = document.getElementById("clear");
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            document.getElementById("modal").style.display = "none";
+        };
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == document.getElementById("modal")) {
+                document.getElementById("modal").style.display = "none";
+            }
+        };
+
+        cancel.onclick = function () {
+            document.getElementById("modal").style.display = "none";
+        };
+
+        clear.onclick = function () {
+            document.getElementById("modal").style.display = "none";
+            $(".clearDetS").val("");
+            $('input[type=radio]:checked').prop("checked", false);
+            $(".FAW").css("display", "none");
+        };
+
+        document.getElementById("modal").style.display = "block";
+    }
+</script>
+</body>
+</html>

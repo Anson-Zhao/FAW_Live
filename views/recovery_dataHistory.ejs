@@ -114,15 +114,18 @@
                     <th>Location_Name</th>
                     <th>Latitude</th>
                     <th>Longitude</th>
+                    <th>Training</th>
                     <th>Main_Crop</th>
                     <th>Main_Crop_Variety</th>
                     <th>Irrigation</th>
                     <th>Fertilized_Used</th>
                     <th>Crop_Stage</th>
                     <th>General_Health</th>
-                    <th>Cropping_System</th>
+                    <th>Farming_system</th>
                     <th>Rotation_Intercropping_Crop</th>
-                    <th>Field_Size_Ha</th>
+                    <th>Field_Size</th>
+                    <th>Field_Size_Unit</th>
+                    <th>Main_crop_planting_date</th>
                     <th>Date_of_Last_Rain</th>
                     <th>Rain_Amount</th>
                     <th>Pest_Species</th>
@@ -139,11 +142,12 @@
                     <th>Pesticide_Litres</th>
                     <th>Biopesticide_Litres</th>
                     <th>Damage_Photo</th>
+                    <th>Damage_Photo_Name</th>
                     <th>Pest_Photo</th>
+                    <th>Pest_Photo_Name</th>
                 </tr>
                 </thead>
                 <tbody>
-
                 </tbody>
                 <tfoot>
                 <tr>
@@ -152,15 +156,18 @@
                     <th>Location_Name</th>
                     <th>Latitude</th>
                     <th>Longitude</th>
+                    <th>Training</th>
                     <th>Main_Crop</th>
                     <th>Main_Crop_Variety</th>
                     <th>Irrigation</th>
                     <th>Fertilized_Used</th>
                     <th>Crop_Stage</th>
                     <th>General_Health</th>
-                    <th>Cropping_System</th>
+                    <th>Farming_system</th>
                     <th>Rotation_Intercropping_Crop</th>
-                    <th>Field_Size_Ha</th>
+                    <th>Field_Size</th>
+                    <th>Field_Size_Unit</th>
+                    <th>Main_crop_planting_date</th>
                     <th>Date_of_Last_Rain</th>
                     <th>Rain_Amount</th>
                     <th>Pest_Species</th>
@@ -177,12 +184,14 @@
                     <th>Pesticide_Litres</th>
                     <th>Biopesticide_Litres</th>
                     <th>Damage_Photo</th>
+                    <th>Damage_Photo_Name</th>
                     <th>Pest_Photo</th>
+                    <th>Pest_Photo_Name</th>
                 </tr>
                 </tfoot>
             </table>
 
-            <h4 style="color: #7d7d7d"><strong>Traps:</strong></h4>
+            <h4 style="color: #9d9d9d"><strong>Traps:</strong></h4>
             <table id="trapDisplay" style="width:100%;">
                 <thead>
                 <tr>
@@ -197,19 +206,25 @@
                     <th>Fertilized_Used</th>
                     <th>Crop_Stage</th>
                     <th>General_Health</th>
-                    <th>Cropping_System</th>
+                    <th>Farming_system</th>
                     <th>Rotation_Intercropping_Crop</th>
-                    <th>Field_Size_Ha</th>
+                    <th>Field_Size</th>
+                    <th>Field_Size_Unit</th>
+                    <th>Main_crop_planting_date</th>
                     <th>Date_of_Last_Rain</th>
                     <th>Rain_Amount</th>
                     <th>Trap_ID</th>
+                    <th>Trap_Location</th>
+                    <th>Number_of_Traps</th>
                     <th>FAW_Confirmed</th>
                     <th>FAW_Suspected</th>
                     <th>Other_Species</th>
-                    <th>Trap_Replaced</th>
-                    <th>Lure_Replaced</th>
+                    <th>Trap_Type</th>
                     <th>Lure_Name</th>
-                    <th>Trap_Serviced_Date</th>
+                    <th>Trap_Replaced</th>
+                    <th>Date_Trap_Replaced</th>
+                    <th>Lure_Replaced</th>
+                    <th>Date_Lure_Replaced</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -228,19 +243,25 @@
                     <th>Fertilized_Used</th>
                     <th>Crop_Stage</th>
                     <th>General_Health</th>
-                    <th>Cropping_System</th>
+                    <th>Farming_system</th>
                     <th>Rotation_Intercropping_Crop</th>
-                    <th>Field_Size_Ha</th>
+                    <th>Field_Size</th>
+                    <th>Field_Size_Unit</th>
+                    <th>Main_crop_planting_date</th>
                     <th>Date_of_Last_Rain</th>
                     <th>Rain_Amount</th>
                     <th>Trap_ID</th>
+                    <th>Trap_Location</th>
+                    <th>Number_of_Traps</th>
                     <th>FAW_Confirmed</th>
                     <th>FAW_Suspected</th>
                     <th>Other_Species</th>
-                    <th>Trap_Replaced</th>
-                    <th>Lure_Replaced</th>
+                    <th>Trap_Type</th>
                     <th>Lure_Name</th>
-                    <th>Trap_Serviced_Date</th>
+                    <th>Trap_Replaced</th>
+                    <th>Date_Trap_Replaced</th>
+                    <th>Lure_Replaced</th>
+                    <th>Date_Lure_Replaced</th>
                 </tr>
                 </tfoot>
             </table>
@@ -386,15 +407,17 @@
                                 resp[i].Location_name,
                                 resp[i].Latitude,
                                 resp[i].Longitude,
+                                resp[i].Training,
                                 resp[i].Main_crop,
                                 resp[i].Main_crop_variety,
                                 resp[i].Irrigation,
                                 resp[i].Fertilized_used,
                                 resp[i].Crop_stage,
                                 resp[i].General_health,
-                                resp[i].Cropping_system,
+                                resp[i].Farming_system,
                                 resp[i].Rotation_intercropping_crop,
-                                resp[i].Field_size_ha,
+                                resp[i].Field_size,
+                                resp[i].Field_size_unit,
                                 resp[i].Main_crop_planting_date,
                                 resp[i].Date_of_last_rain,
                                 resp[i].Rain_amount,
@@ -412,7 +435,9 @@
                                 resp[i].Pesticide_litres,
                                 resp[i].Biopesticide_litres,
                                 resp[i].Damage_photo,
-                                resp[i].Pest_photo
+                                resp[i].Damage_photo_name,
+                                resp[i].Pest_photo,
+                                resp[i].Pest_photo_name
                             ]).draw(false);
                         } else if (resp[i].Entry_type === "PHEROMONE TRAP") {
                             trapTable.row.add([
@@ -427,20 +452,25 @@
                                 resp[i].Fertilized_used,
                                 resp[i].Crop_stage,
                                 resp[i].General_health,
-                                resp[i].Cropping_system,
+                                resp[i].Farming_system,
                                 resp[i].Rotation_intercropping_crop,
-                                resp[i].Field_size_ha,
+                                resp[i].Field_size,
+                                resp[i].Field_size_unit,
                                 resp[i].Main_crop_planting_date,
                                 resp[i].Date_of_last_rain,
                                 resp[i].Rain_amount,
                                 resp[i].Trap_ID,
+                                resp[i].Trap_location,
+                                resp[i].Number_of_traps,
                                 resp[i].FAW_confirmed,
                                 resp[i].FAW_suspected,
                                 resp[i].Other_species,
-                                resp[i].Trap_replaced,
-                                resp[i].Lure_replaced,
+                                resp[i].Trap_status,
                                 resp[i].Lure_name,
-                                resp[i].Trap_serviced_date
+                                resp[i].Trap_replaced,
+                                resp[i].Date_trap_replaced,
+                                resp[i].Lure_replaced,
+                                resp[i].Date_lure_replaced
                             ]).draw(false);
                         }
                     }
