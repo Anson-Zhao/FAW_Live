@@ -922,6 +922,9 @@ module.exports = function (app, passport) {
         req.logout();
         res.redirect('/login');
     });
+    app.get('/scanner',function (req,res) {
+        res.render('scanner.ejs')
+    });
 
     app.get('Cancel', function (req, res) {
         res.redirect('/userHome');
