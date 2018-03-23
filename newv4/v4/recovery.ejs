@@ -27,21 +27,11 @@
         .center {
             margin:auto;
         }
-        .btn {
-            size: auto;
-        }
         .randomText {
             font-size: 100%;
         }
         .floating-Box{
             display: inline;
-        }
-        .floatingBox1{
-            display: inline-block;
-        }
-        .floatingBox3{
-            display: inline-table;
-            width:450px;
         }
         table{
             overflow-x: auto;
@@ -92,101 +82,101 @@
                 line-height: 0;
             }
         }
-        /* for 414px or less */
-        @media screen and (max-width:414px) {
-            .btn-mg {
-                font-size: 12px;
-                height: 20px;
-                line-height: 0;
-            }
+            /* for 414px or less */
+            @media screen and (max-width:414px) {
+                .btn-mg {
+                    font-size: 12px;
+                    height: 20px;
+                    line-height: 0;
+                }
 
-            #Username {
-                font-size: 15px;
-                padding: 5px 2px;
-                margin: 10px;
-            }
+                #Username {
+                    font-size: 15px;
+                    padding: 5px 2px;
+                    margin: 10px;
+                }
 
-            h1 {
-                font-size: 30px;
-            }
+                h1 {
+                    font-size: 30px;
+                }
 
-            .btn {
-                padding: 8px;
+                .btn {
+                    padding: 8px;
+                }
             }
-        }
-        /* for 375px or less */
-        @media screen and (max-width:375px) {
+                /* for 375px or less */
+                @media screen and (max-width:375px) {
 
-            select{
-                width:35%;
-            }
-            input{
-                width:35%;
-            }
-            .date{
-                width:20%;
-                font-size:12px;
-            }
-            .randomText{
-                font-size:15px;
-                padding:5px 6px;
-            }
-            #Username{
-                font-size:10px;
-                padding:5px 2px;
-                margin:10px;
-            }
-            .btn-mg{
-                font-size:12px;
-                height:20px;
-                line-height:0;
-            }
-            h1{
-                font-size:30px;
-            }
-            .btn{
-                padding:5px;
-            }
-        }
-        /* for 320px or less */
-        @media screen and (max-width:320px) {
-            select {
-                width: 35%;
-            }
+                    select{
+                        width:35%;
+                    }
+                    input{
+                        width:35%;
+                    }
+                    .date{
+                        width:20%;
+                        font-size:12px;
+                    }
+                    .randomText{
+                        font-size:15px;
+                        padding:5px 6px;
+                    }
+                    #Username{
+                        font-size:10px;
+                        padding:5px 2px;
+                        margin:10px;
+                    }
+                    .btn-mg{
+                        font-size:12px;
+                        height:20px;
+                        line-height:0;
+                    }
+                    h1{
+                        font-size:30px;
+                    }
+                    .btn{
+                        padding:5px;
+                    }
+                }
+                /* for 320px or less */
+                @media screen and (max-width:320px) {
+                    select {
+                        width: 35%;
+                    }
 
-            input {
-                width: 35%;
-            }
+                    input {
+                        width: 35%;
+                    }
 
-            .randomText {
-                font-size: 15px;
-                padding: 2px 2px;
-            }
+                    .randomText {
+                        font-size: 15px;
+                        padding: 2px 2px;
+                    }
 
-            #Username {
-                font-size: 10px;
-                padding: 5px 2px;
-                margin: 10px;
-            }
+                    #Username {
+                        font-size: 10px;
+                        padding: 5px 2px;
+                        margin: 10px;
+                    }
 
-            .btn-mg {
-                font-size: 12px;
-                height: 20px;
-                line-height: 0;
-            }
+                    .btn-mg {
+                        font-size: 12px;
+                        height: 20px;
+                        line-height: 0;
+                    }
 
-            .btn {
-                padding: 5px;
-            }
+                    .btn {
+                        padding: 5px;
+                    }
 
-            #subtitles {
-                font-size: 19px;
-            }
+                    #subtitles {
+                        font-size: 19px;
+                    }
 
-            h1 {
-                font-size: 25px;
-            }
-        }
+                    h1 {
+                        font-size: 25px;
+                    }
+                }
     </style>
 </head>
 <body>
@@ -213,7 +203,7 @@
     <div class="center">
         <h3 id="subtitles"><strong>Current Deleted Rows:</strong><button id="recoverButton" type="submit" class="btn btn-warning btn-mg floating-Box"> Recover </button></h3>
         <h4 id="note" class="floating-Box">Please select the rows you would like to recover.</h4>
-        <br><br>
+<br><br>
 
         <div id="dvData">
             <h4 style="color: #7d7d7d"><strong>Scouting:</strong></h4>
@@ -463,13 +453,13 @@
                 function update() {
 
                     $.ajax({
-                        url: '/recoverRow2',
+                        url: '/recoverRow',
                         type: 'GET',
                         dataType: 'json',
                         async: false,
                         data: transactionIDStr,
                         success: function (result) {
-                            window.location.replace('/dataHistory')
+                            window.location.replace('/userHome')
                         }
                     })
                 }

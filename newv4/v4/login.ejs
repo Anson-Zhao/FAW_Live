@@ -1,0 +1,97 @@
+<!-- views/login.ejs -->
+<!doctype html>
+<html>
+<head>
+	<title>FAW/Locust - Login</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!--<link rel="stylesheet" href="//unpkg.com/flatpickr/dist/flatpickr.min.css">-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!--<script src="//unpkg.com/flatpickr"></script>-->
+    <style>
+        body{ padding-top:80px; word-wrap:break-word; }
+        .banner{
+            position:relative;
+            width: 100%;
+        }
+            /* for768px or less */
+            @media screen and (max-width:768px) {
+                .btn{
+                padding:7px 7px;
+                font-size:17px;
+                }
+            }
+            /* for414px or less */
+            @media screen and (max-width:414px) {
+                .btn {
+                    padding: 5px 5px;
+                    font-size: 15px;
+                }
+
+                h1 {
+                    font-size: 25px;
+                }
+            }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <div class="col-sm-6 col-sm-offset-3">
+            <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:97px; width: 120%" /></a>
+            <h1><span class="fa fa-sign-in"></span> Login</h1>
+
+             <!--show any messages that come back with authentication -->
+
+
+            <!-- LOGIN FORM -->
+            <form action="/login" method="post">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-control" name="username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" name="password">
+                </div>
+                <div class="form-group">
+                    <label>Remember Me</label>
+                    <input type="checkbox" class="form-control" name="remember" value="yes">
+                </div>
+                <div class="form-group" hidden>
+                    <label>Login Time</label>
+                    <input type="date" id="date" class="form-control" name="lastLoginTime" readonly>
+                </div>
+                <div class="form-group" hidden>
+                    <label>Status</label>
+                    <input type="text" id="status" class="form-control" name="status" value="Active" readonly >
+                </div>
+
+                <button type="submit" class="btn btn-warning btn-lg"> Login </button>
+
+            </form>
+
+            <!--<p>Need an account? <a href="/signup"> Signup </a></p>-->
+            <!--<p>Or go <a href="/">home</a>.</p>-->
+            <br>
+            <p><a href="/forgot">Forgot Password?</a></p>
+        </div>
+    </div>
+    <script>
+            $(function () {
+                flatpickr(".date", {
+                    dateFormat: "Y-m-d",
+                    time_24hr: true
+                });
+            });
+            var today = new Date();
+            var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            var time2 = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            var dateTime = date + ' ' + time2;
+            document.getElementById("date").value = dateTime;
+
+</script>
+</body>
+</html>
