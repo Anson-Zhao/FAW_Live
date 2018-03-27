@@ -1230,55 +1230,60 @@
             window.location.replace('/userhome')
         }
     }
-
-    function clearGeneral() {
-        document.getElementById("modal-footer").innerHTML = "";
-
-        document.getElementById("modal-header").style.backgroundColor = "#f44242";
-        document.getElementById("modal-footer").style.backgroundColor = "#f44242";
-        document.getElementById("close").innerHTML = "&times";
-
-        document.getElementById("header").innerHTML = "Warning! Are you sure you want to clear this page?";
-        document.getElementById("body").innerHTML = "To Clear this page, press '<strong>Clear</strong>'.<br><br> To Cancel this action, press '<strong>Cancel</strong>' or <strong>close the dialog box</strong>.<br>";
-        var footer = $("#modal-footer");
-        footer.append($("<h3 id='clear'>Clear</h3><h3 id='cancel'>Cancel</h3>"));
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementById("close");
-        var cancel = document.getElementById("cancel");
-        var clear = document.getElementById("clear");
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function () {
-            document.getElementById("modal").style.display = "none";
-        };
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            if (event.target == document.getElementById("modal")) {
-                document.getElementById("modal").style.display = "none";
-            }
-        };
-
-        cancel.onclick = function () {
-            document.getElementById("modal").style.display = "none";
-        };
-
-        clear.onclick = function () {
-            document.getElementById("modal").style.display = "none";
-            $(".clearGen").val("");
-            $("#mainCrop").remove();
-            $("#otherMainCrop").remove();
-            var today = new Date();
-            var todayDate = today.getFullYear()+'-'+('0' + (today.getMonth()+1)).slice(-2)+'-'+('0' + today.getDate()).slice(-2);
-            var todayDateV = document.getElementsByClassName("date");
-            for (var i = 0; i < todayDateV.length; i++) {
-                todayDateV[i].value = todayDate;
-            }
-        };
-
-        document.getElementById("modal").style.display = "block";
+    function clearGeneral(){
+        if (confirm("Are you sure you to clear this page? All the data will be cleared accordingly!") === true) {
+            window.location.replace('/newentry')
+        }
     }
+
+    // function clearGeneral() {
+    //     document.getElementById("modal-footer").innerHTML = "";
+    //
+    //     document.getElementById("modal-header").style.backgroundColor = "#f44242";
+    //     document.getElementById("modal-footer").style.backgroundColor = "#f44242";
+    //     document.getElementById("close").innerHTML = "&times";
+    //
+    //     document.getElementById("header").innerHTML = "Warning! Are you sure you want to clear this page?";
+    //     document.getElementById("body").innerHTML = "To Clear this page, press '<strong>Clear</strong>'.<br><br> To Cancel this action, press '<strong>Cancel</strong>' or <strong>close the dialog box</strong>.<br>";
+    //     var footer = $("#modal-footer");
+    //     footer.append($("<h3 id='clear'>Clear</h3><h3 id='cancel'>Cancel</h3>"));
+    //
+    //     // Get the <span> element that closes the modal
+    //     var span = document.getElementById("close");
+    //     var cancel = document.getElementById("cancel");
+    //     var clear = document.getElementById("clear");
+    //
+    //     // When the user clicks on <span> (x), close the modal
+    //     span.onclick = function () {
+    //         document.getElementById("modal").style.display = "none";
+    //     };
+    //
+    //     // When the user clicks anywhere outside of the modal, close it
+    //     window.onclick = function (event) {
+    //         if (event.target == document.getElementById("modal")) {
+    //             document.getElementById("modal").style.display = "none";
+    //         }
+    //     };
+    //
+    //     cancel.onclick = function () {
+    //         document.getElementById("modal").style.display = "none";
+    //     };
+    //
+    //     clear.onclick = function () {
+    //         document.getElementById("modal").style.display = "none";
+    //         $(".clearGen").val("");
+    //         $("#mainCrop").remove();
+    //         $("#otherMainCrop").remove();
+    //         var today = new Date();
+    //         var todayDate = today.getFullYear()+'-'+('0' + (today.getMonth()+1)).slice(-2)+'-'+('0' + today.getDate()).slice(-2);
+    //         var todayDateV = document.getElementsByClassName("date");
+    //         for (var i = 0; i < todayDateV.length; i++) {
+    //             todayDateV[i].value = todayDate;
+    //         }
+    //     };
+    //
+    //     document.getElementById("modal").style.display = "block";
+    // }
 
     function clearDetSailed() {
         document.getElementById("modal-footer").innerHTML = "";

@@ -29,9 +29,7 @@
         form input, button{
             padding: 5px;
         }
-        .inputBoxDate {
-            width: 10%;
-        }
+
         .selected {
             background-color: brown;
             color: #FFF;
@@ -259,10 +257,12 @@
 
             #firstName {
                 width: 19%;
+                font-size:11px;
             }
 
             #lastName {
                 width: 19%;
+                font-size:11px;
             }
 
             .DateModified1 {
@@ -281,17 +281,18 @@
                 margin-left: -82px;
             }
         }
-        @media  screen and (min-width:770px) and (max-width: 1024px){
+        @media  screen and (min-width:768px) and (max-width: 1024px){
             .inputBoxDate {
-                font-size:13.5px;
+                font-size:13px
 
             }
             #firstName {
-                font-size:9px;
+                font-size:13px;
+
             }
 
             #lastName {
-                font-size:9px;
+                font-size:13px;
             }
 
             .DateModified1 {
@@ -316,11 +317,16 @@
         }
         @media  screen and (min-width:1024px) and (max-width: 1920px) {
             #firstName {
-                font-size: 11px;
+                font-size: 12px;
+                width:13%;
             }
 
             #lastName {
-                font-size: 11px;
+                font-size: 12px;
+                width:13%;
+            }
+            .inputBoxDate {
+                width: 10%;
             }
         }
 
