@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>FAW/Locust Project - User Home</title>
+    <title>FAW/Locust Project - User Home</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -69,8 +69,34 @@
             -webkit-appearance: none;
             height: 7px;
         }
-        .btn-sm{
-            width:5%;
+
+        .x {
+            border: 1px solid #ddd; /* Gray border */
+            border-radius: 4px;  /* Rounded border */
+            padding: 5px; /* Some padding */
+            width: 125px; /* Set a small width */
+            height: auto;
+        }
+
+        .y {
+            border: 1px solid #ddd; /* Gray border */
+            border-radius: 4px;  /* Rounded border */
+            padding: 5px; /* Some padding */
+            height: 125px; /* Set a small width */
+            width: auto;
+        }
+
+        .z {
+            border: 1px solid #ddd; /* Gray border */
+            border-radius: 4px;  /* Rounded border */
+            padding: 5px; /* Some padding */
+            height: 125px; /* Set a small width */
+            width: 125px;
+        }
+
+        /* Add a hover effect (blue shadow) */
+        .x:hover, .y:hover, .z:hover {
+            box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
         }
         /* for1024px or less */
         @media screen and (max-width:1024px) {
@@ -225,56 +251,22 @@
                     font-size:25px;
                 }
             }
-
-		.floatingBox3{
-			display: inline-table;
-			width:450px;
-		}
-
-        .x {
-            border: 1px solid #ddd; /* Gray border */
-            border-radius: 4px;  /* Rounded border */
-            padding: 5px; /* Some padding */
-            width: 125px; /* Set a small width */
-            height: auto;
-        }
-
-        .y {
-            border: 1px solid #ddd; /* Gray border */
-            border-radius: 4px;  /* Rounded border */
-            padding: 5px; /* Some padding */
-            height: 125px; /* Set a small width */
-            width: auto;
-        }
-
-        .z {
-            border: 1px solid #ddd; /* Gray border */
-            border-radius: 4px;  /* Rounded border */
-            padding: 5px; /* Some padding */
-            height: 125px; /* Set a small width */
-            width: 125px;
-        }
-
-        /* Add a hover effect (blue shadow) */
-        .x:hover, .y:hover, .z:hover {
-            box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
-        }
-	</style>
+    </style>
 </head>
 <body>
 <div class="container center">
     <a href="//aworldbridge.com"><img class="banner" src="/pic/NewWBBanner.jpg" style="height:147px"/></a>
-
-</div><br><br>
-<div class="page-header text-center header">
-    <h1><span class="fa fa-anchor"></span> FAW Project -  User Home </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
-    <a href="/newEntry" class="btn btn-default btn-lg">New Entry</a>&nbsp;&nbsp;
-    <a href="/dataHistory" class="btn btn-default btn-lg">Data History</a>&nbsp;&nbsp;
-    <a href="/recovery" id="restoreButton" class="btn btn-default btn-lg" type="button">Recovery</a>&nbsp;&nbsp;
-    <div class="dropdown floating-Box">
-        <button class="btn btn-primary btn-lg" data-toggle="dropdown" id="Username"><%= user.firstName%>
-            <span class="caret"></span></button>
-        <ul id="userMenu" class="dropdown-menu">
+    <br><br>
+    <div class="page-header text-center header">
+        <h1><span class="fa fa-anchor"></span> FAW Project -  User Home </h1><h4><span class="fa fa-user"></span>&nbsp;<strong>Account Name</strong>: <%= user.username %></h4><br>
+        <a href="/newEntry" class="btn btn-default btn-lg">New Entry</a>&nbsp;&nbsp;
+        <a href="/dataHistory" class="btn btn-default btn-lg">Data History</a>&nbsp;&nbsp;
+        <a href="/recovery" id="restoreButton" class="btn btn-default btn-lg" type="button">Recovery</a>&nbsp;&nbsp;
+        <div class="dropdown floating-Box">
+            <button class="btn btn-primary btn-lg" data-toggle="dropdown" id="Username"><%= user.firstName%>
+                <span class="caret"></span>
+            </button>
+            <ul id="userMenu" class="dropdown-menu">
 
             </ul>
         </div>
@@ -450,19 +442,20 @@
                 <option value="3Date_lure_replaced">3.Date Lure Replaced</option>
             </select>
         </h5>
-        <h5 class="floatingBox3">Content:&nbsp;&nbsp;<input type="text" class="content"></h5>
-    </div><br>
-    <div class="center">
-        <button id="submitButton" class="btn btn-primary btn-sm button" type="button" onclick="query()">Filter</button>
-        <button id="editButton" class="btn btn-primary btn-sm button" type="button">Edit</button>
-        <button id="deleteButton" class="btn btn-primary btn-sm button" type="button">Delete</button>
+		<h5 class="floatingBox3">Content:&nbsp;&nbsp;<input type="text" class="content"></h5>
+	</div><br>
+	<div class="center">
+		<button id="submitButton" class="btn btn-primary btn-sm button" type="button" onclick="query()">Filter</button>
+		<button id="editButton" class="btn btn-primary btn-sm button" type="button">Edit</button>
+		<button id="deleteButton" class="btn btn-primary btn-sm button" type="button">Delete</button>
     </div>
     <br>
     <div class="center">
 	    <h4 id="subtitles"><strong>Most Recent Records:</strong></h4>
         <h4 style="color: #9d9d9d"><strong>Scouting:</strong></h4>
+
         <div id="dvData">
-            <table id="dataDisplay" style="width:100%;">
+            <table id="dataDisplay">
                 <thead>
                 <tr>
                     <th>Transaction_ID</th>
@@ -816,8 +809,8 @@
                                 resp[i].Pest_photo,
                                 resp[i].Pest_photo_name
                             ]).draw(false);
-                            drawImage(i + 1, 30, resp[i].Damage_photo, "damage");
-                            drawImage(i + 1, 31, resp[i].Pest_photo, "pest");
+                            // drawImage(i + 1, 30, resp[i].Damage_photo, "damage");
+                            // drawImage(i + 1, 31, resp[i].Pest_photo, "pest");
                         } else if (resp[i].Entry_type === "PHEROMONE TRAP") {
                             trapTable.row.add([
                                 resp[i].transactionID,
@@ -891,33 +884,33 @@
         });
     }
 
-    function drawImage(rowNumber, cellNumber, paths, name) {
-        var string = "https://www.w3schools.com/w3css/img_lights.jpg;https://www.w3schools.com/howto/img_fjords.jpg;https://static.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg";
-        //var path = paths.split(";");
-        var path = string.split(";");
-
-        for (var i = 0; i < path.length; i++) {
-            //alert(i);
-            document.getElementById("dataDisplay").rows[rowNumber].cells[cellNumber].innerHTML += "<a target=\"_blank\" href='" + path[i] + "'><img onload='setSize(this.id)' id='" + name + "." + rowNumber + "." + i + "' src='" + path[i] + "'></a>";
-
-        }
-    }
-
-    function setSize(id) {
-        var picWidth = document.getElementById(id).naturalWidth;
-        var picHeight = document.getElementById(id).naturalHeight;
-        // alert(picWidth + "   " + picHeight);
-
-        if (picWidth > picHeight) {
-            document.getElementById(id).setAttribute("class", "x");
-        } else if (picWidth < picHeight) {
-            document.getElementById(id).setAttribute("class", "y");
-        } else if (picWidth === picHeight) {
-            document.getElementById(id).setAttribute("class", "z");
-        }
-
-        // alert(document.getElementById(name + "." + rowNumber + "." + i).width + "   " + document.getElementById(name + "." + rowNumber + "." + i).height);
-    }
+    // function drawImage(rowNumber, cellNumber, paths, name) {
+    //     var string = "https://www.w3schools.com/w3css/img_lights.jpg;https://www.w3schools.com/howto/img_fjords.jpg;https://static.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg";
+    //     //var path = paths.split(";");
+    //     var path = string.split(";");
+    //
+    //     for (var i = 0; i < path.length; i++) {
+    //         //alert(i);
+    //         document.getElementById("dataDisplay").rows[rowNumber].cells[cellNumber].innerHTML += "<a target=\"_blank\" href='" + path[i] + "'><img onload='setSize(this.id)' id='" + name + "." + rowNumber + "." + i + "' src='" + path[i] + "'></a>";
+    //
+    //     }
+    // }
+    //
+    // function setSize(id) {
+    //     var picWidth = document.getElementById(id).naturalWidth;
+    //     var picHeight = document.getElementById(id).naturalHeight;
+    //     // alert(picWidth + "   " + picHeight);
+    //
+    //     if (picWidth > picHeight) {
+    //         document.getElementById(id).setAttribute("class", "x");
+    //     } else if (picWidth < picHeight) {
+    //         document.getElementById(id).setAttribute("class", "y");
+    //     } else if (picWidth === picHeight) {
+    //         document.getElementById(id).setAttribute("class", "z");
+    //     }
+    //
+    //     // alert(document.getElementById(name + "." + rowNumber + "." + i).width + "   " + document.getElementById(name + "." + rowNumber + "." + i).height);
+    // }
 
     function changeColor() {
         var row = document.getElementsByClassName("change")[0].innerHTML.trim().split("</td>");
@@ -938,6 +931,7 @@
         }
         //alert(markers.length)
     }
+
 </script>
 </body>
 </html>

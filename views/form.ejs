@@ -697,8 +697,8 @@
         },
         callbacks: {
             onComplete: function (id, name, responseJSON) {
-                alert(responseJSON.newuuid);
-                alert(id + "      " + name);
+                // alert(responseJSON.newuuid);
+                // alert(id + "      " + name);
                 uploader.setUuid(id, responseJSON.newuuid);
                 // $.ajax({
                 //     url: '/submit',
@@ -1090,8 +1090,8 @@
                 },
                 callbacks: {
                     onComplete: function (id, name, responseJSON) {
-                        alert(responseJSON.newuuid2);
-                        alert(id + "      " + name);
+                        // alert(responseJSON.newuuid2);
+                        // alert(id + "      " + name);
                         uploaderPest.setUuid(id, responseJSON.newuuid2);
                         // $.ajax({
                         //     url: '/submit',
@@ -1226,7 +1226,7 @@
     }
 
     function goBack() {
-        if (confirm("Warning ! Are You Sure to Leave this Page ?") === true) {
+        if (confirm("Are you sure you to leave this page? All the data will be cleared accordingly!") === true) {
             window.location.replace('/userhome')
         }
     }
@@ -1304,7 +1304,7 @@
 
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function (event) {
-            if (event.target == document.getElementById("modal")) {
+            if (event.target === document.getElementById("modal")) {
                 document.getElementById("modal").style.display = "none";
             }
         };

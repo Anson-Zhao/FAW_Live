@@ -1267,7 +1267,7 @@
 
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function (event) {
-            if (event.target == document.getElementById("modal")) {
+            if (event.target === document.getElementById("modal")) {
                 document.getElementById("modal").style.display = "none";
             }
         };
@@ -1292,14 +1292,14 @@
         document.getElementById("modal").style.display = "block";
     }
 
-    function clearDetailed() {
+    function clearDetSailed() {
         document.getElementById("modal-footer").innerHTML = "";
 
         document.getElementById("modal-header").style.backgroundColor = "#f44242";
         document.getElementById("modal-footer").style.backgroundColor = "#f44242";
         document.getElementById("close").innerHTML = "&times";
 
-        document.getElementById("header").innerHTML = "Warning ! Are You Sure to Clear this Page ?";
+        document.getElementById("header").innerHTML = "Warning! Are You Sure to Clear this Page?";
         document.getElementById("body").innerHTML = "To Clear this page, press '<strong>Clear</strong>'.<br><br> To Cancel this action, press '<strong>Cancel</strong>' or <strong>close the dialog box</strong>.<br>";
         var footer = $("#modal-footer");
         footer.append($("<h3 id='clear'>Clear</h3><h3 id='cancel'>Cancel</h3>"));
@@ -1316,7 +1316,7 @@
 
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function (event) {
-            if (event.target == document.getElementById("modal")) {
+            if (event.target === document.getElementById("modal")) {
                 document.getElementById("modal").style.display = "none";
             }
         };
